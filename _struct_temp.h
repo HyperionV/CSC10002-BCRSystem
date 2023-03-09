@@ -2,10 +2,29 @@
 #define _STRUCT_TEMP_H
 #include <string>
 
+struct date;
+struct student;
+struct studentNode;
+struct classes;
+struct course;
+struct courseNode;
+struct staff;
+struct scoreboard;
+struct schoolYear;
+struct semester;
+struct calendar;
+
 struct date {
     int day;
     int month;
     int year;
+};
+
+struct scoreboard {
+    double total;
+    double final;
+    double midterm;
+    double other;
 };
 
 struct student {
@@ -34,18 +53,15 @@ struct staff {
     std::string password;
 };
 
-struct scoreboard {
-    double total;
-    double final;
-    double midterm;
-    double other;
-};
-
 struct classes {
     std::string name;
     std::string type;
     student* studentList;
     int numberOfStudent;
+};
+
+struct calendar {
+    course** session;
 };
 
 struct course {
@@ -65,8 +81,8 @@ struct courseNode {
     courseNode* next;
 };
 
-struct calendar {
-    course** session;
+struct schoolYear {
+    semester* sem;
 };
 
 struct semester {
@@ -74,10 +90,6 @@ struct semester {
     schoolYear SY;
     date start;
     date end;
-};
-
-struct schoolYear {
-    semester* sem;
 };
 
 #endif

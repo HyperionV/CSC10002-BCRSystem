@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MOD_H
+#define _MOD_H
+
 #include "_struct_temp.h"
 
 void addStudent();
@@ -10,3 +12,5 @@ void updateStudentScoreboard();
 void checkOpenTime(); //check validity
 void modifyCourseInfo();
 void modifyClassInfo();
+
+#endif
