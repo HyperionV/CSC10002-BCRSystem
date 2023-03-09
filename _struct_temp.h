@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _STRUCT_TEMP_H
+#define _STRUCT_TEMP_H
 #include <string>
 
 struct date {
@@ -15,7 +16,13 @@ struct student {
     std::string socialid;
     bool gender;
     scoreboard score;
-    course* courses;
+    courseNode* courses;
+    std::string password;
+};
+
+struct studentNode {
+    student data;
+    studentNode* next;
 };
 
 struct staff {
@@ -24,6 +31,7 @@ struct staff {
     date dob;
     std::string socialid;
     bool gender;
+    std::string password;
 };
 
 struct scoreboard {
@@ -48,12 +56,17 @@ struct course {
     int credit;
     calendar shedule;
     int max;
-    student* enrolled;
+    studentNode* enrolled;
     semester* sem;
 };
 
+struct courseNode {
+    course data;
+    courseNode* next;
+};
+
 struct calendar {
-    bool** session;
+    course** session;
 };
 
 struct semester {
@@ -66,3 +79,5 @@ struct semester {
 struct schoolYear {
     semester* sem;
 };
+
+#endif
