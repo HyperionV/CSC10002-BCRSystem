@@ -1,8 +1,9 @@
-#include "_modification_.h"
-#include <iostream>
-
+#include "_modification_.cpp"
 using namespace std;
 
 int main() {
-    cout << "This works fine" << endl;
+    schoolYear SC;
+    createSchoolYear(SC);
+    createSemester();
+    addStudentToClassIndividually("22CLC06");
 }

@@ -1,6 +1,4 @@
-#ifndef _STRUCT_TEMP_H
-#define _STRUCT_TEMP_H
-#include <string>
+#include "_library_.h"
 
 struct date;
 struct student;
@@ -17,7 +15,6 @@ struct calendar;
 struct date {
     int day;
     int month;
-    int year;
 };
 
 struct scoreboard {
@@ -28,12 +25,14 @@ struct scoreboard {
 };
 
 struct student {
-    std::string name;
+    string num;
+    std::string firstname;
+    string lastname;
     std::string id;
-    date dob;
+    string dob;
     classes* classroom;
     std::string socialid;
-    bool gender;
+    string gender;
     scoreboard score;
     courseNode* courses;
     std::string password;
@@ -82,14 +81,25 @@ struct courseNode {
 };
 
 struct schoolYear {
+    std::string name;
     semester* sem;
 };
 
+struct schoolYearNode {
+    schoolYear data;
+    schoolYearNode* next;
+};
+
 struct semester {
-    course* cours;
+    courseNode* cours;
     schoolYear SY;
+    std::string name;
     date start;
     date end;
 };
 
-#endif
+struct stringNode {
+    int index;
+    string data;
+    stringNode* next;
+};
