@@ -2,9 +2,10 @@
 
 void addStringNode(stringNode *&head, string data);
 void createSchoolYear(schoolYear &object, string name);
-void createSemester(schoolYear &object);
+void createSemester(semester &s);
 void createClass(schoolYear &object);
 void getContentOfFile(ifstream &ifile, stringNode *&head);
 void displayListContent(stringNode *head);
 void displayListContentWithIndex(stringNode *head);
-void createCourse();
+void createCourse(const semester &obj);
+

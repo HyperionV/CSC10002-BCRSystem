@@ -87,7 +87,7 @@ void createSchoolYear(schoolYear &object, string name) {
     //add action: create classes menu after creating new school year
 }
 
-void createSemester(schoolYear &object) {
+void createSemester(semester &s) {
     cout << "\n--------Create new semester--------\n" << endl;
     cout << "Choose a school year to create new semester: ";
     string path = {"Data/schoolYears.txt"};
@@ -97,22 +97,23 @@ void createSemester(schoolYear &object) {
     displayListContentWithIndex(yearList);
     cout << "Your choice: ";
     int choice;
-    cin >> choice;
+    cin >> choice;  //check input here
     stringNode *curr = yearList;
     while (curr && curr->index != choice) {
         curr = curr->next;
     }
-    string choosenYear = curr->data;
+    s.schoolYear = curr->data;
     cout << "Choose a semester to create: \n\tA. Spring semester \n\tB. Summer semester \n\tC. Autumn semester" << endl;
-    string semChoice; ///Check for input here
+    string semChoice; ///Check input here
     cout << "Your choice: ";
     cin >> semChoice;
-    string filepath = "Data/"+choosenYear+"/Semester_"+semChoice;
+    s.sem = semChoice;
+    string filepath = "Data/"+s.schoolYear+"/Semester_"+semChoice;
     if (mkdir((filepath).c_str()) == -1) {
         cout << "This semester has already been created" << endl;
         return;
     }
-    cout << "Created new semester " << semChoice << " for school year " << choosenYear << endl;
+    cout << "Created new semester " << semChoice << " for school year " << s.schoolYear << endl;
     cout << "Update semester information" << endl;
     cout << "Enter semester start date: ";
     string start;
@@ -121,30 +122,35 @@ void createSemester(schoolYear &object) {
     string end;
     cin >> end;
     ofstream ofile {filepath+"/info.txt", std::ios::app};
-    ofile << start << "," << end << "," << choosenYear << endl;
+    ofile << start << "," << end << "," << s.schoolYear << endl;
     ofile.close();
 }
 
-void createCourse() {
-
-}
-
-void createClass(schoolYear &object) {
-    cout << "\n--------Create class--------\n" << endl;
-    string name;
-    cout << "Enter class identifier: ";
-    cin >> name;
-    string path = "Data/" + object.SY;
-    path += "/Classes/" + name;
-    if (mkdir(path.c_str()) == -1) {
-        cout << "This class has been created before" << endl;
+void createCourse(const semester &obj) {
+    course temp;
+    cout << "\n--------Create course--------\n" << endl;
+    cout << "Enter course ID: ";
+    cin >> temp.id;
+    string pathID = "Data/"+obj.schoolYear+"/Semester_"+obj.sem+temp.id;
+    if (mkdir(pathID.c_str()) == -1) {
+        cout << "This course has been created for this semester" << endl;
         return;
     }
-    else {
-        cout << "Created class " << name << endl;
-    }
-    addStringNode(object.classes, name);
-    ofstream out_file {"Data/"+object.SY+"/Classes/info.txt", std::ios::app};
-    out_file << name << endl;
-    out_file.close();
+    ofstream ofile {pathID+"/info.txt"};
+    cout << "Enter course name: ";  
+    cin >> temp.name;
+    cout << "Enter classname: "; 
+    cin >> temp.className;
+    cout << "Enter teacher name: ";
+    cin >> temp.teacher;
+    cout << "Enter number of credits: ";
+    cin >> temp.credit;
+    cout << "Enter maximum number of students: ";
+    cin >> temp.max;
+    cout << "Enter day of week: ";
+    cin >> temp.day;
+    cout << "Enter session: ";
+    cin >> temp.session;
+
 }
+

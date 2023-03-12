@@ -5,5 +5,4 @@ int main() {
     cout << "Enter school year: ";
     cin >> SC.SY;
     createSchoolYear(SC, SC.SY);
-    createSemester(SC);
 }

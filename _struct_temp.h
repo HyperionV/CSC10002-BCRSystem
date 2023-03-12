@@ -47,9 +47,8 @@ struct course {
 };
 
 struct semester {
-    string start;
-    string end;
-    string SY; //school year
+    string schoolYear;
+    string sem;
     stringNode* courses;
 };
 
