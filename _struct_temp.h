@@ -10,8 +10,9 @@ struct staff;
 struct stringNode;
 
 struct stringNode {
+    int index;
     string data;
-    stringNode* next;
+    stringNode* next{nullptr};
 };
 
 struct scoreboard {
@@ -30,6 +31,7 @@ struct student {
     string dob;
     string socialid;
     stringNode* courses;
+    string password;
 };
 
 struct course {

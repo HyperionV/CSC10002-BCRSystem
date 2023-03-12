@@ -3,3 +3,5 @@
 Debug/
 *.mk
 *.project
+*.txt
+Data/

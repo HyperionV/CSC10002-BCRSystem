@@ -1,6 +1,9 @@
 #include "_modification_.cpp"
-using namespace std;
 
 int main() {
-    
+    schoolYear SC;
+    cout << "Enter school year: ";
+    cin >> SC.SY;
+    createSchoolYear(SC, SC.SY);
+    createSemester(SC);
 }
