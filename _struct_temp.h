@@ -1,20 +1,17 @@
 #include "_library_.h"
 
-struct date;
-struct student;
-struct studentNode;
-struct classes;
-struct course;
-struct courseNode;
-struct staff;
-struct scoreboard;
 struct schoolYear;
+struct classes;
 struct semester;
-struct calendar;
+struct course;
+struct student;
+struct scoreboard;
+struct staff;
+struct stringNode;
 
-struct date {
-    int day;
-    int month;
+struct stringNode {
+    string data;
+    stringNode* next;
 };
 
 struct scoreboard {
@@ -25,81 +22,42 @@ struct scoreboard {
 };
 
 struct student {
-    string num;
-    std::string firstname;
-    string lastname;
-    std::string id;
-    string dob;
-    classes* classroom;
-    std::string socialid;
+    int index;
+    string id;
+    string firstName;
+    string lastName;
     string gender;
-    scoreboard score;
-    courseNode* courses;
-    std::string password;
-};
-
-struct studentNode {
-    student data;
-    studentNode* next;
-};
-
-struct staff {
-    std::string name;
-    std::string id;
-    date dob;
-    std::string socialid;
-    bool gender;
-    std::string password;
-};
-
-struct classes {
-    std::string name;
-    std::string type;
-    student* studentList;
-    int numberOfStudent;
-};
-
-struct calendar {
-    course** session;
+    string dob;
+    string socialid;
+    stringNode* courses;
 };
 
 struct course {
-    std::string id;
-    std::string name;
-    std::string className;
-    std::string teacherName;
-    int credit;
-    calendar shedule;
-    int max;
-    studentNode* enrolled;
-    semester* sem;
-};
-
-struct courseNode {
-    course data;
-    courseNode* next;
-};
-
-struct schoolYear {
-    std::string name;
-    semester* sem;
-};
-
-struct schoolYearNode {
-    schoolYear data;
-    schoolYearNode* next;
+    string id;
+    string name;
+    string className;
+    string teacher;
+    unsigned int credit;
+    unsigned int max;
+    string day;
+    string session;
+    stringNode* enrolled;
 };
 
 struct semester {
-    courseNode* cours;
-    schoolYear SY;
-    std::string name;
-    date start;
-    date end;
+    string start;
+    string end;
+    string SY; //school year
+    stringNode* courses;
 };
 
-struct stringNode {
-    int index;
-    string data;
-    stringNode* next;
+struct classes {
+    string name;
+    stringNode* students;
+};
+
+struct schoolYear {
+    string SY;
+    stringNode* classes;
+    stringNode* semester;
 };

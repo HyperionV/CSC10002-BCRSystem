@@ -5,5 +5,6 @@
 #include <cctype>
 #include <iomanip>
 #include <fstream>
+#include <sys/stat.h>
 
 using namespace std;
