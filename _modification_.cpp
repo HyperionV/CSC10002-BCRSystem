@@ -45,3 +45,25 @@ void createSchoolYear(schoolYear &object, string name) {
 
 }
 
+void createSemester(schoolYear &object) {
+
+}
+
+void createClass(schoolYear &object) {
+    string name;
+    cout << "Enter class identifier: ";
+    cin >> name;
+    string path = "Data/" + object.SY;
+    path += "/Classes/" + name;
+    if (mkdir(path.c_str()) == -1) {
+        cout << "This class has been created before" << endl;
+        return;
+    }
+    else {
+        cout << "Created class " << name << endl;
+    }
+    addStringNode(object.classes, name);
+    ofstream out_file {"Data/"+object.SY+"/Classes/info.txt"};
+    out_file << name << endl;
+    out_file.close();
+}
