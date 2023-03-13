@@ -8,3 +8,5 @@
 #include <sys/stat.h>
 
 using namespace std;
+
+const string defaultPassword = "123456";

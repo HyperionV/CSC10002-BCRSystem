@@ -20,7 +20,7 @@ void addStringNode(stringNode *&head, string data) {
     temp = curr = nullptr;
 }
 
-void getContentOfFile(string path, stringNode *&head) {
+void getContentOfFile(const string &path, stringNode *&head) {
     ifstream ifile {path};
     if (!ifile) {
         cout << "Cannot open file at: " << path << endl;
@@ -58,7 +58,29 @@ void displayListContentWithIndex(stringNode *head) {
     curr = nullptr;
 }
 
-void createSchoolYear(schoolYear &object, string name) {
+string checkClassOfStudent(const student &obj, string schoolYear) {
+    string path = "Data/"+schoolYear+"/Classes/info.txt";
+    stringNode *classList = nullptr;
+    getContentOfFile(path, classList);
+    stringNode *curr = classList;
+    string classPath = "Data/"+schoolYear+"/Classes/";
+    while (curr) {
+        string tempPath = classPath+curr->data;
+        if (rename(tempPath.c_str(), tempPath.c_str()) != -1) {
+            return curr->data;
+        }
+    }
+    return "others";
+    //optimize linked list here - delete all nodes
+}
+
+void saveStudentInfo(string path, const student &source) {
+    ofstream studentInfo {path};
+    studentInfo << source.id << "," << source.firstName << "," << source.lastName << "," << source.gender << "," << source.dob << "," << source.socialid << "," << defaultPassword << endl;
+    studentInfo.close();
+}
+
+void createSchoolYear(schoolYear &source, string name) {
     cout << "\n--------Create school year--------\n" << endl;
     //check valid year
 
@@ -77,9 +99,9 @@ void createSchoolYear(schoolYear &object, string name) {
         cout << "Error while creating Class folder for " << name << endl;   //for debugging purpose
         return;
     }
-    object.SY = name;
-    object.classes = nullptr;   //add first node using function
-    object.semester = nullptr;  //add first node using function
+    source.SY = name;
+    source.classes = nullptr;   //add first node using function
+    source.semester = nullptr;  //add first node using function
     ofstream out_file {"Data/schoolYears.txt", std::ios::app};
     out_file << name << endl;
     out_file.close();
@@ -126,12 +148,12 @@ void createSemester(semester &s) {
     ofile.close();
 }
 
-void createCourse(const semester &obj) {
+void createCourse(const semester &source) {
     course temp;
     cout << "\n--------Create course--------\n" << endl;
     cout << "Enter course ID: ";
     cin >> temp.id;
-    string pathID = "Data/"+obj.schoolYear+"/Semester_"+obj.sem+temp.id;
+    string pathID = "Data/"+source.schoolYear+"/Semester_"+source.sem+temp.id;
     if (mkdir(pathID.c_str()) == -1) {
         cout << "This course has been created for this semester" << endl;
         return;
@@ -151,6 +173,80 @@ void createCourse(const semester &obj) {
     cin >> temp.day;
     cout << "Enter session: ";
     cin >> temp.session;
+}
+
+void createClass(schoolYear &source) {
+    cout << "\n--------Create class--------\n" << endl;
+    string name;
+    cout << "Enter class identifier: ";
+    cin >> name;
+    string path = "Data/" + source.SY;
+    path += "/Classes/" + name;
+    if (mkdir(path.c_str()) == -1) {
+        cout << "This class has been created before" << endl;
+        return;
+    }
+    else {
+        cout << "Created class " << name << endl;
+    }
+    addStringNode(source.classes, name);
+    ofstream out_file {"Data/"+source.SY+"/Classes/info.txt", std::ios::app};
+    out_file << name << endl;
+    out_file.close();
+}
+
+void addStudentToCourse(course &c, const string &schoolYear, const string &sem) {
+    string path = "Data/"+schoolYear+"/Semester_"+sem+"/"+c.id;
+    cout << "\n--------Add student to course--------\n" << endl;
+    cout << "Choose a way to add: \n\t1. By file \n\tIndividually" << endl;
+    cout << "Your choice: ";
+    //add input validation
+    int choice;
+    cin >> choice;
+    ofstream ofile {path+"enrolled.txt", std::ios::app};
+    if (choice == 1) {
+        student temp;
+        addStudentIndividually(temp);
+        ofile << temp.id << endl;
+        ofile.close();
+        if (checkClassOfStudent(temp) == "others") {
+            if (mkdir(("Data/"+schoolYear+"/others/"+temp.id).c_str()) == -1) {
+                return;
+            }
+            ofstream studentInfo {"Data/"+schoolYear+"/others/"+temp.id+"/info.txt", std::ios::app | std::ios::ate};
+            studentInfo << c.id << endl;
+            studentInfo.close();
+        }
+        string studentPath = "Data/"+schoolYear+"/Classes/"+temp.id;
+        ofstream studentInfo {studentPath+"/info.txt", std::ios::app | std::ios::ate};
+        studentInfo << c.id << endl;
+        studentInfo.close();
+        return;
+    }
+    else if (choice == 2) {
+
+    }
+}
+
+void addStudentByFile(student &s) {
 
 }
 
+void addStudentIndividually(student &s) {
+    //validate input
+
+    cout << "\n--------Add student individually--------\n" << endl;
+    cout << "Enter ID of student: ";
+    cin >> s.id;
+    cout << "Enter student's first name: ";
+    cin >> s.firstName;
+    cout << "Enter student's last name: ";
+    cin >> s.lastName;
+    cout << "Enter student's gender [M/F]: ";
+    cin >> s.gender;
+    s.gender = toupper(s.gender[0]);
+    cout << "Enter day of birth: ";
+    cin >> s.dob;
+    cout << "Enter social ID: ";
+    cin >> s.socialid;
+}

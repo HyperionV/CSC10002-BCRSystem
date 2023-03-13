@@ -40,7 +40,7 @@ struct course {
     string className;
     string teacher;
     unsigned int credit;
-    unsigned int max;
+    unsigned int max = 50;
     string day;
     string session;
     stringNode* enrolled;
