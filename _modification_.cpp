@@ -266,7 +266,6 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
             ofstream scoreboard {studentPath+"/Scoreboard"+c.id+".txt"};
             scoreboard.close();
             curr = curr->next;
-
             //add efficient method to remove linked list here
         }
     }
