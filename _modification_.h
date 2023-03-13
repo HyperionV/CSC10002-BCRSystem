@@ -1,6 +1,6 @@
 #include "_struct_temp.h"
 
-void addStringNode(stringNode *&head, string data);
+void addStringNode(stringNode *&head, const string &data);
 void createSchoolYear(schoolYear &object, string name);
 void createSemester(semester &s);
 void createClass(schoolYear &object);
@@ -14,5 +14,6 @@ void addStudentToClass(classes &c);
 void addStudentByFile();
 void addStudentIndividually();
 void saveStudentInfo(string path, const student &source);
+void addStudentNode(studentNode *&head, const student &source);
 
 string checkClassOfStudent(const student &obj);

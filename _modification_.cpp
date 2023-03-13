@@ -1,6 +1,6 @@
 #include "_modification_.h"
 
-void addStringNode(stringNode *&head, string data) {
+void addStringNode(stringNode *&head, const string &data) {
     if (head == nullptr) {
         head = new stringNode;
         head->data = data;
@@ -16,6 +16,24 @@ void addStringNode(stringNode *&head, string data) {
     curr->data = data;
     curr->next = nullptr;
     curr->index = temp->index+1;
+    temp->next = curr;
+    temp = curr = nullptr;
+}
+
+void addStudentNode(studentNode *&head, const student &source) {
+    if (head == nullptr) {
+        head = new studentNode;
+        head->data = source;
+        head->next = nullptr;
+        return;
+    }
+    studentNode *temp = head;
+    while (temp->next) {
+        temp = temp->next;
+    }
+    studentNode *curr = new studentNode;
+    curr->data = source;
+    curr->next = nullptr;
     temp->next = curr;
     temp = curr = nullptr;
 }
@@ -198,38 +216,92 @@ void createClass(schoolYear &source) {
 void addStudentToCourse(course &c, const string &schoolYear, const string &sem) {
     string path = "Data/"+schoolYear+"/Semester_"+sem+"/"+c.id;
     cout << "\n--------Add student to course--------\n" << endl;
-    cout << "Choose a way to add: \n\t1. By file \n\tIndividually" << endl;
+    cout << "Choose a way to add: \n\t1. By file \n\t2. Individually" << endl;
     cout << "Your choice: ";
     //add input validation
+    //check if that student has enrolled in that course before
     int choice;
     cin >> choice;
     ofstream ofile {path+"enrolled.txt", std::ios::app};
-    if (choice == 1) {
+    if (choice == 2) {
         student temp;
         addStudentIndividually(temp);
         ofile << temp.id << endl;
         ofile.close();
-        if (checkClassOfStudent(temp) == "others") {
+        string studentClass = checkClassOfStudent(temp);
+        if (studentClass == "others") {
             if (mkdir(("Data/"+schoolYear+"/others/"+temp.id).c_str()) == -1) {
                 return;
             }
-            ofstream studentInfo {"Data/"+schoolYear+"/others/"+temp.id+"/info.txt", std::ios::app | std::ios::ate};
-            studentInfo << c.id << endl;
-            studentInfo.close();
+            saveStudentInfo("Data/"+schoolYear+"/others/"+temp.id+"/info.txt", temp);
         }
-        string studentPath = "Data/"+schoolYear+"/Classes/"+temp.id;
+        string studentPath = "Data/"+schoolYear+"/Classes/"+studentClass+"/"+temp.id;
         ofstream studentInfo {studentPath+"/info.txt", std::ios::app | std::ios::ate};
         studentInfo << c.id << endl;
         studentInfo.close();
+        mkdir((studentPath+"/Scoreboard").c_str());
+        ofstream scoreboard {studentPath+"/Scoreboard"+c.id+".txt"};
+        scoreboard.close();
         return;
     }
-    else if (choice == 2) {
+    else if (choice == 1) {
+        studentNode* head = nullptr;
+        addStudentByFile(head);
+        studentNode *curr = head;
+        string classPath = "Data/"+schoolYear+"/Classes/";
+        while (curr) {
+            ofile << curr->data.id << endl;
+            string studentClass = checkClassOfStudent(curr->data);
+            if (studentClass == "others") {
+                if (mkdir(("Data/"+schoolYear+"/others/"+curr->data.id).c_str()) == -1) {
+                    continue;
+                }
+                saveStudentInfo("Data/"+schoolYear+"/others/"+curr->data.id+"/info.txt", curr->data);
+            }
+            string studentPath = "Data/"+schoolYear+"/Classes/"+studentClass+"/"+curr->data.id;
+            ofstream studentInfo {studentPath+"/info.txt", std::ios::app | std::ios::ate};
+            studentInfo << c.id << endl;
+            studentInfo.close();
+            mkdir((studentPath+"/Scoreboard").c_str());
+            ofstream scoreboard {studentPath+"/Scoreboard"+c.id+".txt"};
+            scoreboard.close();
+            curr = curr->next;
 
+            //add efficient method to remove linked list here
+        }
     }
 }
 
-void addStudentByFile(student &s) {
-
+void addStudentByFile(studentNode *&head) {
+    cout << "\n--------Add students by file--------\n" << endl;
+    cout << "Enter file path: ";
+    string filePath;
+    cin >> filePath;
+    ifstream in_file {filePath};
+    if (!in_file) {
+        cout << "Error while opening file! Please check if the path was correct" << endl;
+        return;
+    }
+    //validate input
+    while (!in_file.eof()) {
+        student temp;
+        string placeHolder;
+        getline(in_file, placeHolder, ',');
+        temp.index = stoi(placeHolder);
+        getline(in_file, temp.id, ',');
+        getline(in_file, temp.firstName, ',');
+        getline(in_file, temp.lastName, ',');
+        getline(in_file, temp.gender, ',');
+        getline(in_file, temp.dob, ',');
+        getline(in_file, temp.socialid, ',');
+        addStudentNode(head, temp);
+    }
+    studentNode* curr = head;
+    while (curr->next && curr->next->next) {
+        curr = curr->next;
+    }
+    curr->next = nullptr;
+    in_file.close();
 }
 
 void addStudentIndividually(student &s) {

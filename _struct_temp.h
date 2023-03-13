@@ -23,7 +23,7 @@ struct scoreboard {
 };
 
 struct student {
-    int index;
+    unsigned int index;
     string id;
     string firstName;
     string lastName;
@@ -32,6 +32,11 @@ struct student {
     string socialid;
     stringNode* courses;
     string password;
+};
+
+struct studentNode {
+    student data;
+    studentNode* next{nullptr};
 };
 
 struct course {
