@@ -76,7 +76,7 @@ void displayListContentWithIndex(stringNode *head) {
     curr = nullptr;
 }
 
-string checkClassOfStudent(const student &obj, string schoolYear) {
+string checkClassOfStudent(const student &obj, const string &schoolYear) {
     string path = "Data/"+schoolYear+"/Classes/info.txt";
     stringNode *classList = nullptr;
     getContentOfFile(path, classList);
@@ -171,18 +171,20 @@ void createCourse(const semester &source) {
     cout << "\n--------Create course--------\n" << endl;
     cout << "Enter course ID: ";
     cin >> temp.id;
-    string pathID = "Data/"+source.schoolYear+"/Semester_"+source.sem+temp.id;
+    string pathID = "Data/"+source.schoolYear+"/Semester_"+source.sem+"/"+temp.id;
     if (mkdir(pathID.c_str()) == -1) {
         cout << "This course has been created for this semester" << endl;
         return;
     }
     ofstream ofile {pathID+"/info.txt"};
     cout << "Enter course name: ";  
-    cin >> temp.name;
+    cin.ignore();
+    getline(cin, temp.name);
     cout << "Enter classname: "; 
     cin >> temp.className;
     cout << "Enter teacher name: ";
-    cin >> temp.teacher;
+    cin.ignore();
+    getline(cin, temp.teacher);
     cout << "Enter number of credits: ";
     cin >> temp.credit;
     cout << "Enter maximum number of students: ";
@@ -191,6 +193,8 @@ void createCourse(const semester &source) {
     cin >> temp.day;
     cout << "Enter session: ";
     cin >> temp.session;
+    ofile << temp.id << "," << temp.name << "," << temp.className << "," << temp.teacher << "," << temp.credit << "," << temp.max << "," << temp.day << "," << temp.session << endl;
+    ofile.close();
 }
 
 void createClass(schoolYear &source) {
@@ -228,7 +232,7 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
         addStudentIndividually(temp);
         ofile << temp.id << endl;
         ofile.close();
-        string studentClass = checkClassOfStudent(temp);
+        string studentClass = checkClassOfStudent(temp, schoolYear);
         if (studentClass == "others") {
             if (mkdir(("Data/"+schoolYear+"/others/"+temp.id).c_str()) == -1) {
                 return;
@@ -251,7 +255,7 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
         string classPath = "Data/"+schoolYear+"/Classes/";
         while (curr) {
             ofile << curr->data.id << endl;
-            string studentClass = checkClassOfStudent(curr->data);
+            string studentClass = checkClassOfStudent(curr->data, schoolYear);
             if (studentClass == "others") {
                 if (mkdir(("Data/"+schoolYear+"/others/"+curr->data.id).c_str()) == -1) {
                     continue;

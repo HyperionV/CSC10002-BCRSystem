@@ -11,9 +11,9 @@ void createCourse(const semester &obj);
 
 void addStudentToCourse(course &c);
 void addStudentToClass(classes &c);
-void addStudentByFile();
-void addStudentIndividually();
+void addStudentByFile(studentNode *&head);
+void addStudentIndividually(student &s);
 void saveStudentInfo(string path, const student &source);
 void addStudentNode(studentNode *&head, const student &source);
 
-string checkClassOfStudent(const student &obj);
+string checkClassOfStudent(const student &obj, const string &schoolYear);
