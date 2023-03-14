@@ -32,9 +32,11 @@ student getStudentData(std::string id, std::string pathStudent) {
 			A.gender = tmp.substr(findNthOccurrence(tmp, ',', 3) + 1, 1); //M/F
 			A.socialid = tmp.substr(findNthOccurrence(tmp, ',', 5) + 1, 12); //1234567890ab
 			A.dob = tmp.substr(findNthOccurrence(tmp, ',', 6) + 1, 8); //dd/mm/yy
+			findId.close();
 			return A;
 		}
 	}
+	findId.close();
 	std::cout << "Couldn't find student with that ID. Please try again.\n";
 	getStudentData(id, pathStudent);
 }
