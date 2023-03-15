@@ -10,8 +10,15 @@ int findNthOccurrence(std::string s, char x, int count) {
 	return -1;
 }
 
+std::string returnPath(int schoolYear, std::string StudentClass, std::string studentID) {
+	std::string pathStudent = "Data/" + schoolYear + "/Classes/" + StudentClass + "/" + studentID;
+	return pathStudent;
+}
+
 student getStudentData(std::string id, std::string pathStudent) {
-	fstream findId;
+	int schoolYear = std::stoi(id.substr(0, 3)) + 2000;  //assuming no students got accepted before 2000
+	pathStudent = returnPath(schoolYear , ,id); //how to define which class
+	ifstream findId;
 	findId.open(pathStudent);
 	if (!findID.is_open()) {
 		std::cout << "Unable to locate student file\n";
@@ -39,7 +46,8 @@ student getStudentData(std::string id, std::string pathStudent) {
 		}
 	}
 	findId.close();
-	std::cout << "Couldn't find student with that ID. Please try again.\n";
+	std::cout << "Couldn't find student with that ID. Please retype your id and try again.\n";
+	cin >> id;
 	getStudentData(id, pathStudent);
 }
 
