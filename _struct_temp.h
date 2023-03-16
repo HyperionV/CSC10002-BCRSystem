@@ -15,7 +15,7 @@ struct courseNode;
 struct stringNode {
     int idx;
     string data;
-    stringNode* next{nullptr};
+    stringNode* next = nullptr;
 };
 
 struct scoreboard {
@@ -33,9 +33,9 @@ struct student {
     string gender;
     string dob;
     string socialid;
-    stringNode* _course;
+    stringNode* _course = nullptr;
     string className;
-    string password;
+    string password = defaultPassword;
 };
 
 struct studentNode {
@@ -53,7 +53,7 @@ struct course {
     unsigned int max = 50;
     string day;
     string session;
-    studentNode* enrolled;
+    studentNode* enrolled = nullptr;
 };
 
 struct courseNode {
@@ -64,12 +64,12 @@ struct courseNode {
 
 struct semester {
     string name;
-    courseNode* _course;
+    courseNode* _course = nullptr;
 };
 
 struct _class {
     string name;
-    studentNode* _student;
+    studentNode* _student = nullptr;
 };
 
 struct classNode {
@@ -80,6 +80,6 @@ struct classNode {
 
 struct schoolYear {
     string _schoolYear;
-    classNode* _class;
+    classNode* _class = nullptr;
     semester *_semester;
 };

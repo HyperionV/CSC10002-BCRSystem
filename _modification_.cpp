@@ -26,6 +26,7 @@ void addStudentNode(studentNode *&head, const student &source) {
     if (head == nullptr) {
         head = new studentNode;
         head->data = source;
+        head->data.index = 1;
         head->next = nullptr;
         return;
     }
@@ -35,6 +36,9 @@ void addStudentNode(studentNode *&head, const student &source) {
     }
     studentNode *curr = new studentNode;
     curr->data = source;
+    if (source.index == 0) {
+        curr->data.index = temp->data.index+1;
+    }
     curr->next = nullptr;
     temp->next = curr;
     temp = curr = nullptr;
@@ -122,6 +126,7 @@ void addStudentByFile(studentNode *&head) {
         addStudentNode(head, temp);
     }
     studentNode* curr = head;
+    //the last line will be a blank line so we have to manually remove it
     while (curr->next && curr->next->next) {
         curr = curr->next;
     }
@@ -323,3 +328,25 @@ void createClass(schoolYear &SC) {
     addClassNode(SC._class, temp);
     cout << "Created new class " << name << endl;
 }
+
+void addStudentToClass(_class &c) {
+    cout << "\n---------Add student to class--------\n" << endl;
+    cout << "Choose a way: \n\t1. Individually \n\t2. By file" << endl;
+    cout << "Choose an option: ";
+    int choice;
+    cin >> choice;
+    if (choice == 1) {
+        student temp;
+        addStudentIndividually(temp);
+        temp.index = 0;
+        temp.className = c.name;
+        addStudentNode(c._student, temp);
+    }
+    else if (choice == 2) {
+        addStudentByFile(c._student);
+    }
+    else {
+        cout << "Invalid option!" << endl;
+    }
+}
+
