@@ -19,6 +19,10 @@ void deleteClassList(classNode *&head);
 classNode* findClassName(classNode *head, const string &className);
 studentNode* findStudent(studentNode *head, const string &studentID);
 courseNode* findCourse(courseNode *head, const string &ID);
+void deleteStringNode(stringNode *&head, const string &target);
+void deleteCourseNode(courseNode *&head, const string &ID);
+void deleteClassNode(classNode *&head, const string &className);
+void deleteStudentNode(studentNode *&head, const string &studentID);
 
 //main functions prototypes
 void createSchoolYear(schoolYear &year);
