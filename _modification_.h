@@ -26,3 +26,4 @@ void createClass(schoolYear &SC);
 void addStudentToClass(_class &c);
 void createSemester(schoolYear &SY);
 void createCourse(semester &_semester);
+void addStudentToCourse(course &_course);

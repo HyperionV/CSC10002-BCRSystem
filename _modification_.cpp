@@ -405,3 +405,24 @@ void createCourse(semester &_semester) {
 
     //add enrolled students
 }
+
+void addStudentToCourse(course &_course) {
+    cout << "\n---------Add student to course--------\n" << endl;
+    cout << "Choose a way: \n\t1. Individually \n\t2. By file" << endl;
+    cout << "Choose an option: ";
+    int choice;
+    cin >> choice;
+    if (choice == 1) {
+        student temp;
+        addStudentIndividually(temp);
+        temp.index = 0;
+        addStudentNode(_course.enrolled, temp);
+    }
+    else if (choice == 2) {
+        addStudentByFile(_course.enrolled);
+    }
+    else {
+        cout << "Invalid option!" << endl;
+    }
+}
+
