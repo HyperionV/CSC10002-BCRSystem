@@ -1,5 +1,7 @@
 #include "_modification_.h"
 
+//students' indexes????
+
 void addStringNode(stringNode *&head, const string &data) {
     if (head == nullptr) {
         head = new stringNode;
@@ -94,7 +96,7 @@ string checkClassOfStudent(const student &obj, const string &schoolYear) {
 
 void saveStudentInfo(string path, const student &source) {
     ofstream studentInfo {path};
-    studentInfo << source.id << "," << source.firstName << "," << source.lastName << "," << source.gender << "," << source.dob << "," << source.socialid << "," << defaultPassword << endl;
+    studentInfo << source.id << "," << source.firstName << "," << source.lastName << "," << source.gender << "," << source.dob << "," << source.socialid << endl;
     studentInfo.close();
 }
 
@@ -256,6 +258,7 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
             string studentClass = checkClassOfStudent(curr->data, schoolYear);
             if (studentClass == "others") {
                 cout << "Error! Unknown student" << endl;
+                curr = curr->next;
                 continue;
             }
             ofile << curr->data.id << endl;
@@ -309,6 +312,7 @@ void addStudentToClass(const string &schoolYear, const string &className) {
         ofstream classInfo {classPath+"/info.txt", std::ios::app | std::ios::ate};
         while (studentList) {
             if (checkClassOfStudent(studentList->data, schoolYear) != "others") {
+                studentList = studentList->next;
                 continue;
             }
             classInfo << studentList->data.id << endl;
@@ -372,4 +376,28 @@ void addStudentIndividually(student &s) {
     cin >> s.dob;
     cout << "Enter social ID: ";
     cin >> s.socialid;
+}
+
+void exportStudentListOfClass(const string &schoolYear, const string &className) {
+    string classPath = "Data/"+schoolYear+"/Classes/"+className;
+    string file = schoolYear+"_"+className+"_students_Export.txt";
+    ofstream exportFile {"Export/"+file};
+    stringNode *studentList = nullptr;
+    getContentOfFile(classPath+"/info.txt", studentList);
+    while (studentList) {
+        ifstream studentInfo {classPath+"/"+studentList->data+"/info.txt"};
+        if (!studentInfo) {
+            cout << "Error! Cannot open student info file" << endl;
+            studentList = studentList->next;
+            continue;
+        }
+        string data;
+        getline(studentInfo, data);
+        studentInfo.close();
+        exportFile << data << endl;
+        studentList = studentList->next;
+
+        //dispose of the linked list here
+    }
+    exportFile.close();
 }
