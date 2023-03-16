@@ -206,9 +206,45 @@ void addClassNode(classNode *&head, const _class &c) {
     curr = nullptr;
 }
 
+classNode* findClassName(classNode *head, const string &className) {
+    while (head) {
+        if (head->data.name == className) {
+            classNode *temp = new classNode;
+            temp->data = head->data;
+            return temp;
+        }
+        head = head->next;
+    }
+    return nullptr;
+}
+
+studentNode* findStudent(studentNode *head, const string &studentID) {
+    while (head) {
+        if (head->data.id == studentID) {
+            studentNode *temp = new studentNode;
+            temp->data = head->data;
+            return temp;
+        }
+        head = head->next;
+    }
+    return nullptr;
+}
+
+courseNode* findCourse(courseNode *head, const string &ID) {
+    while (head) {
+        if (head->data.id == ID) {
+            courseNode *temp = new courseNode;
+            temp->data = head->data;
+            return temp;
+        }
+        head = head->next;
+    }
+    return nullptr;
+}
 //The main part
 
 void createSchoolYear(schoolYear &year) {
+    cout << "\n---------Create new school year----------\n" << endl;
     string SC;
     cout << "Enter school year: ";
     cin >> SC;
@@ -239,4 +275,10 @@ void createSchoolYear(schoolYear &year) {
     }
 
     //add create classes
+
+}
+
+void createClass(schoolYear &SC) {
+    cout << "\n----------Create class----------\n" << endl;
+    
 }
