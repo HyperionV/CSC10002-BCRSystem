@@ -230,15 +230,14 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
     if (choice == 2) {
         student temp;
         addStudentIndividually(temp);
-        ofile << temp.id << endl;
-        ofile.close();
         string studentClass = checkClassOfStudent(temp, schoolYear);
         if (studentClass == "others") {
-            if (mkdir(("Data/"+schoolYear+"/others/"+temp.id).c_str()) == -1) {
-                return;
-            }
-            saveStudentInfo("Data/"+schoolYear+"/others/"+temp.id+"/info.txt", temp);
+            cout << "Error! Unknown student!" << endl;
+            ofile.close();
+            return;
         }
+        ofile << temp.id << endl;
+        ofile.close();
         string studentPath = "Data/"+schoolYear+"/Classes/"+studentClass+"/"+temp.id;
         ofstream studentInfo {studentPath+"/info.txt", std::ios::app | std::ios::ate};
         studentInfo << c.id << endl;
@@ -254,14 +253,12 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
         studentNode *curr = head;
         string classPath = "Data/"+schoolYear+"/Classes/";
         while (curr) {
-            ofile << curr->data.id << endl;
             string studentClass = checkClassOfStudent(curr->data, schoolYear);
             if (studentClass == "others") {
-                if (mkdir(("Data/"+schoolYear+"/others/"+curr->data.id).c_str()) == -1) {
-                    continue;
-                }
-                saveStudentInfo("Data/"+schoolYear+"/others/"+curr->data.id+"/info.txt", curr->data);
+                cout << "Error! Unknown student" << endl;
+                continue;
             }
+            ofile << curr->data.id << endl;
             string studentPath = "Data/"+schoolYear+"/Classes/"+studentClass+"/"+curr->data.id;
             ofstream studentInfo {studentPath+"/info.txt", std::ios::app | std::ios::ate};
             studentInfo << c.id << endl;
@@ -273,6 +270,56 @@ void addStudentToCourse(course &c, const string &schoolYear, const string &sem) 
             
             //add efficient method to remove linked list here
         }
+        ofile.close();
+    }
+    else {
+        cout << "Invalid option!" << endl;
+        return;
+    }
+}
+
+void addStudentToClass(const string &schoolYear, const string &className) {
+    cout << "\n--------Add student to class--------\n" << endl;
+    string classPath = "Data/"+schoolYear+"/Classes"+className;
+    cout << "Choose a way to add: \n\t1. By file \n\t2. Individually" << endl;
+    cout << "Your choice: ";
+    int choice;
+    cin >> choice;
+    //add input validation
+    //check if a student has been in that class
+    if (choice == 2) {
+        student temp;
+        addStudentIndividually(temp);
+        if (checkClassOfStudent(temp, schoolYear) != "others") {
+            cout << "That student has already been assigned to a class" << endl;
+            return;
+        }
+        ofstream classInfo {classPath+"/info.txt", std::ios::app | std::ios::ate};
+        classInfo << temp.id << endl;
+        classInfo.close();
+        string studentPath = classPath+"/"+temp.id;
+        mkdir(studentPath.c_str());
+        mkdir((studentPath+"/Scoreboard").c_str());
+        saveStudentInfo(studentPath+"/info.txt", temp);
+    }
+    else if (choice == 1) {
+        studentNode *studentList = nullptr;
+        addStudentByFile(studentList);
+        string classPath = "Data/"+schoolYear+"/Classes"+className;
+        ofstream classInfo {classPath+"/info.txt", std::ios::app | std::ios::ate};
+        while (studentList) {
+            if (checkClassOfStudent(studentList->data, schoolYear) != "others") {
+                continue;
+            }
+            classInfo << studentList->data.id << endl;
+            string studentPath = classPath+"/"+studentList->data.id;
+            mkdir(studentPath.c_str());
+            mkdir((studentPath+"/Scoreboard").c_str());
+            saveStudentInfo(studentPath+"/info.txt", studentList->data);
+            studentList = studentList->next;
+            //remove this linked list completely later
+        }
+        classInfo.close();
     }
 }
 

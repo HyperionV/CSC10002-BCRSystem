@@ -15,5 +15,6 @@ void addStudentByFile(studentNode *&head);
 void addStudentIndividually(student &s);
 void saveStudentInfo(string path, const student &source);
 void addStudentNode(studentNode *&head, const student &source);
+void addStudentToClass(const string &schoolYear, const string &className);
 
 string checkClassOfStudent(const student &obj, const string &schoolYear);

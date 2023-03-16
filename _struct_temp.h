@@ -31,6 +31,7 @@ struct student {
     string dob;
     string socialid;
     stringNode* courses;
+    string className;
     string password;
 };
 
