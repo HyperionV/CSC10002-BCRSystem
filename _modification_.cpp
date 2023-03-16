@@ -206,7 +206,43 @@ void addClassNode(classNode *&head, const _class &c) {
     curr = nullptr;
 }
 
-//use deep copy constructor ??
+void deleteStringList(stringNode *&head) {
+    while (head) {
+        stringNode *curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
+void deleteStudentList(studentNode *&head) {
+    while (head) {
+        studentNode *curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
+void deleteClassList(classNode *&head) {
+    while (head) {
+        classNode *curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
+void deleteCourseList(courseNode *&head) {
+    while (head) {
+        courseNode *curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
+    //use deep copy constructor ??
 classNode* findClassName(classNode *head, const string &className) {
     while (head) {
         if (head->data.name == className) {
