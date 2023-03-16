@@ -499,3 +499,8 @@ void removeStudentFromCourse(course &_course, const string &studentID) {
     deleteStudentNode(_course.enrolled, studentID);
 }
 
+void deleteCourse(semester &_semester, const string &ID) {
+    cout << "\n----------Delete course----------\n" << endl;
+    deleteStudentList(findCourse(_semester._course, ID)->data.enrolled);
+    deleteCourseNode(_semester._course, ID);
+}
