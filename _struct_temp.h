@@ -1,13 +1,16 @@
 #include "_library_.h"
 
 struct schoolYear;
-struct classes;
+struct _class;
 struct semester;
 struct course;
 struct student;
 struct scoreboard;
 struct staff;
 struct stringNode;
+struct studentNode;
+struct classNode;
+struct courseNode;
 
 struct stringNode {
     int index;
@@ -30,14 +33,14 @@ struct student {
     string gender;
     string dob;
     string socialid;
-    stringNode* courses;
+    stringNode* _course;
     string className;
     string password;
 };
 
 struct studentNode {
     student data;
-    studentNode* next{nullptr};
+    studentNode* next = nullptr;
 };
 
 struct course {
@@ -49,22 +52,31 @@ struct course {
     unsigned int max = 50;
     string day;
     string session;
-    stringNode* enrolled;
+    studentNode* enrolled;
+};
+
+struct courseNode {
+    course data;
+    courseNode* next = nullptr;
 };
 
 struct semester {
-    string schoolYear;
-    string sem;
-    stringNode* courses;
+    string name;
+    courseNode* _course;
 };
 
-struct classes {
+struct _class {
     string name;
-    stringNode* students;
+    studentNode* _student;
+};
+
+struct classNode {
+    _class data;
+    classNode *next = nullptr;
 };
 
 struct schoolYear {
-    string SY;
-    stringNode* classes;
-    stringNode* semester;
+    string _schoolYear;
+    classNode* _class;
+    semester *_semester;
 };
