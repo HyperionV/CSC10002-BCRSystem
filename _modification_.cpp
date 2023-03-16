@@ -355,6 +355,7 @@ void addStudentToClass(_class &c) {
 }
 
 void createSemester(schoolYear &SY) {
+    cout << "\n----------Create semester----------\n" << endl;
     cout << "Choose a semester to create: \n\t1. Spring semester \n\t2.Summer semester \n\t3. Autumn semester" << endl;
     int choice;
     cout << "Choose an option: ";
@@ -375,3 +376,32 @@ void createSemester(schoolYear &SY) {
     cout << "Created " << SY._semester[choice-1].name << " for school year " << SY._schoolYear << ". The semester starts on " << SY._semester[choice-1].start << ", ends on " << SY._semester[choice-1].end << endl; 
 }
 
+void createCourse(semester &_semester) {
+    cout << "\n----------Create course----------\n";
+    course temp;
+    cout << "Enter course ID: ";
+    cin >> temp.id;
+    if (findCourse(_semester._course, temp.id) != nullptr) {
+        cout << "This course has already been created in this semester" << endl;
+        return;
+    }
+    cout << "Enter course name: ";  
+    cin.ignore();
+    getline(cin, temp.name);
+    cout << "Enter classname: "; 
+    cin >> temp.className;
+    cout << "Enter teacher name: ";
+    cin.ignore();
+    getline(cin, temp.teacher);
+    cout << "Enter number of credits: ";
+    cin >> temp.credit;
+    cout << "Enter maximum number of students: ";
+    cin >> temp.max;
+    cout << "Enter day of week: ";
+    cin >> temp.day;
+    cout << "Enter session: ";
+    cin >> temp.session;
+    addCourseNode(_semester._course, temp);
+
+    //add enrolled students
+}
