@@ -10,5 +10,8 @@ void addStudentIndividually(student &s);
 void saveStudentInfo(string path, const student &source);
 void addStudentNode(studentNode *&head, const student &source);
 void exportStudentListOfClass(const string &schoolYear, const string &className);
+void addCourseNode(courseNode *&head, const course &_course);
+void addClassNode(classNode *&head, const _class &c);
 
 //main functions prototypes
+void createSchoolYear(schoolYear &year);

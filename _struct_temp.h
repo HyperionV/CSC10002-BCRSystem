@@ -13,7 +13,7 @@ struct classNode;
 struct courseNode;
 
 struct stringNode {
-    int index;
+    int idx;
     string data;
     stringNode* next{nullptr};
 };
@@ -39,6 +39,7 @@ struct student {
 };
 
 struct studentNode {
+    int idx;
     student data;
     studentNode* next = nullptr;
 };
@@ -56,6 +57,7 @@ struct course {
 };
 
 struct courseNode {
+    int idx;
     course data;
     courseNode* next = nullptr;
 };
@@ -71,6 +73,7 @@ struct _class {
 };
 
 struct classNode {
+    int idx;
     _class data;
     classNode *next = nullptr;
 };

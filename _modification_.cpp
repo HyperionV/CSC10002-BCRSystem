@@ -7,7 +7,7 @@ void addStringNode(stringNode *&head, const string &data) {
         head = new stringNode;
         head->data = data;
         head->next = nullptr;
-        head->index = 1;
+        head->idx = 1;
         return;
     }
     stringNode *temp = head;
@@ -17,7 +17,7 @@ void addStringNode(stringNode *&head, const string &data) {
     stringNode* curr = new stringNode;
     curr->data = data;
     curr->next = nullptr;
-    curr->index = temp->index+1;
+    curr->idx = temp->idx+1;
     temp->next = curr;
     temp = curr = nullptr;
 }
@@ -72,7 +72,7 @@ void displayListContentWithIndex(stringNode *head) {
     }
     stringNode *curr = head;
     while (curr) {
-        cout << "\t" << curr->index << ". " << curr->data << endl;
+        cout << "\t" << curr->idx << ". " << curr->data << endl;
         curr = curr->next;
     }
     curr = nullptr;
@@ -172,13 +172,71 @@ void exportStudentListOfClass(const string &schoolYear, const string &className)
     exportFile.close();
 }
 
-void addCourseNode() {
-
+void addCourseNode(courseNode *&head, const course &_course) {
+    if (head == nullptr) {
+        head = new courseNode;
+        head->data = _course;
+        head->idx = 1;
+        return;
+    }
+    courseNode *curr = head;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    curr->next = new courseNode;
+    curr->next->data = _course;
+    curr->next->idx = curr->idx+1;
+    curr = nullptr;
 }
 
-void addClassNode() {
-
+void addClassNode(classNode *&head, const _class &c) {
+    if (head == nullptr) {
+        head = new classNode;
+        head->data = c;
+        head->idx = 1;
+        return;
+    }
+    classNode *curr = head;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    curr->next = new classNode;
+    curr->next->data = c;
+    curr->next->idx = curr->idx+1;
+    curr = nullptr;
 }
 
 //The main part
 
+void createSchoolYear(schoolYear &year) {
+    string SC;
+    cout << "Enter school year: ";
+    cin >> SC;
+    if (SC.length() < 5) {
+        string temp = SC;
+        temp[3] += 1;
+        SC += "-" + temp;
+    }
+    if (SC.length() > 5) {
+        string temp1 = SC.substr(4);
+        string temp2 = SC.substr(5, 4);
+        if (abs(stoi(temp1) - stoi(temp2)) != 1 || SC[4] != '-') {
+            cout << "Invalid input" << endl;
+            return;
+        }
+    }
+    string yearPath = "Data/"+SC;
+    if (rename((yearPath).c_str(), (yearPath).c_str()) == -1) {
+        cout << "That school year has already been created" << endl;
+        return;
+    }
+    year._schoolYear = SC;
+    year._class = nullptr;
+    year._semester = new semester[3];
+    for (int i = 0; i < 3; i++){
+        year._semester->name = "NULL";
+        year._semester->_course = nullptr;
+    }
+
+    //add create classes
+}
