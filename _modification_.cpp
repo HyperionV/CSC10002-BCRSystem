@@ -494,6 +494,8 @@ void addStudentToCourse(course &_course) {
     }
 }
 
-void updateCourseInfo(course &_course) {
-    
+void removeStudentFromCourse(course &_course, const string &studentID) {
+    cout << "\n----------Remove student from course----------\n" << endl;
+    deleteStudentNode(_course.enrolled, studentID);
 }
+
