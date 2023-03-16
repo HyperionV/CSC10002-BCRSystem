@@ -305,8 +305,12 @@ void createSchoolYear(schoolYear &year) {
     year._schoolYear = SC;
     year._class = nullptr;
     year._semester = new semester[3];
+    year._semester[0].name = "Spring semester";
+    year._semester[1].name = "Summer semester";
+    year._semester[2].name = "Autumn semester";
     for (int i = 0; i < 3; i++){
-        year._semester->name = "NULL";
+        year._semester->start = "NULL";
+        year._semester->end = "NULL";
         year._semester->_course = nullptr;
     }
 
@@ -348,5 +352,26 @@ void addStudentToClass(_class &c) {
     else {
         cout << "Invalid option!" << endl;
     }
+}
+
+void createSemester(schoolYear &SY) {
+    cout << "Choose a semester to create: \n\t1. Spring semester \n\t2.Summer semester \n\t3. Autumn semester" << endl;
+    int choice;
+    cout << "Choose an option: ";
+    cin >> choice;
+    if (SY._semester[choice-1].start != "NULL") {
+        cout << "This semester has already been created" << endl;
+        return;
+    }
+    string tempStart;
+    string tempEnd;
+    //add date validation
+    cout << "Enter start date: ";
+    cin >> tempStart;
+    cout << "Enter end date: ";
+    cin >>tempEnd;
+    SY._semester[choice-1].start = tempStart;
+    SY._semester[choice-1].end = tempEnd;
+    cout << "Created " << SY._semester[choice-1].name << " for school year " << SY._schoolYear << ". The semester starts on " << SY._semester[choice-1].start << ", ends on " << SY._semester[choice-1].end << endl; 
 }
 

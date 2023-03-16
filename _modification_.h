@@ -24,3 +24,4 @@ courseNode* findCourse(courseNode *head, const string &ID);
 void createSchoolYear(schoolYear &year);
 void createClass(schoolYear &SC);
 void addStudentToClass(_class &c);
+void createSemester(schoolYear &SY);

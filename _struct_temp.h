@@ -64,6 +64,8 @@ struct courseNode {
 
 struct semester {
     string name;
+    string start;
+    string end;
     courseNode* _course = nullptr;
 };
 
