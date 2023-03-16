@@ -18,3 +18,4 @@ courseNode* findCourse(courseNode *head, const string &ID);
 
 //main functions prototypes
 void createSchoolYear(schoolYear &year);
+void createClass(schoolYear &SC);

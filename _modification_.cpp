@@ -206,12 +206,11 @@ void addClassNode(classNode *&head, const _class &c) {
     curr = nullptr;
 }
 
+//use deep copy constructor ??
 classNode* findClassName(classNode *head, const string &className) {
     while (head) {
         if (head->data.name == className) {
-            classNode *temp = new classNode;
-            temp->data = head->data;
-            return temp;
+            return head;
         }
         head = head->next;
     }
@@ -221,9 +220,7 @@ classNode* findClassName(classNode *head, const string &className) {
 studentNode* findStudent(studentNode *head, const string &studentID) {
     while (head) {
         if (head->data.id == studentID) {
-            studentNode *temp = new studentNode;
-            temp->data = head->data;
-            return temp;
+            return head;
         }
         head = head->next;
     }
@@ -233,9 +230,7 @@ studentNode* findStudent(studentNode *head, const string &studentID) {
 courseNode* findCourse(courseNode *head, const string &ID) {
     while (head) {
         if (head->data.id == ID) {
-            courseNode *temp = new courseNode;
-            temp->data = head->data;
-            return temp;
+            return head;
         }
         head = head->next;
     }
@@ -280,5 +275,15 @@ void createSchoolYear(schoolYear &year) {
 
 void createClass(schoolYear &SC) {
     cout << "\n----------Create class----------\n" << endl;
-    
+    cout << "Enter class name: ";
+    string name;
+    cin >> name;
+    if (findClassName(SC._class, name)) {
+        cout << "This class has already been added" << endl;
+        return;
+    }
+    _class temp;
+    temp.name = name;
+    addClassNode(SC._class, temp);
+    cout << "Created new class " << name << endl;
 }
