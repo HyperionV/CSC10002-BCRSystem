@@ -33,7 +33,7 @@ struct student {
     string gender;
     string dob;
     string socialid;
-    stringNode* _course = nullptr;
+    courseNode* _course = nullptr;
     string className;
     string password = defaultPassword;
 };

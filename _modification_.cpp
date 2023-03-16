@@ -277,6 +277,74 @@ courseNode* findCourse(courseNode *head, const string &ID) {
     }
     return nullptr;
 }
+
+void deleteStringNode(stringNode *&head, const string &target) {
+    stringNode *newhead = nullptr;
+    while (head) {
+        if (head->data == target) {
+            stringNode *curr = head;
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addStringNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    newhead = nullptr;
+}
+
+void deleteCourseNode(courseNode *&head, const string &ID) {
+    courseNode *newhead = nullptr;
+    while (head) {
+        if (head->data.id == ID) {
+            courseNode *curr = head;
+            deleteStudentList(curr->data.enrolled);
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addCourseNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    newhead = nullptr;
+}
+
+void deleteClassNode(classNode *&head, const string &className) {
+    classNode* newhead = nullptr;
+    while (head) {
+        if (head->data.name == className) {
+            classNode *curr = head;
+            deleteStudentList(curr->data._student);
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addClassNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    newhead = nullptr;
+}
+
+void deleteStudentNode(studentNode *&head, const string &studentID) {
+    studentNode *newhead = nullptr;
+    while (head) {
+        if (head->data.id == studentID) {
+            studentNode *curr = head;
+            deleteCourseList(curr->data._course);
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addStudentNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    newhead = nullptr;
+}
+
 //The main part
 
 void createSchoolYear(schoolYear &year) {
@@ -426,3 +494,6 @@ void addStudentToCourse(course &_course) {
     }
 }
 
+void updateCourseInfo(course &_course) {
+    
+}
