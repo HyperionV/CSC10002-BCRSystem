@@ -226,6 +226,21 @@ void addScoreboardNode(scoreboardNode *&head, const scoreboard &score) {
     curr = nullptr;
 }
 
+void addBasicCourseInfoNode(basicCourseInfoNode *&head, const basicCourseInfo &_course) {
+    if (head == nullptr) {
+        head = new basicCourseInfoNode;
+        head->data = _course;
+        return;
+    }
+    basicCourseInfoNode *curr = head;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    curr->next = new basicCourseInfoNode;
+    curr->next->data = _course;
+    curr = nullptr;
+}
+
 void deleteStringList(stringNode *&head) {
     while (head) {
         stringNode *curr = head;
@@ -239,6 +254,7 @@ void deleteStudentList(studentNode *&head) {
     while (head) {
         studentNode *curr = head;
         head = head->next;
+        deleteBasicCourseList(curr->data._course);
         delete curr;
     }
     head = nullptr;
@@ -248,6 +264,7 @@ void deleteClassList(classNode *&head) {
     while (head) {
         classNode *curr = head;
         head = head->next;
+        deleteStudentList(curr->data._student);
         delete curr;
     }
     head = nullptr;
@@ -257,6 +274,7 @@ void deleteCourseList(courseNode *&head) {
     while (head) {
         courseNode *curr = head;
         head = head->next;
+        deleteStudentList(curr->data.enrolled);
         delete curr;
     }
     head = nullptr;
@@ -266,6 +284,16 @@ void deleteScoreboardList(scoreboardNode *&head) {
     while (head) {
         scoreboardNode *curr = head;
         head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
+void deleteBasicCourseList(basicCourseInfoNode *&head) {
+    while (head) {
+        basicCourseInfoNode *curr = head;
+        head = head->next;
+        deleteScoreboardList(curr->data.score);
         delete curr;
     }
     head = nullptr;
@@ -305,6 +333,16 @@ courseNode* findCourse(courseNode *head, const string &ID) {
 scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID) {
     while (head) {
         if (head->data.courseID == ID) {
+            return head;
+        }
+        head = head->next;
+    }
+    return nullptr;
+}
+
+basicCourseInfoNode* findBasicCourse(basicCourseInfoNode *head, const string &ID) {
+    while (head) {
+        if (head->data.id == ID) {
             return head;
         }
         head = head->next;
@@ -367,7 +405,7 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
     while (head) {
         if (head->data.id == studentID) {
             studentNode *curr = head;
-            deleteCourseList(curr->data._course);
+            deleteBasicCourseList(curr->data._course);
             head = head->next;
             delete curr;
             continue;
@@ -389,6 +427,23 @@ void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
             continue;
         }
         addScoreboardNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    newhead = nullptr;
+}
+
+void deleteBasicCourseNode(basicCourseInfoNode *&head, const string &ID) {
+    basicCourseInfoNode *newhead = nullptr;
+    while (head) {
+        if (head->data.id == ID) {
+            basicCourseInfoNode *curr = head;
+            deleteScoreboardList(curr->data.score);
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addBasicCourseInfoNode(newhead, head->data);
         head = head->next;
     }
     head = newhead;
@@ -561,4 +616,3 @@ void updateCourseInfo(course &_course) {
 }
 
 //Data export functions
-

@@ -12,6 +12,7 @@ struct studentNode;
 struct classNode;
 struct courseNode;
 struct scoreboardNode;
+struct basicCourseInfo;
 
 struct stringNode {
     int idx;
@@ -41,7 +42,7 @@ struct student {
     string gender;
     string dob;
     string socialid;
-    courseNode* _course = nullptr;
+    basicCourseInfoNode* _course = nullptr;
     string className;
     string password = defaultPassword;
 };
@@ -62,6 +63,17 @@ struct course {
     string day;
     string session;
     studentNode* enrolled = nullptr;
+};
+
+struct basicCourseInfo {
+    string id;
+    string name;
+    scoreboardNode *score = nullptr;
+};
+
+struct basicCourseInfoNode {
+    basicCourseInfo data;
+    basicCourseInfoNode* next = nullptr;
 };
 
 struct courseNode {
