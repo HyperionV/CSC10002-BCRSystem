@@ -97,7 +97,7 @@ void displayStudentList(studentNode *head) {
 
 void saveStudentInfo(string path, const student &source) {
     ofstream studentInfo {path};
-    studentInfo << source.index << " " << source.id << "," << source.firstName << "," << source.lastName << "," << source.gender << "," << source.dob << "," << source.socialid << endl;
+    studentInfo << source.index << "," << source.id << "," << source.firstName << "," << source.lastName << "," << source.gender << "," << source.dob << "," << source.socialid << endl;
     studentInfo.close();
 }
 
@@ -211,6 +211,21 @@ void addClassNode(classNode *&head, const _class &c) {
     curr = nullptr;
 }
 
+void addScoreboardNode(scoreboardNode *&head, const scoreboard &score) {
+    if (head == nullptr) {
+        head = new scoreboardNode;
+        head->data = score;
+        return;
+    }
+    scoreboardNode *curr = head;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    curr->next = new scoreboardNode;
+    curr->next->data = score;
+    curr = nullptr;
+}
+
 void deleteStringList(stringNode *&head) {
     while (head) {
         stringNode *curr = head;
@@ -247,6 +262,15 @@ void deleteCourseList(courseNode *&head) {
     head = nullptr;
 }
 
+void deleteScoreboardList(scoreboardNode *&head) {
+    while (head) {
+        scoreboardNode *curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
     //use deep copy constructor ??
 classNode* findClassName(classNode *head, const string &className) {
     while (head) {
@@ -271,6 +295,16 @@ studentNode* findStudent(studentNode *head, const string &studentID) {
 courseNode* findCourse(courseNode *head, const string &ID) {
     while (head) {
         if (head->data.id == ID) {
+            return head;
+        }
+        head = head->next;
+    }
+    return nullptr;
+}
+
+scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID) {
+    while (head) {
+        if (head->data.courseID == ID) {
             return head;
         }
         head = head->next;
@@ -345,7 +379,23 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
     newhead = nullptr;
 }
 
-//The main part
+void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
+    scoreboardNode *newhead = nullptr;
+    while (head) {
+        if (head->data.courseID == ID) {
+            scoreboardNode *curr = head;
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addScoreboardNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    newhead = nullptr;
+}
+
+//main features functions
 
 void createSchoolYear(schoolYear &year) {
     cout << "\n---------Create new school year----------\n" << endl;
@@ -445,6 +495,7 @@ void createSemester(schoolYear &SY) {
 }
 
 void createCourse(semester &_semester) {
+    //add input validation here
     cout << "\n----------Create course----------\n";
     course temp;
     cout << "Enter course ID: ";
@@ -504,3 +555,10 @@ void deleteCourse(semester &_semester, const string &ID) {
     deleteStudentList(findCourse(_semester._course, ID)->data.enrolled);
     deleteCourseNode(_semester._course, ID);
 }
+
+void updateCourseInfo(course &_course) {
+    //requires view course info
+}
+
+//Data export functions
+

@@ -11,6 +11,7 @@ struct stringNode;
 struct studentNode;
 struct classNode;
 struct courseNode;
+struct scoreboardNode;
 
 struct stringNode {
     int idx;
@@ -19,10 +20,17 @@ struct stringNode {
 };
 
 struct scoreboard {
+    string courseID;
+    string courseName;
     double total;
     double final;
     double midterm;
     double other;
+};
+
+struct scoreboardNode {
+    scoreboard data;
+    scoreboardNode *next = nullptr;
 };
 
 struct student {
