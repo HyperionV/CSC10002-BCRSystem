@@ -42,7 +42,7 @@ struct student {
     string gender;
     string dob;
     string socialid;
-    basicCourseInfoNode* _course = nullptr;
+    scoreboardNode* _course = nullptr;
     string className;
     string password = defaultPassword;
 };
@@ -63,17 +63,6 @@ struct course {
     string day;
     string session;
     studentNode* enrolled = nullptr;
-};
-
-struct basicCourseInfo {
-    string id;
-    string name;
-    scoreboardNode *score = nullptr;
-};
-
-struct basicCourseInfoNode {
-    basicCourseInfo data;
-    basicCourseInfoNode* next = nullptr;
 };
 
 struct courseNode {

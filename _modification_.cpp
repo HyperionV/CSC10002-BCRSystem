@@ -153,30 +153,6 @@ void addStudentIndividually(student &s) {
     cin >> s.socialid;
 }
 
-void exportStudentListOfClass(const string &schoolYear, const string &className) {
-    string classPath = "Data/"+schoolYear+"/Classes/"+className;
-    string file = schoolYear+"_"+className+"_students_Export.txt";
-    ofstream exportFile {"Export/"+file};
-    stringNode *studentList = nullptr;
-    getContentOfFile(classPath+"/info.txt", studentList);
-    while (studentList) {
-        ifstream studentInfo {classPath+"/"+studentList->data+"/info.txt"};
-        if (!studentInfo) {
-            cout << "Error! Cannot open student info file" << endl;
-            studentList = studentList->next;
-            continue;
-        }
-        string data;
-        getline(studentInfo, data);
-        studentInfo.close();
-        exportFile << data << endl;
-        studentList = studentList->next;
-
-        //dispose of the linked list here
-    }
-    exportFile.close();
-}
-
 void addCourseNode(courseNode *&head, const course &_course) {
     if (head == nullptr) {
         head = new courseNode;
@@ -226,21 +202,6 @@ void addScoreboardNode(scoreboardNode *&head, const scoreboard &score) {
     curr = nullptr;
 }
 
-void addBasicCourseInfoNode(basicCourseInfoNode *&head, const basicCourseInfo &_course) {
-    if (head == nullptr) {
-        head = new basicCourseInfoNode;
-        head->data = _course;
-        return;
-    }
-    basicCourseInfoNode *curr = head;
-    while (curr->next) {
-        curr = curr->next;
-    }
-    curr->next = new basicCourseInfoNode;
-    curr->next->data = _course;
-    curr = nullptr;
-}
-
 void deleteStringList(stringNode *&head) {
     while (head) {
         stringNode *curr = head;
@@ -254,7 +215,7 @@ void deleteStudentList(studentNode *&head) {
     while (head) {
         studentNode *curr = head;
         head = head->next;
-        deleteBasicCourseList(curr->data._course);
+        deleteScoreboardList(curr->data._course);
         delete curr;
     }
     head = nullptr;
@@ -284,16 +245,6 @@ void deleteScoreboardList(scoreboardNode *&head) {
     while (head) {
         scoreboardNode *curr = head;
         head = head->next;
-        delete curr;
-    }
-    head = nullptr;
-}
-
-void deleteBasicCourseList(basicCourseInfoNode *&head) {
-    while (head) {
-        basicCourseInfoNode *curr = head;
-        head = head->next;
-        deleteScoreboardList(curr->data.score);
         delete curr;
     }
     head = nullptr;
@@ -333,16 +284,6 @@ courseNode* findCourse(courseNode *head, const string &ID) {
 scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID) {
     while (head) {
         if (head->data.courseID == ID) {
-            return head;
-        }
-        head = head->next;
-    }
-    return nullptr;
-}
-
-basicCourseInfoNode* findBasicCourse(basicCourseInfoNode *head, const string &ID) {
-    while (head) {
-        if (head->data.id == ID) {
             return head;
         }
         head = head->next;
@@ -405,7 +346,7 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
     while (head) {
         if (head->data.id == studentID) {
             studentNode *curr = head;
-            deleteBasicCourseList(curr->data._course);
+            deleteScoreboardList(curr->data._course);
             head = head->next;
             delete curr;
             continue;
@@ -433,21 +374,15 @@ void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
     newhead = nullptr;
 }
 
-void deleteBasicCourseNode(basicCourseInfoNode *&head, const string &ID) {
-    basicCourseInfoNode *newhead = nullptr;
-    while (head) {
-        if (head->data.id == ID) {
-            basicCourseInfoNode *curr = head;
-            deleteScoreboardList(curr->data.score);
-            head = head->next;
-            delete curr;
-            continue;
+bool checkStudentExistence(const schoolYear &_schoolYear, const student &_student) {
+    classNode *curr = _schoolYear._class;
+    while (curr) {
+        if (findStudent(curr->data._student, _student.id) != nullptr) {
+            return true;
         }
-        addBasicCourseInfoNode(newhead, head->data);
-        head = head->next;
+        curr = curr->next;
     }
-    head = newhead;
-    newhead = nullptr;
+    return false;
 }
 
 //main features functions
@@ -488,7 +423,6 @@ void createSchoolYear(schoolYear &year) {
     }
 
     //add create classes
-
 }
 
 void createClass(schoolYear &SC) {
@@ -506,25 +440,60 @@ void createClass(schoolYear &SC) {
     cout << "Created new class " << name << endl;
 }
 
-void addStudentToClass(_class &c) {
+void addStudentToClass(schoolYear &_schoolYear) {
     cout << "\n---------Add student to class--------\n" << endl;
+    classNode *curr = _schoolYear._class;
+    cout << "Choose a class: " << endl;
+    int idx = 1;
+    while (curr) {
+        cout << "\t" << idx << ". " << curr->data.name << endl;
+    }
+    int choice;
+    cout << "Choose an option: ";
+    cin >> choice;
+    idx = 1;
+    curr = _schoolYear._class;
+    while (curr) {
+        if (idx == choice) {
+            break;
+        }
+        idx++;
+        curr = curr->next;
+    }
+    _class c = curr->data;
     cout << "Choose a way: \n\t1. Individually \n\t2. By file" << endl;
     cout << "Choose an option: ";
-    int choice;
     cin >> choice;
     if (choice == 1) {
         student temp;
         addStudentIndividually(temp);
+        if (checkStudentExistence(_schoolYear, temp)) {
+            cout << "This student has already been added" << endl;
+            return;
+        }
         temp.index = 0;
         temp.className = c.name;
         addStudentNode(c._student, temp);
     }
     else if (choice == 2) {
-        addStudentByFile(c._student);
+        studentNode *_student = nullptr;
+        addStudentByFile(_student);
+        studentNode *currStudentNode = _student;
+        while (currStudentNode) {
+            if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
+                cout << "This student has already been added" << endl;
+                deleteStudentNode(_student, currStudentNode->data.id);
+                continue;
+            }
+            currStudentNode = currStudentNode->next;
+        }
+        c._student = _student;
+        _student = currStudentNode = nullptr;
     }
     else {
         cout << "Invalid option!" << endl;
     }
+    curr = nullptr;
 }
 
 void createSemester(schoolYear &SY) {
@@ -615,4 +584,22 @@ void updateCourseInfo(course &_course) {
     //requires view course info
 }
 
+    
+
 //Data export functions
+
+void exportCourseStudent(const string &_schoolYear, const course &_course) {
+    string filePath = "Export/"+_schoolYear+"_"+_course.name+".csv";
+    ofstream exportFile {filePath};
+    studentNode *curr = _course.enrolled;
+    while (curr) {
+        exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<endl;
+        curr = curr->next;
+    }
+    exportFile.close();
+    curr = nullptr;
+}
+
+
+    
+
