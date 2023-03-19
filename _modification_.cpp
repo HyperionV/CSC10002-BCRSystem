@@ -89,7 +89,7 @@ void displayStudentList(studentNode *head) {
     }
     studentNode *curr = head;
     while (curr) {
-        cout << "\t" << curr->data.id << ". " << curr->data.firstName << " " << curr->data.lastName << endl;
+        cout << "\t" << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << endl;
         curr = curr->next;
     }
     curr = nullptr;
@@ -101,7 +101,7 @@ void saveStudentInfo(string path, const student &source) {
     studentInfo.close();
 }
 
-void addStudentByFile(studentNode *&head) {
+void addStudentByFile(studentNode *&head, const string &className) {
     cout << "\n--------Add students by file--------\n" << endl;
     cout << "Enter file path: ";
     string filePath;
@@ -123,6 +123,7 @@ void addStudentByFile(studentNode *&head) {
         getline(in_file, temp.gender, ',');
         getline(in_file, temp.dob, ',');
         getline(in_file, temp.socialid, ',');
+        temp.className = className;
         addStudentNode(head, temp);
     }
     studentNode* curr = head;
@@ -142,8 +143,10 @@ void addStudentIndividually(student &s) {
     cin >> s.id;
     cout << "Enter student's first name: ";
     cin >> s.firstName;
+    cin.ignore();
     cout << "Enter student's last name: ";
     cin >> s.lastName;
+    cin.ignore();
     cout << "Enter student's gender [M/F]: ";
     cin >> s.gender;
     s.gender = toupper(s.gender[0]);
@@ -397,16 +400,16 @@ void createSchoolYear(schoolYear &year) {
         temp[3] += 1;
         SC += "-" + temp;
     }
-    if (SC.length() > 5) {
-        string temp1 = SC.substr(4);
-        string temp2 = SC.substr(5, 4);
-        if (abs(stoi(temp1) - stoi(temp2)) != 1 || SC[4] != '-') {
-            cout << "Invalid input" << endl;
-            return;
-        }
-    }
+    // if (SC.length() > 5) {
+    //     string temp1 = SC.substr(4);
+    //     string temp2 = SC.substr(5, 4);
+    //     if (abs(stoi(temp1) - stoi(temp2)) != 1 || SC[4] != '-') {
+    //         cout << "Invalid input" << endl;
+    //         return;
+    //     }
+    // }
     string yearPath = "Data/"+SC;
-    if (rename((yearPath).c_str(), (yearPath).c_str()) == -1) {
+    if (rename((yearPath).c_str(), (yearPath).c_str()) == 1) {
         cout << "That school year has already been created" << endl;
         return;
     }
@@ -422,7 +425,50 @@ void createSchoolYear(schoolYear &year) {
         year._semester->_course = nullptr;
     }
 
-    //add create classes
+    while (true) {
+        cout << "Current classes: " << endl;
+        classNode *currClass = year._class;
+        while (currClass) {
+            cout << "\t" << currClass->data.name << "\n";
+            currClass = currClass->next;
+        }
+        cout << "Do you want to add new class? [Y/N]: ";
+        char choice;
+        cin >> choice;
+        if (choice == 'Y') {
+            createClass(year);
+        }
+        else if (choice == 'N') {
+            cout << "Creating classes phase compeleted" << endl;
+            break;
+        }
+        else {
+            cout << "Invalid choice, please try again" << endl;
+        }
+    }
+    cout << "Add new students to the newly created classes" << endl;
+    while (true) {
+        cout << "Add new student? [Y/N]: ";
+        char choice;
+        cin >> choice;
+        if (choice == 'Y') {
+            addStudentToClass(year);
+        }
+        else if (choice == 'N') {
+            cout << "Adding student phase completed" << endl;
+            cout << "Displaying students of classes: " << endl;
+            classNode *currClass = year._class;
+            while (currClass) {
+                cout << "\t" << currClass->data.name << ": \n";
+                displayStudentList(currClass->data._student);
+                currClass = currClass->next;
+            }
+            break;
+        }
+        else {
+            cout << "Invalid choice please try again" << endl;
+        }
+    }
 }
 
 void createClass(schoolYear &SC) {
@@ -446,7 +492,8 @@ void addStudentToClass(schoolYear &_schoolYear) {
     cout << "Choose a class: " << endl;
     int idx = 1;
     while (curr) {
-        cout << "\t" << idx << ". " << curr->data.name << endl;
+        cout << "\t" << idx++ << ". " << curr->data.name << endl;
+        curr = curr->next;
     }
     int choice;
     cout << "Choose an option: ";
@@ -474,10 +521,11 @@ void addStudentToClass(schoolYear &_schoolYear) {
         temp.index = 0;
         temp.className = c.name;
         addStudentNode(c._student, temp);
+        curr->data = c;
     }
     else if (choice == 2) {
         studentNode *_student = nullptr;
-        addStudentByFile(_student);
+        addStudentByFile(_student, c.name);
         studentNode *currStudentNode = _student;
         while (currStudentNode) {
             if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
@@ -489,6 +537,7 @@ void addStudentToClass(schoolYear &_schoolYear) {
         }
         c._student = _student;
         _student = currStudentNode = nullptr;
+        curr->data = c;
     }
     else {
         cout << "Invalid option!" << endl;
@@ -549,20 +598,63 @@ void createCourse(semester &_semester) {
     //add enrolled students
 }
 
-void addStudentToCourse(course &_course) {
+void addStudentToCourse(const schoolYear &_schoolYear, course &_course) {
     cout << "\n---------Add student to course--------\n" << endl;
     cout << "Choose a way: \n\t1. Individually \n\t2. By file" << endl;
     cout << "Choose an option: ";
     int choice;
     cin >> choice;
     if (choice == 1) {
-        student temp;
-        addStudentIndividually(temp);
-        temp.index = 0;
-        addStudentNode(_course.enrolled, temp);
+        student placeHolder;
+        addStudentIndividually(placeHolder);
+        placeHolder.index = 0;
+        classNode *currClass = _schoolYear._class;
+        placeHolder.className = "NULL";
+        while (currClass) {
+            studentNode *temp = findStudent(currClass->data._student, placeHolder.id);
+            if (temp) {
+                placeHolder.className = temp->data.className;
+                temp = nullptr;
+                break;
+            }
+            temp = nullptr;
+            currClass = currClass->next;
+        }
+        if (placeHolder.className == "NULL") {
+            cout << "This student has not been added to any class" << endl;
+            currClass = nullptr;
+            return;
+        }
+        addStudentNode(_course.enrolled, placeHolder);
     }
     else if (choice == 2) {
-        addStudentByFile(_course.enrolled);
+        studentNode *placeHolder = nullptr;
+        addStudentByFile(placeHolder, "");
+        student sample = placeHolder->data;
+        classNode *currClass = _schoolYear._class;
+        string commonClassName = "NULL";
+        while (currClass) {
+            studentNode *temp = findStudent(currClass->data._student, sample.id);
+            if (temp) {
+                commonClassName = temp->data.className;
+                temp = nullptr;
+                break;
+            }
+            temp = nullptr;
+            currClass = currClass->next;
+        }
+        if (commonClassName == "NULL") {
+            cout << "Error! This student has not been added in any class" << endl;
+            deleteStudentList(placeHolder);
+            currClass = nullptr;
+            return;
+        }
+        _course.enrolled = placeHolder;
+        while (placeHolder) {
+            placeHolder->data.className = commonClassName;
+        }
+        placeHolder = nullptr;
+        currClass = nullptr; 
     }
     else {
         cout << "Invalid option!" << endl;
@@ -584,7 +676,41 @@ void updateCourseInfo(course &_course) {
     //requires view course info
 }
 
-    
+void updateStudentResult(const schoolYear &_schoolYear, const course &_course) {
+    cout << "\n----------Update student result----------\n" << endl;
+    int choice, idx = 1;
+    studentNode *curr = _course.enrolled;
+    while (curr) {
+        cout << "\t" << idx++ << ". " << curr->data.className << endl;
+        curr = curr->next;
+    }
+    cout << "Choose an option: ";
+    cin >> choice;
+    curr = _course.enrolled;
+    while (choice-- && curr) {
+        curr = curr->next;
+    }
+    if (choice > 0) {
+        cout << "Invalid option" << endl;
+        curr = nullptr;
+        return;
+    }
+    scoreboardNode *currCourse = findCourseScoreboard(curr->data._course, _course.id);
+    cout << "Current result: ";
+    cout << "\n\tTotal: " << currCourse->data.total;
+    cout << "\n\tFinal: " << currCourse->data.final;
+    cout << "\n\tMidterm: " << currCourse->data.midterm;
+    cout << "\n\tOther: " << currCourse->data.other << endl;
+    cout << "Enter new value for each type of scores: ";
+    cout << "\n\tTotal: "; cin >> currCourse->data.total;
+    cout << "\n\tFinal: "; cin >> currCourse->data.final;
+    cout << "\n\tMidterm: "; cin >> currCourse->data.midterm;
+    cout << "\n\tOther: "; cin >> currCourse->data.other;
+    classNode *studentClass = findClassName(_schoolYear._class, curr->data.className);
+    studentNode *OG = findStudent(studentClass->data._student, curr->data.id);
+    scoreboardNode *studentScore = findCourseScoreboard(OG->data._course, _course.id);
+    studentScore->data = currCourse->data;
+}
 
 //Data export functions
 
@@ -599,7 +725,3 @@ void exportCourseStudent(const string &_schoolYear, const course &_course) {
     exportFile.close();
     curr = nullptr;
 }
-
-
-    
-

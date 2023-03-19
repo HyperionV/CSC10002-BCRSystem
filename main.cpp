@@ -1,5 +1,7 @@
 #include "_modification_.cpp"
 
 int main() {
-    cout << "Lookin' good bro" << endl;
+    schoolYear _schoolYear;
+    createSchoolYear(_schoolYear);
+    deleteClassList(_schoolYear._class);
 }

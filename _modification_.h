@@ -5,7 +5,7 @@ void getContentOfFile(const string &path, stringNode *&head);
 void displayListContent(stringNode *head);
 void displayListContentWithIndex(stringNode *head);
 void displayStudentList(studentNode *head);
-void addStudentByFile(studentNode *&head);
+void addStudentByFile(studentNode *&head, const string &className);
 void addStudentIndividually(student &s);
 void saveStudentInfo(string path, const student &source);
 void addStringNode(stringNode *&head, const string &data);
@@ -32,15 +32,15 @@ bool checkStudentExistence(const schoolYear &_schoolYear, const student &_studen
 //main features functions prototypes
 void createSchoolYear(schoolYear &year);
 void createClass(schoolYear &SC);
-void addStudentToClass(_class &c);
+void addStudentToClass(schoolYear &_schoolYear);
 void createSemester(schoolYear &SY);
 void createCourse(semester &_semester);
 void addStudentToCourse(course &_course);
 void removeStudentFromCourse(course &_course, const string &studentID);
 void deleteCourse(semester &_semester, const string &ID);
 void updateCourseInfo(course &_course);
-
+void updateStudentResult(const schoolYear &_schoolYear, const course &_course);
 
 //Data export function prototypes
-void exportStudentInfoList(const string &_schoolYear, const string &className);
+void exportStudentInfoList(const string &_schoolYear, const course &_course);
 
