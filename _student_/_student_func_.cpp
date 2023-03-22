@@ -28,14 +28,14 @@ student getStudentData(std::string id, std::string pathStudent) {
 	while (!findId.eof()) {
 		std::string tmp;
 		std::cin.getline(tmp);
-		//Assuming the format is: No,First_name,Last_name,Gender,id,socialid,dob
-		std::string tmpid = tmp.substr(findNthOccurrence(tmp, ',', 4) + 1,8);
+		//Assuming the format is: No,Student ID, First_name,Last_name,Gender,socialid,dob
+		std::string tmpid = tmp.substr(findNthOccurrence(tmp, ',', 1) + 1,8); //8 can be changed to an appropriate id length
 		if (tmpid == id) {
 			A.id = id;
-			int firstLth = findNthOccurrence(tmp, ',', 2) - findNthOccurrence(tmp, ',', 1);
+			int firstLth = findNthOccurrence(tmp, ',', 3) - findNthOccurrence(tmp, ',', 2);
 			A.firstName = tmp.substr(findNthOccurrence(tmp, ',', 1) + 1, firstLth);
 			A.firstName[firstLth + 1] = '\0';
-			int lastLth = findNthOccurrence(tmp, ',', 3) - findNthOccurrence(tmp, ',', 2);
+			int lastLth = findNthOccurrence(tmp, ',', 4) - findNthOccurrence(tmp, ',', 3);
 			A.lastName = tmp.substr(findNthOccurrence(tmp, ',', 1) + 1, lastLth);
 			A.lastName[lastLth + 1] = '\0'; 
 			A.gender = tmp.substr(findNthOccurrence(tmp, ',', 3) + 1, 1); //M/F
@@ -57,7 +57,7 @@ void viewProfile(student A) {
 	std::cout << A.id << std::endl;
 	std::cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	std::cout << "Full name: " << A.name << "\t" << "Gender: ";
-	if (A.gender) std::cout << "male\n";
+	if (A.gender == 'M') std::cout << "male\n";
 	else std::cout << "female\n";
 	std::cout << "Date of Birth: " << A.dob;
 	std::cout << "Social ID: " << A.socialid << std::endl;
@@ -101,7 +101,7 @@ void menuStudent(student A) {
 }
 
 void viewScoreboard(student A) {
-
+	
 }
 
 void viewCourse(student A) {

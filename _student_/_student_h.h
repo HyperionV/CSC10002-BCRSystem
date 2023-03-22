@@ -1,6 +1,7 @@
 #pragma once
 #ifndef __STUDENT_H_
 #define __STUDENT_H_
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <string>
