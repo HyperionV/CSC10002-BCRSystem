@@ -43,4 +43,4 @@ void updateStudentResult(const schoolYear &_schoolYear, const course &_course);
 
 //Data export function prototypes
 void exportStudentInfoList(const string &_schoolYear, const course &_course);
-
+void importStudentScore(const schoolYear &_schooolYear, const course &_course);

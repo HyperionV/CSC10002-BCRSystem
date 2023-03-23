@@ -296,6 +296,7 @@ scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID) {
 
 void deleteStringNode(stringNode *&head, const string &target) {
     stringNode *newhead = nullptr;
+    stringNode *delHead = head;
     while (head) {
         if (head->data == target) {
             stringNode *curr = head;
@@ -307,11 +308,13 @@ void deleteStringNode(stringNode *&head, const string &target) {
         head = head->next;
     }
     head = newhead;
+    deleteStringList(delHead);
     newhead = nullptr;
 }
 
 void deleteCourseNode(courseNode *&head, const string &ID) {
     courseNode *newhead = nullptr;
+    courseNode *delHead = head;
     while (head) {
         if (head->data.id == ID) {
             courseNode *curr = head;
@@ -324,11 +327,13 @@ void deleteCourseNode(courseNode *&head, const string &ID) {
         head = head->next;
     }
     head = newhead;
+    deleteCourseList(delHead);
     newhead = nullptr;
 }
 
 void deleteClassNode(classNode *&head, const string &className) {
     classNode* newhead = nullptr;
+    classNode* delHead = head;
     while (head) {
         if (head->data.name == className) {
             classNode *curr = head;
@@ -341,11 +346,13 @@ void deleteClassNode(classNode *&head, const string &className) {
         head = head->next;
     }
     head = newhead;
+    deleteClassList(delHead);
     newhead = nullptr;
 }
 
 void deleteStudentNode(studentNode *&head, const string &studentID) {
     studentNode *newhead = nullptr;
+    studentNode *delHead = head;
     while (head) {
         if (head->data.id == studentID) {
             studentNode *curr = head;
@@ -358,6 +365,7 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
         head = head->next;
     }
     head = newhead;
+    deleteStudentList(delHead);
     newhead = nullptr;
 }
 
@@ -387,6 +395,7 @@ bool checkStudentExistence(const schoolYear &_schoolYear, const student &_studen
     }
     return false;
 }
+
 
 //main features functions
 
@@ -527,6 +536,7 @@ void addStudentToClass(schoolYear &_schoolYear) {
         studentNode *_student = nullptr;
         addStudentByFile(_student, c.name);
         studentNode *currStudentNode = _student;
+        //check duplicate in input file
         while (currStudentNode) {
             if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
                 cout << "This student has already been added" << endl;
@@ -717,6 +727,7 @@ void updateStudentResult(const schoolYear &_schoolYear, const course &_course) {
 void exportCourseStudent(const string &_schoolYear, const course &_course) {
     string filePath = "Export/"+_schoolYear+"_"+_course.name+".csv";
     ofstream exportFile {filePath};
+    exportFile << "Index,ID,Name,Other,Midterm,Final,Total" << endl;
     studentNode *curr = _course.enrolled;
     while (curr) {
         exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<endl;
@@ -725,3 +736,54 @@ void exportCourseStudent(const string &_schoolYear, const course &_course) {
     exportFile.close();
     curr = nullptr;
 }
+
+void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
+    string path;
+    cout << "Enter scoreboard path: ";
+    cin >> path;
+    ifstream importFile {path};
+    if (!importFile) {
+        cout << "Error! Cannot open import file" << endl;
+        return;
+    }
+    classNode *currClassList = _schoolYear._class;
+    studentNode *currStudentList = _course.enrolled;
+    while (!importFile.eof()) {
+        string placeHolder;
+        string idx;
+        string studentID;
+        scoreboard tempScoreBoard;
+        tempScoreBoard.courseID = _course.id;
+        tempScoreBoard.courseName = _course.name;
+        getline(importFile, idx, ',');  //get index
+        getline(importFile, studentID, ',');    //get student id
+        getline(importFile, placeHolder, ',');  //get firstname
+        getline(importFile, placeHolder, ',');  //get lastname
+        getline(importFile, placeHolder, ',');  //get other scores
+        tempScoreBoard.other = stod(placeHolder);
+        getline(importFile, placeHolder, ',');  //get midterm score
+        tempScoreBoard.midterm = stod(placeHolder);
+        getline(importFile, placeHolder, ',');  //get final score
+        tempScoreBoard.final = stod(placeHolder);
+        getline(importFile, placeHolder, ',');  //get total score
+        tempScoreBoard.total = stod(placeHolder);
+        //find student in course to change scoreboard
+        studentNode *targetStudent = findStudent(currStudentList, studentID);
+        scoreboardNode *targetScoreboard = findCourseScoreboard(targetStudent->data._course, _course.id);
+        targetScoreboard->data = tempScoreBoard;
+        targetScoreboard = nullptr;
+        //find student in class to change scoreboard
+        classNode *targetClass = findClassName(currClassList, targetStudent->data.className);
+        targetStudent = findStudent(targetClass->data._student, studentID);
+        targetScoreboard = findCourseScoreboard(targetStudent->data._course, _course.id);
+        targetScoreboard->data = tempScoreBoard;
+        targetStudent = nullptr;
+        targetClass = nullptr;
+        targetScoreboard = nullptr;
+    }   
+    //need better optimization here
+    currClassList = nullptr;
+    currStudentList = nullptr;
+    importFile.close();
+}
+
