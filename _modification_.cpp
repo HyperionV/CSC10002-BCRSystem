@@ -111,7 +111,8 @@ void addStudentByFile(studentNode *&head, const string &className) {
         cout << "Error while opening file! Please check if the path was correct" << endl;
         return;
     }
-    //validate input
+    string placeHolder;
+    getline(in_file, placeHolder); //get the content line of the CSV file
     while (!in_file.eof()) {
         student temp;
         string placeHolder;
@@ -122,7 +123,7 @@ void addStudentByFile(studentNode *&head, const string &className) {
         getline(in_file, temp.lastName, ',');
         getline(in_file, temp.gender, ',');
         getline(in_file, temp.dob, ',');
-        getline(in_file, temp.socialid, ',');
+        getline(in_file, temp.socialid); //the default delimiter is "\n"
         temp.className = className;
         addStudentNode(head, temp);
     }
@@ -138,14 +139,21 @@ void addStudentByFile(studentNode *&head, const string &className) {
 void addStudentIndividually(student &s) {
     //validate input
 
-    cout << "\n--------Add student individually--------\n" << endl;
+    cout << "\n--------Add student individually--------" << endl;
     cout << "Enter ID of student: ";
     cin >> s.id;
+    if (s.id.length() != 8) {
+        student newStudent;
+        s = newStudent;
+        cout << "Wrong ID format! The ID should consist of 8 numbers" << endl;
+        return;
+    }
+    cin.ignore();
     cout << "Enter student's first name: ";
-    cin >> s.firstName;
+    getline(cin, s.firstName);
     cin.ignore();
     cout << "Enter student's last name: ";
-    cin >> s.lastName;
+    getline(cin, s.lastName);
     cin.ignore();
     cout << "Enter student's gender [M/F]: ";
     cin >> s.gender;
@@ -154,6 +162,12 @@ void addStudentIndividually(student &s) {
     cin >> s.dob;
     cout << "Enter social ID: ";
     cin >> s.socialid;
+    if (s.socialid.length() != 12) {
+        cout << "Wrong social ID format" << endl;
+        student newStudent;
+        s = newStudent;
+        return;
+    }
 }
 
 void addCourseNode(courseNode *&head, const course &_course) {
@@ -481,18 +495,63 @@ void createSchoolYear(schoolYear &year) {
 }
 
 void createClass(schoolYear &SC) {
-    cout << "\n----------Create class----------\n" << endl;
-    cout << "Enter class name: ";
-    string name;
-    cin >> name;
-    if (findClassName(SC._class, name)) {
-        cout << "This class has already been added" << endl;
-        return;
+    cout << "\n----------Create class----------" << endl;
+    cout << "Choose a way to create classes: \n\t1. Single Creation \n\t2. Mass Creation" << endl;
+    cout << "Your option: ";
+    char choice;
+    cin >> choice;
+    if (choice == '1') {
+        cout << "Enter class name: ";
+        string name;
+        cin >> name;
+        if (findClassName(SC._class, name)) {
+            cout << "This class has already been added" << endl;
+            return;
+        }
+        _class temp;
+        temp.name = name;
+        addClassNode(SC._class, temp);
+        cout << "Created new class " << name << endl;
     }
-    _class temp;
-    temp.name = name;
-    addClassNode(SC._class, temp);
-    cout << "Created new class " << name << endl;
+    else if (choice == '2') {
+        string type;
+        cout << "Enter classes type [CLC/APCS/VP]" << endl;
+        cout << "Your option: ";
+        cin >> type;
+        for (size_t i = 0; i < type.length(); i++) {
+            type[i] = toupper(type[i]);
+        }
+        if (!(type == "CLC" || type == "APCS" || type == "VP")) {
+            cout << "Unknown type! Please try again!" << endl;
+            return;
+        }
+        string className = SC._schoolYear+type;
+        cout << "New classes range starts from: " << className;
+        int r1;
+        cin >> r1;
+        int r2;
+        cout << " to " << className << endl;
+        if (r2 < r1) {
+            cout << "Invalid range! Please try again!" << endl;
+            return;
+        }
+        for (int i = r1; i <= r2; i++) {
+            string numName = to_string(i);
+            if (numName.length() < 2) {
+                numName = "0" + numName;
+            }
+            string tmpClassName = className + numName;
+            if (findClassName(SC._class, tmpClassName)) {
+                //cout << "This class has already been added" << endl;
+                continue;
+            }
+            _class temp;
+            temp.name = tmpClassName;
+            addClassNode(SC._class, temp);
+            //cout << "Created new class " << tmpClassName << endl;
+        }
+        cout << "Created classes from range " << r1 << " to " << r2 << endl;
+    }
 }
 
 void addStudentToClass(schoolYear &_schoolYear) {
@@ -539,7 +598,7 @@ void addStudentToClass(schoolYear &_schoolYear) {
         //check duplicate in input file
         while (currStudentNode) {
             if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
-                cout << "This student has already been added" << endl;
+                //cout << "This student has already been added" << endl;
                 deleteStudentNode(_student, currStudentNode->data.id);
                 continue;
             }
@@ -786,4 +845,3 @@ void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
     currStudentList = nullptr;
     importFile.close();
 }
-
