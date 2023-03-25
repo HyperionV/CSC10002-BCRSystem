@@ -12,7 +12,7 @@ void addStringNode(stringNode *&head, const string &data);
 void addStudentNode(studentNode *&head, const student &source);
 void addCourseNode(courseNode *&head, const course &_course);
 void addClassNode(classNode *&head, const _class &c);
-void addScoreboarNode(scoreboardNode *&head, const scoreboard &score);
+void addScoreboardNode(scoreboardNode *&head, const scoreboard &score);
 void deleteStringList(stringNode *&head);
 void deleteStudentList(studentNode *&head);
 void deleteCourseList(courseNode *&head);
@@ -28,6 +28,7 @@ void deleteClassNode(classNode *&head, const string &className);
 void deleteStudentNode(studentNode *&head, const string &studentID);
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID);
 bool checkStudentExistence(const schoolYear &_schoolYear, const student &_student);
+int getNumberOfStudents(studentNode *_student);
 
 //main features functions prototypes
 void createSchoolYear(schoolYear &year);
@@ -35,7 +36,8 @@ void createClass(schoolYear &SC);
 void addStudentToClass(schoolYear &_schoolYear);
 void createSemester(schoolYear &SY);
 void createCourse(semester &_semester);
-void addStudentToCourse(course &_course);
+void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
+void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course);
 void removeStudentFromCourse(course &_course, const string &studentID);
 void deleteCourse(semester &_semester, const string &ID);
 void updateCourseInfo(course &_course);
