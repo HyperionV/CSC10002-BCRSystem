@@ -801,7 +801,67 @@ void deleteCourse(semester &_semester, const string &ID) {
 }
 
 void updateCourseInfo(course &_course) {
-    //requires view course info
+    cout << "\n---------Update course info----------" << endl;
+    string placeHolder;
+    cout << "Current course info:";
+    cout << "\n\t1. ID: " << _course.id;
+    cout << "\n\t2. Name: " << _course.name;
+    cout << "\n\t3. Study Room: " << _course.className;
+    cout << "\n\t4. Teacher: " << _course.teacher;
+    cout << "\n\t5. Credits: " << _course.credit;
+    cout << "\n\t6. Max number of students: " << _course.max;
+    cout << "\n\t7. Schedule: " << _course.session << " - " << _course.day << endl;
+    //enter new course info
+    cout << "\nEnter new information for this course: ";
+    cout << "\n\t1. ID: ";
+    cin >> _course.id;
+    cout << "\n\t2. Name: "; 
+    cin.ignore();
+    getline(cin, _course.name);
+    cout << "\n\t3. Study Room: ";
+    cin >> _course.className;
+    cout << "\n\t4. Teacher: ";
+    cin.ignore();
+    getline(cin, _course.teacher);
+    //repeatedly asking user to re-enter information if input wrongly
+    while (true) {
+        cout << "\n\t5. Credits: ";
+        cin >> placeHolder;
+        _course.credit = stoi(placeHolder);
+        if (_course.credit > 5 || _course.credit <= 0) {
+            cout << "Invalid input! Please try again!" << endl;
+            continue;
+        }
+        break;
+    }
+    //repeatedly asking user to re-enter information if input wrongly
+    while (true) {
+        cout << "\n\t6. Max number of students: " << _course.max;
+        cin >> placeHolder;
+        _course.max = stoi(placeHolder);
+        if (_course.max <= 0) {
+            cout << "Invalid input! Please try again" << endl;
+            continue;
+        }
+        break;
+    }
+    cout << "\n\t7.1 Day: ";
+    cin >> _course.day;
+    for (int i = 0; i < _course.day.length(); i++) {
+        _course.day[i] = toupper(_course.day[i]);
+    }
+    cout << "\n\t7.2 Session: ";
+    cin >> _course.session;
+    //display the new course information
+    cout << "Successfully updated course info" << endl;
+    cout << "Current course info:";
+    cout << "\n\t1. ID: " << _course.id;
+    cout << "\n\t2. Name: " << _course.name;
+    cout << "\n\t3. Study Room: " << _course.className;
+    cout << "\n\t4. Teacher: " << _course.teacher;
+    cout << "\n\t5. Credits: " << _course.credit;
+    cout << "\n\t6. Max number of students: " << _course.max;
+    cout << "\n\t7. Schedule: " << _course.session << " - " << _course.day << endl;
 }
 
 void updateStudentResult(const schoolYear &_schoolYear, const course &_course) {
