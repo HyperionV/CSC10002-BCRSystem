@@ -13,6 +13,7 @@ struct classNode;
 struct courseNode;
 struct scoreboardNode;
 struct basicCourseInfo;
+struct schoolYearNode;
 
 struct stringNode {
     int idx;
@@ -94,3 +95,8 @@ struct schoolYear {
     classNode* _class = nullptr;
     semester *_semester;
 };
+
+struct schoolYearNode {
+    schoolYear data;
+    schoolYearNode* next = nullptr;
+}

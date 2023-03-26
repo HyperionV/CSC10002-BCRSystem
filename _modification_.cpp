@@ -2,8 +2,6 @@
 
 //Miscellaneous/support functions
 
-
-
 void addStringNode(stringNode *&head, const string &data) {
     if (head == nullptr) {
         head = new stringNode;
@@ -221,6 +219,21 @@ void addScoreboardNode(scoreboardNode *&head, const scoreboard &score) {
     curr = nullptr;
 }
 
+void addSchoolYearNode(schoolYearNode *&head, const schoolYear &_schoolYear) {
+    if (head == nullptr) {
+        head = new schoolYearNode;
+        head->data = _schoolYear;
+        return;
+    }
+    schoolYearNode *curr = head;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    curr->next = new schoolYearNode;
+    curr->next->data = _schoolYear;
+    curr = nullptr;
+}
+
 void deleteStringList(stringNode *&head) {
     while (head) {
         stringNode *curr = head;
@@ -269,6 +282,15 @@ void deleteScoreboardList(scoreboardNode *&head) {
     head = nullptr;
 }
 
+void deleteSchoolYearList(schoolYearNode *&head) {
+    while (head) {
+        schoolYearNode *curr = head;
+        head = head->next;
+        delete curr;
+    }
+    head = nullptr;
+}
+
     //use deep copy constructor ??
 classNode* findClassName(classNode *head, const string &className) {
     while (head) {
@@ -303,6 +325,16 @@ courseNode* findCourse(courseNode *head, const string &ID) {
 scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID) {
     while (head) {
         if (head->data.courseID == ID) {
+            return head;
+        }
+        head = head->next;
+    }
+    return nullptr;
+}
+
+schoolYearNode* findSchoolYear(schoolYearNode *head, const string &_schoolYear) {
+    while (head) {
+        if (head->data._schoolYear == _schoolYear) {
             return head;
         }
         head = head->next;
@@ -387,6 +419,7 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
 
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
     scoreboardNode *newhead = nullptr;
+    scoreboardNode *delHead = head;
     while (head) {
         if (head->data.courseID == ID) {
             scoreboardNode *curr = head;
@@ -398,7 +431,27 @@ void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
         head = head->next;
     }
     head = newhead;
+    deleteScoreboardList(delHead);
     newhead = nullptr;
+}
+
+void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear) {
+    schoolYearNode *newhead = nullptr;
+    schoolYearNode *delHead = head;
+    while (head) {
+        if (head->data._schoolYear == _schoolYear) {
+            schoolYearNode *curr = head;
+            deleteClassList(curr->data._class);
+            head = head->next;
+            delete curr;
+            continue;
+        }
+        addSchoolYearNode(newhead, head->data);
+        head = head->next;
+    }
+    head = newhead;
+    deleteSchoolYearList(delHead);
+    newhead= nullptr;
 }
 
 bool checkStudentExistence(const schoolYear &_schoolYear, const student &_student) {
@@ -422,7 +475,6 @@ int getNumberOfStudents(studentNode *_student) {
     return counter;
 }
 
-
 //main features functions
 
 void createSchoolYear(schoolYear &year) {
@@ -435,14 +487,14 @@ void createSchoolYear(schoolYear &year) {
         temp[3] += 1;
         SC += "-" + temp;
     }
-    // if (SC.length() > 5) {
-    //     string temp1 = SC.substr(4);
-    //     string temp2 = SC.substr(5, 4);
-    //     if (abs(stoi(temp1) - stoi(temp2)) != 1 || SC[4] != '-') {
-    //         cout << "Invalid input" << endl;
-    //         return;
-    //     }
-    // }
+    if (SC.length() > 5) {
+        string temp1 = SC.substr(5);
+        string temp2 = SC.substr(0, 4);
+        if (abs(stoi(temp1) - stoi(temp2)) != 1 || SC[4] != '-') {
+            cout << "Invalid input" << endl;
+            return;
+        }
+    }
     string yearPath = "Data/"+SC;
     if (rename((yearPath).c_str(), (yearPath).c_str()) == 1) {
         cout << "That school year has already been created" << endl;
