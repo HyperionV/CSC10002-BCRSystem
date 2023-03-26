@@ -1,0 +1,7 @@
+*.vsidx
+*.vcxproj
+*.sqlite
+*.wsuo
+*.db
+*.filters
+*.user
