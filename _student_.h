@@ -5,7 +5,6 @@
 #include "_struct_temp.h"
 
 void getStudentData(student& A);
-void printDate(date d);
 void menuStudent(student A);
 void viewScoreboard(student A);
 void viewCourse(student A);
