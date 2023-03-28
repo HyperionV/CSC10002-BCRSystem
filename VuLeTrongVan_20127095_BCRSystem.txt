@@ -18,3 +18,5 @@ Dự án đang tham gia: BCRSystem (Better/Best Course Registration System)
 9. Làm test data để nhóm có thể thông quá thử (1000 ---> 2000 dòng gì đó hoặc hơn).
 
 ---> Đối với mục 1 và mục 2: khi đang trong quá trình hoàn thiện code của Student và Staff sẽ có thể ảnh hưởng và chỉnh sửa để phù hợp với giao diện người dùng, chính xác hơn là sửa các code của mục view cũng như upadate và xóa trong Student và Staff.
+
+---> Youtube Chanel of Group BCRSystem: https://www.youtube.com/channel/UC_vMFU1bHtroD3qtdLOCxHg
