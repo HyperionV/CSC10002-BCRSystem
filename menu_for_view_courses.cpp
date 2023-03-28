@@ -1,4 +1,7 @@
 #include "common.h"
+#include <iostream>
+#include <ios>
+#include <iomanip>
 
 void clearConsole() {
 	COORD c;
