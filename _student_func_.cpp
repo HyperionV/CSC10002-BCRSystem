@@ -119,31 +119,44 @@ void viewScoreboard(student A) {
 
 void viewCourse(student A, schoolYear _yr) {
 	semester* tmp = _yr._semester;
+	bool printAll = false;
 	for (int count = 0; count < 3; count++){
 		cout << count + 1 << ". " << tmp->name << endl;
 	}
 	int choice;
-	do { 
+	do {
+		cout<<"4. View all courses throughout the year\n"; 
 		cout<<"Choose which semester to view\n";
 		cin>>choice;
-	}  while (choice > 0 && choice < 4);
-	for (int i = 0; i < choice - 1; i++){
+	}  while (choice > 0 && choice < 5);
+	if (choice == 4) {
+		printAll = true;
+	}
+	else for (int i = 0; i < choice - 1; i++){
 		_yr._semester++;
 	}
-	
+
 	courseNode* viewC = _yr._semester->_course;
+
 	if (!viewC){
 		cout << "Unable to find any courses\n";
 		return;
 	}
 
+	if (printAll) int trash = 3;
+	else int trash = 1;
+
 	cout<<"No\tCourse ID\tCourse Name\tClass Name\tSchedule\tSession\tTeacher\n";
 	int no = 1;
+	for (int k = 0; k < trash; k++){
 	while(!viewC){
 		cout<< no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
 		cout<< " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
 		no++;
 		viewC = viewC->next;
+	}
+	_yr._semester++;
+	viewC = _yr._semester->course;
 	}
 }
 
