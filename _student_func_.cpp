@@ -86,7 +86,7 @@ void menuStudent(student A, schoolYear *_yr) {
 			viewScoreboard(A);
 			break;
 		case 2:
-			viewCourse(A, viewC);
+			viewCourse(A, _yr);
 			break;
 		case 3:
 			changePassStudent(A);
@@ -101,7 +101,8 @@ void menuStudent(student A, schoolYear *_yr) {
 	menuStudent(A);
 }
 
-void viewScoreboard(student A, scoreboardNode* viewScore) {
+void viewScoreboard(student A) {
+	scoreboardNode* viewScore = A._course;	
 	if (!viewScore){
 		cout << "The staff haven't updated the scoreboard yet\n";
 		return;
@@ -116,11 +117,26 @@ void viewScoreboard(student A, scoreboardNode* viewScore) {
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
-void viewCourse(student A, courseNode *viewC) {
+void viewCourse(student A, schoolYear _yr) {
+	semester* tmp = _yr._semester;
+	for (int count = 0; count < 3; count++){
+		cout << count + 1 << ". " << tmp->name << endl;
+	}
+	int choice;
+	do { 
+		cout<<"Choose which semester to view\n";
+		cin>>choice;
+	}  while (choice > 0 && choice < 4);
+	for (int i = 0; i < choice - 1; i++){
+		_yr._semester++;
+	}
+	
+	courseNode* viewC = _yr._semester->_course;
 	if (!viewC){
 		cout << "Unable to find any courses\n";
 		return;
 	}
+
 	cout<<"No\tCourse ID\tCourse Name\tClass Name\tSchedule\tSession\tTeacher\n";
 	int no = 1;
 	while(!viewC){

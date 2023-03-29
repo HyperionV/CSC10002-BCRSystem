@@ -1,4 +1,4 @@
-#pragma once
+
 #ifndef __STUDENT_H_
 #define __STUDENT_H_
 #include <iostream>
@@ -6,11 +6,11 @@
 #include <string>
 #include "_struct_temp.h"
 
-int findNthOccurrence(std::string s, char x, int count);
-student getStudentData(std::string id, std::string pathStudent);
-void menuStudent(student A);
+int findNthOccurrence(string s, char x, int count);
+student getStudentData(string id, string pathStudent);
+void menuStudent(student A, schoolYear _yr);
 void viewScoreboard(student A);
-void viewCourse(student A);
+void viewCourse(student A, schoolYear _yr);
 void viewProfile(student A);
 void changePassStudent(student& A);
 #endif
