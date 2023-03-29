@@ -148,13 +148,12 @@ void addStudentIndividually(student &s) {
         cout << "Wrong ID format! The ID should consist of 8 numbers" << endl;
         return;
     }
-    cin.ignore();
     cout << "Enter student's first name: ";
+    cin.ignore();
     getline(cin, s.firstName);
-    cin.ignore();
     cout << "Enter student's last name: ";
-    getline(cin, s.lastName);
     cin.ignore();
+    getline(cin, s.lastName);
     cout << "Enter student's gender [M/F]: ";
     cin >> s.gender;
     s.gender = toupper(s.gender[0]);
@@ -589,12 +588,14 @@ void createClass(schoolYear &SC) {
             cout << "Unknown type! Please try again!" << endl;
             return;
         }
-        string className = SC._schoolYear+type;
+        string yearNum = SC._schoolYear.substr(7);
+        string className = yearNum+type;
         cout << "New classes range starts from: " << className;
         int r1;
         cin >> r1;
         int r2;
-        cout << " to " << className << endl;
+        cout << " to " << className;
+        cin >> r2;
         if (r2 < r1) {
             cout << "Invalid range! Please try again!" << endl;
             return;

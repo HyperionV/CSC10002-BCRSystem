@@ -99,4 +99,4 @@ struct schoolYear {
 struct schoolYearNode {
     schoolYear data;
     schoolYearNode* next = nullptr;
-}
+};
