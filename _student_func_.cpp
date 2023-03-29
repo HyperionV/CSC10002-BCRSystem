@@ -1,5 +1,5 @@
 #include "_student_h.h"
-
+//main function file 
 
 int findNthOccurrence(string s, char x, int count) {
 	int tmp = 0;
@@ -10,13 +10,12 @@ int findNthOccurrence(string s, char x, int count) {
 	return -1;
 }
 
-string returnPath(int schoolYear, string StudentClass, string studentID) {
-	string pathStudent = "Data/" + to_string(schoolYear) + "/Classes/" + StudentClass + "/" + studentID;
+string returnPath(string schoolYear, string StudentClass, string studentID) {
+	string pathStudent = "Data/" + schoolYear + "/Classes/" + StudentClass + "/" + studentID;
 	return pathStudent;
 }
 
-student getStudentData(string id, string pathStudent) {
-	int schoolYear = stoi(id.substr(0, 3)) + 2000;  //assuming no students got accepted before 2000
+student getStudentData(string id, string pathStudent, string schoolYear) {
 	pathStudent = returnPath(schoolYear , ,id); //how to define which class
 	ifstream findId;
 	findId.open(pathStudent);
@@ -33,48 +32,48 @@ student getStudentData(string id, string pathStudent) {
 		string tmpid = tmp.substr(findNthOccurrence(tmp, ',', 1) + 1,8); //8 can be changed to an appropriate id length
 		if (tmpid == id) {
 			A.id = id;
-			int nameLth = findNthOccurrence(tmp, ',', 4) - findNthOccurrence(tmp, ',', 2);
-			A.name = tmp.substr(findNthOccurrence(tmp, ',', 2) + 1, nameLth);
+			int FnameLth = findNthOccurrence(tmp, ',', 3) - findNthOccurrence(tmp, ',', 2);
+			A.firstName = tmp.substr(findNthOccurrence(tmp, ',', 2) + 1, FnameLth);
+			int LnameLth = findNthOccurrence(tmp, ',', 4) - findNthOccurrence(tmp, ',', 3);
+			A.firstName = tmp.substr(findNthOccurrence(tmp, ',', 3) + 1, LnameLth);
 
-			if (tmp.substr(findNthOccurrence(tmp, ',', 4) + 1, 1) == "M") A.gender = 1; else A.gender = 0; //M/F
+			if (tmp.substr(findNthOccurrence(tmp, ',', 4) + 1, 1) == "M") A.gender = "M"; else A.gender = "F"; //M/F
 			A.socialid = tmp.substr(findNthOccurrence(tmp, ',', 6) + 1, 12); //1234567890ab
 
-			A.dob.day = stoi(tmp.substr(findNthOccurrence(tmp, ',', 6) + 1, 2)); //dd
-			A.dob.month = stoi(tmp.substr(findNthOccurrence(tmp, ',', 6) + 4, 2));
-			A.dob.year = stoi(tmp.substr(findNthOccurrence(tmp, ',', 6) + 7, 2));
+			A.dob = tmp.substr(findNthOccurrence(tmp,',',5)+1,10);// dd/mm/yyyy
 			findId.close();
 			return A;
 		}
 	}
 	findId.close();
-	std::cout << "Couldn't find student with that ID. Please retype your id and try again.\n";
+	cout << "Couldn't find student with that ID. Please retype your id and try again.\n";
 	cin >> id;
 	getStudentData(id, pathStudent);
 }
 
-void viewProfile(student A) {
+void viewProfile(student A, schoolYear *_yr) {
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
 	cout << A.id << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
-	cout << "Full name: " << A.name << "\t" << "Gender: ";
-	if (A.gender == 'M') cout << "male\n";
+	cout << "Full name: " << A.firstName << A.lastName << "\t" << "Gender: ";
+	if (A.gender == "M") cout << "male\n";
 	else cout << "female\n";
-	cout << "Date of Birth: " << A.dob.day <<"/"<<A.dob.month<<"/"<<A.dob.year;
+	cout << "Date of Birth: " << A.dob << endl;
 	cout << "Social ID: " << A.socialid << endl;
-	cout << "Class: " << A.classroom << endl;
+	cout << "Class: " << A.className << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
-	menuStudent(A);
+	menuStudent(A, _yr);
 }
 
-void menuStudent(student A) {
+void menuStudent(student A, schoolYear *_yr) {
 	
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
 	cout << "-------------------------------------------------------------------\n";
 	cout << endl << endl;
 	cout << "1. View your scores throughout the year\n";
-	cout << "2. View your current courses\n";
+	cout << "2. View your courses\n";
 	cout << "3. Change your password\n";
 	cout << "0. Exit to login screen\n";
 	cout << "-------------------------------------------------------------------\n";
@@ -87,7 +86,7 @@ void menuStudent(student A) {
 			viewScoreboard(A);
 			break;
 		case 2:
-			viewCourse(A);
+			viewCourse(A, viewC);
 			break;
 		case 3:
 			changePassStudent(A);
@@ -95,36 +94,41 @@ void menuStudent(student A) {
 		case 0:
 			return;
 		default:
-			std::cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
+			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
 			break;
 		}
 	}
 	menuStudent(A);
 }
 
-void viewScoreboard(student A) {
-	/*classes* tmp = A.classroom; 
-	if (!tmp) {
-		cout<<"Student has not been assigned to any class\n";
+void viewScoreboard(student A, scoreboardNode* viewScore) {
+	if (!viewScore){
+		cout << "The staff haven't updated the scoreboard yet\n";
 		return;
 	}
-	int count = 1;
-	while (tmp){
-		cout<< count <<". "<<endl;
-	}*/ 
-
-	//Finding courses for students to choose to see
-	string pth = returnPath(year, , A.id);
-	ifstream score;
-	score.open(pth);
-	while (!score.eof()){
-		
+	int no = 1;
+	cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+	while (!viewScore){
+		cout<<no<<" \t" << viewScore->data.courseID<<"\t"<<viewScore->data.courseName<<"\t";
+		cout<<viewScore->data.total<<"\t"<<viewScore->data.final<<"\t"<<viewScore->data.midterm<<"\t"<<viewScore->data.other<<endl;
+		no++;
 	}
-//No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
+	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
-void viewCourse(student A) {
-
+void viewCourse(student A, courseNode *viewC) {
+	if (!viewC){
+		cout << "Unable to find any courses\n";
+		return;
+	}
+	cout<<"No\tCourse ID\tCourse Name\tClass Name\tSchedule\tSession\tTeacher\n";
+	int no = 1;
+	while(!viewC){
+		cout<< no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
+		cout<< " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
+		no++;
+		viewC = viewC->next;
+	}
 }
 
 void changePassStudent(student& A) {

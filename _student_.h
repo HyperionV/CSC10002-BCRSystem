@@ -7,7 +7,7 @@
 void getStudentData(student& A);
 void menuStudent(student A);
 void viewScoreboard(student A);
-void viewCourse(student A);
+void viewCourse(student A, courseNode* viewC);
 void viewProfile(student A);
 void changePassStudent(student &A);
 #endif

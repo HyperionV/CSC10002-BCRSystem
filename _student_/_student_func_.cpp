@@ -68,6 +68,7 @@ void viewProfile(student A) {
 }
 
 void menuStudent(student A) {
+	
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
 	cout << "-------------------------------------------------------------------\n";
@@ -111,6 +112,7 @@ void viewScoreboard(student A) {
 	while (tmp){
 		cout<< count <<". "<<endl;
 	}*/ 
+
 	//Finding courses for students to choose to see
 	string pth = returnPath(year, , A.id);
 	ifstream score;

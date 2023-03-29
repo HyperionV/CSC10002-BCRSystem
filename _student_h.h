@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #ifndef __STUDENT_H_
 #define __STUDENT_H_
 #include <iostream>
