@@ -1,0 +1,16 @@
+-- Profile of Me --
+Họ và Tên: Vũ Lê Trọng Văn
+Mã số sinh viên: 20127095
+Lớp: 22CLC06
+Dự án đang tham gia: BCRSystem (Better/Best Course Registration System
+
+-- Works in the Project --
+1. Viết hàm student menu
+2. Từ student menu dẫn đến các lựa chọn:
+	i.	Xuất các khóa học của học sinh ra màn hình (theo id khóa, theo semester, in tất cả)
+	ii.	Xuất bảng điểm của học sinh theo semester sau khi academic staff hoàn tất đăng bảng điểm.
+	iii.	Đăng xuất hoặc đổi mật khẩu dùng để đăng nhập.
+Mô tả: Bằng việc sử dụng singly linked list, giá trị của biến student được lấy khi học sinh đăng nhập vào hệ thống. Sau đó các thông tin được xuất ra màn hình tùy theo lựa chọn của học sinh.
+
+---> Đối với mục i và ii cần có sự biến đổi cho phù hợp giữa staff với student.
+---> Mục iii cần sửa đổi cho phù hợp.

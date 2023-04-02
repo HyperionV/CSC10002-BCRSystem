@@ -149,40 +149,40 @@ void viewCourse(student A, schoolYear _yr) {
 	cout<<"No\tCourse ID\tCourse Name\tClass Name\tSchedule\tSession\tTeacher\n";
 	int no = 1;
 	for (int k = 0; k < trash; k++){
-	while(!viewC){
-		cout<< no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
-		cout<< " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
-		no++;
-		viewC = viewC->next;
-	}
-	_yr._semester++;
-	viewC = _yr._semester->course;
+		while(!viewC){
+			cout<< no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
+			cout<< " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
+			no++;
+			viewC = viewC->next;
+		}
+		_yr._semester++;
+		viewC = _yr._semester->course;
 	}
 }
 
 void changePassStudent(student& A) {
-	std::cout << std::endl << "Input previous password (default is 123456): ";
-	std::string temp; std::cin >> temp;
+	cout << endl << "Input previous password (default is 123456): ";
+	string temp; cin >> temp;
 	if (temp == A.password) {
-		std::string newPass;
+		string newPass;
 		do {
-			std::cout << "Password cannot contain spaces!\n";
-			std::cout << "Input new password: ";
-			std::cin >> temp;
-			std::cout << "Confirm your new password: ";
-			std::cin >> newPass;
+			cout << "Password cannot contain spaces!\n";
+			cout << "Input new password: ";
+			cin >> temp;
+			cout << "Confirm your new password: ";
+			cin >> newPass;
 			if (newPass != temp) std::cout << "Password confirmation incorrect, please retype a new password\n";
 		} while (temp != newPass);
 		A.password = newPass;
 		return;
 	}
 	else {
-		std::cout << "Wrong password. Would you like to continue changing password?\n";
-		std::cout << "1. Yes\t\t2. Cancel\n";
+		cout << "Wrong password. Would you like to continue changing password?\n";
+		cout << "1. Yes\t\t2. Cancel\n";
 		int choice;
 		do {
-			std::cin >> choice;
-			if (choice < 1 || choice > 2) std::cout << "Invalid option, please input again\n";
+			cin >> choice;
+			if (choice < 1 || choice > 2) cout << "Invalid option, please input again\n";
 		} while (choice < 1 || choice > 2);
 		switch (choice) {
 		case 1:
