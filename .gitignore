@@ -1,0 +1,10 @@
+newest/
+*.pptx
+*.txt
+*.proj
+*.exe
+*.code-workspace
+FourthVersion/
+.vscode/
+Backup/
+Data/
