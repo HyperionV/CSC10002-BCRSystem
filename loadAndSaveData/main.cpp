@@ -1,10 +1,10 @@
-#include "_modification_.cpp"
+#include "_modification_.h"
 
 int main()
 {
     string start_path = "Data";
 
-    schoolYear* hold = loadSchoolyear(start_path, "2020-2021");
+    schoolYear hold = loadSchoolyear(start_path, "2020-2021");
 
     delete_directory(start_path);
 

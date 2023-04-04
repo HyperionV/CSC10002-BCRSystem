@@ -82,11 +82,6 @@ struct semester {
     courseNode* _course = nullptr;
 };
 
-struct semesterNode {
-    semester name;
-    semesterNode* next = nullptr;
-};
-
 struct _class {
     string name;
     studentNode* _student = nullptr;
@@ -101,6 +96,5 @@ struct classNode {
 struct schoolYear {
     string _schoolYear;
     classNode* _class = nullptr;
-    semesterNode* sem = nullptr;
-    semester *_semester;
+    semester *_semester = new semester[3];
 };

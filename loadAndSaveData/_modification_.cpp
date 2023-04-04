@@ -742,7 +742,7 @@ semester loadSemester(const string &path, string semesterName) {
                 }
                 else if(dir_entry->d_type == DT_REG) {
                     ifstream in_file {path + "/" + entry_name};
-                    getline(in_file, curr.start,',');
+                    getline(in_file, curr.start, ',');
                     getline(in_file, curr.end);
                     in_file.close();
                 }
@@ -753,15 +753,15 @@ semester loadSemester(const string &path, string semesterName) {
     return curr;
 }
 
-scoreboard* newScoreBoard(scoreboard curr) {
-    scoreboard* temp= new scoreboard;
-    temp->courseID = curr.courseID;
-    temp->midterm = curr.midterm;
-    temp->final = curr.final;
-    temp->other = curr.other;
-    temp->total = curr.total;
-    return temp;
-}
+// scoreboard* newScoreBoard(scoreboard curr) {
+//     scoreboard* temp= new scoreboard;
+//     temp->courseID = curr.courseID;
+//     temp->midterm = curr.midterm;
+//     temp->final = curr.final;
+//     temp->other = curr.other;
+//     temp->total = curr.total;
+//     return temp;
+// }
 
 course loadCourse(const string &path) {
     course curr;
@@ -837,10 +837,11 @@ classNode* loadClass(const string &path) {
     return list;
 }
 
-schoolYear* loadSchoolyear(const string &path, const string &sY) 
+schoolYear loadSchoolyear(const string &path, const string &sY) 
 {
-    schoolYear* curr = new schoolYear;
-    curr->_schoolYear = sY;
+    int index= 0;
+    schoolYear curr;
+    curr._schoolYear = sY;
     DIR* directory = opendir(path.c_str());
     if(directory != NULL) 
     {   
@@ -855,12 +856,11 @@ schoolYear* loadSchoolyear(const string &path, const string &sY)
                     if(entry_name1 != "." && entry_name1 != ".." && dir_entry1->d_type == DT_DIR) {
                         if(entry_name1 == "Classes") {
                             string cur_path =  full_path + '/' + entry_name1;
-                            curr->_class= loadClass(cur_path);
+                            curr._class= loadClass(cur_path);
                         }
                         else {
                             string cur_path = full_path + "/" + entry_name1;
-                            semester Sem= loadSemester(cur_path, entry_name1);
-                            addSemesterNode(curr->sem, Sem);
+                            curr._semester[index++] = loadSemester(cur_path, entry_name1);
                         }
                     }
                 }
@@ -870,23 +870,6 @@ schoolYear* loadSchoolyear(const string &path, const string &sY)
     }
     closedir(directory);
     return curr;
-}
-
-void addSemesterNode(semesterNode* &head, semester curr) {
-    semesterNode* temp= new semesterNode;
-    temp->name = curr;
-    if(!head) {
-        head= temp;
-        return;
-    }
-    else {
-        semesterNode* move= head;
-        while(move->next) {
-            move= move->next;
-        }
-        move->next= temp;
-    }
-    return;
 }
 
 void loadStudentByFile(studentNode *&head, const string &path) {
@@ -1012,31 +995,6 @@ void loadStudentScoreboard(scoreboardNode* &list, const string &path) {
     return;
 }
 
-void loadCourseScoreboard(scoreboardNode* &list, const string &path) {
-    ifstream in_file {path};
-    if(!in_file) {
-        cout << "Error while opening file ! Please try agian later !" << endl;
-        return;
-    }
-    while(!in_file.eof()) {
-        scoreboard curr;
-        string hold;
-        getline(in_file, curr.courseID, ',');
-        getline(in_file, hold, ',');
-        curr.other = stod(hold);
-        getline(in_file, hold, ',');
-        curr.midterm = stod(hold);
-        getline(in_file, hold, ',');
-        curr.final = stod(hold);
-        getline(in_file, hold,';');
-        curr.total = stod(hold);
-        hold.clear();
-        addScoreboardNode(list, curr);
-    }
-    in_file.close();
-    return;
-}
-
 void delete_directory(const string& path)
 {
     DIR* directory = opendir(path.c_str());
@@ -1086,7 +1044,7 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
         out_file << studentList->data.dob << ',';
         out_file << studentList->data.socialid ;
         if(studentList->next)
-            cout << endl;
+            out_file << endl;
         out_file.close();
 
         ofstream out_file1 {full_path + "/Scoreboard.txt"};
@@ -1098,7 +1056,7 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
             out_file1 << studentList->data._course->data.final << ",";
             out_file1 << studentList->data._course->data.total;
             if(studentList->data._course->next)
-                cout << endl;
+                out_file1 << endl;
             //DELETE AFTER DATA IS SAVED
             scoreboardNode* del= studentList->data._course;
             studentList->data._course= studentList->data._course->next;
@@ -1117,7 +1075,6 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
 
 void writeCourseEnrolls(courseNode* &list, const string &path) {
     ofstream out_file {path};
-    cout << path << " ";
     courseNode* holdToDelete= list;
     while(list->data.enrolled) {
         out_file << list->data.enrolled->data.id << "," << list->data.enrolled->data.firstName << "," << list->data.enrolled->data.lastName << "," << list->data.enrolled->data.className << ",";
@@ -1126,7 +1083,7 @@ void writeCourseEnrolls(courseNode* &list, const string &path) {
         out_file << list->data.enrolled->data._course->data.total << ",";
         out_file << list->data.enrolled->data._course->data.final;
         if(list->data.enrolled->next)
-            cout << endl;
+            out_file << endl;
         //DELETE AFTER DATA IS SAVED
         deleteScoreboardList(list->data.enrolled->data._course);
         studentNode* del= list->data.enrolled;
@@ -1173,29 +1130,27 @@ void writeClass(classNode* &classList ,const string &path) {
     return;
 }
 
-void writeSchoolyear(string path, schoolYear* sY)  
+void writeSchoolyear(string path, schoolYear sY)  
 {
-    path = path + "/" + sY->_schoolYear;
+    path = path + "/" + sY._schoolYear;
     ////create school year folder
     mkdir(path.c_str());
     ////Write semesters to folder
-    while(sY->sem) {
+    for(int i= 0; i< 3; i++) {
         ofstream out_file;
-        string full_path = path + "/" + sY->sem->name.name;
+        string full_path = path + "/" + sY._semester[i].name;
         ////create semester folder
         mkdir(full_path.c_str());
         ////create info file of semester
         out_file.open(full_path + "/info.txt");
-        out_file << sY->sem->name.start << "," << sY->sem->name.end;
+        out_file << sY._semester[i].start << "," << sY._semester[i].end;
         ////write courses to semester's folder
-        writeCourse(sY->sem->name._course, full_path);
-        semesterNode* del= sY->sem;
-        sY->sem = sY->sem->next;
-        delete del;
-        del= nullptr;
+        writeCourse(sY._semester[i]._course, full_path);
+        out_file.close();
     }
+    delete [] sY._semester;
     ////Write student to classes 
     mkdir((path + "/Classes").c_str());
-    writeClass(sY->_class, path + "/Classes");
+    writeClass(sY._class, path + "/Classes");
 
 }
