@@ -1,0 +1,22 @@
+-- My Profile --
+Họ và Tên: Võ Minh Khôi
+Mã số sinh viên: 22127213
+Lớp: 22CLC06
+Dự án đang tham gia: BCRSystem (Better/Best Course Registration System)
+
+-- Works in the Project --
+1. Viết các hàm chức năng của Staff member, bao gồm:
+	1.1 Create school years
+	1.2 Create classes
+	1.3 Create courses
+	1.4 Add students to class
+	1.5 Add students to courses
+	1.6 Import scoreboards
+	1.7 Export scoreboards
+	1.8 Import student lists
+	1.9 Create semester
+	1.10 Delete course
+	1.11 Remove student from class/course
+	1.12 Update student result
+	1.13 Update course info
+2. Viết các hàm hỗ trợ, tối ưu quá trình hoạt động của phần mềm
