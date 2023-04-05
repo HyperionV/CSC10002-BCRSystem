@@ -16,6 +16,7 @@ string returnPath(string schoolYear, string StudentClass, string studentID) {
 }
 
 student getStudentData(string id, string pathStudent, string schoolYear) {
+
 	pathStudent = returnPath(schoolYear , ,id); //how to define which class
 	ifstream findId;
 	findId.open(pathStudent);
@@ -66,7 +67,7 @@ void viewProfile(student A, schoolYear _yr) {
 	menuStudent(A, _yr);
 }
 
-void menuStudent(const student &A, const schoolYear &_yr) {
+void menuStudent(student &A, const schoolYear &_yr) {
 	
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
@@ -89,17 +90,17 @@ void menuStudent(const student &A, const schoolYear &_yr) {
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			changePassStudent(A.password);
+			changePassStudent(&A.password, A);
 			break;
 		case 0:
-			menu_version1();
+			//menu_version1(); Accessing login menu
 			return;
 		default:
 			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
 			break;
 		}
 	
-	menuStudent(A);
+	menuStudent(A, _yr);
 }
 
 void viewScoreboard(student A) {
@@ -144,29 +145,34 @@ void viewCourse(student A, schoolYear _yr) {
 		return;
 	}
 
-	if (printAll) int trash = 3;
-	else int trash = 1;
+	int trash = 0;
 
-	cout<<"No\tCourse ID\tCourse Name\tClass Name\tSchedule\tSession\tTeacher\n";
+	if (printAll) trash = 3;
+	else trash = 1;
+
+	cout << "No \tCourse ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
 	int no = 1;
-	for (int k = 0; k < trash; k++){
-		while(!viewC){
-			cout<< no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
-			cout<< " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
+	for (int k = 0; k < trash; k++)
+	{
+		while(!viewC)
+		{
+			cout << no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
+			cout << " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
 			no++;
 			viewC = viewC->next;
 		}
 		_yr._semester++;
-		viewC = _yr._semester->course;
+		viewC = _yr._semester->_course;
 	}
 }
 
-void changePassStudent(string& password) {
+void changePassStudent(string* password, student A) {
 	cout << endl << "Input previous password (default is 123456): ";
 	string temp;
 	cin.ignore();
 	cin >> temp;
-	if (temp == password) {
+	if (temp == *password)
+	{
 		string newPass;
 		do {
 			cout << "Password cannot contain spaces!\n";
@@ -176,7 +182,7 @@ void changePassStudent(string& password) {
 			cin >> newPass;
 			if (newPass != temp) cout << "Password confirmation incorrect, please retype a new password\n";
 		} while (temp != newPass);
-		password = newPass;
+		*password = newPass;
 		return;
 	}
 	else {
@@ -189,7 +195,7 @@ void changePassStudent(string& password) {
 		} while (choice < 1 || choice > 2);
 		switch (choice) {
 		case 1:
-			changePassStudent(A);
+			changePassStudent(&A.password, A);
 			break;
 		case 2:
 			return;

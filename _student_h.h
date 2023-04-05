@@ -8,9 +8,9 @@
 
 int findNthOccurrence(string s, char x, int count);
 student getStudentData(string id, string pathStudent);
-void menuStudent(const student &A, const schoolYear &_yr);
+void menuStudent(student &A, const schoolYear &_yr);
 void viewScoreboard(student A);
 void viewCourse(student A, schoolYear _yr);
 void viewProfile(student A, schoolYear _yr);
-void changePassStudent(string& password);
+void changePassStudent(string* password, student A);
 #endif
