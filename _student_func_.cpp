@@ -89,7 +89,7 @@ void menuStudent(const student &A, const schoolYear &_yr) {
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			changePassStudent(A);
+			changePassStudent(A.password);
 			break;
 		case 0:
 			menu_version1();
@@ -161,10 +161,12 @@ void viewCourse(student A, schoolYear _yr) {
 	}
 }
 
-void changePassStudent(student& A) {
+void changePassStudent(string& password) {
 	cout << endl << "Input previous password (default is 123456): ";
-	string temp; cin >> temp;
-	if (temp == A.password) {
+	string temp;
+	cin.ignore();
+	cin >> temp;
+	if (temp == password) {
 		string newPass;
 		do {
 			cout << "Password cannot contain spaces!\n";
@@ -172,9 +174,9 @@ void changePassStudent(student& A) {
 			cin >> temp;
 			cout << "Confirm your new password: ";
 			cin >> newPass;
-			if (newPass != temp) std::cout << "Password confirmation incorrect, please retype a new password\n";
+			if (newPass != temp) cout << "Password confirmation incorrect, please retype a new password\n";
 		} while (temp != newPass);
-		A.password = newPass;
+		password = newPass;
 		return;
 	}
 	else {
