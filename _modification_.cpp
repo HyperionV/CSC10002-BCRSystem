@@ -89,7 +89,7 @@ void displayStudentList(studentNode *head) {
     }
     studentNode *curr = head;
     while (curr) {
-        cout << "\t" << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << endl;
+        cout << "\t\t" << curr->data.index << ". " << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << endl;
         curr = curr->next;
     }
     curr = nullptr;
@@ -117,6 +117,11 @@ void addStudentByFile(studentNode *&head, const string &className) {
         student temp;
         string placeHolder;
         getline(in_file, placeHolder, ',');
+        if (placeHolder == "" || placeHolder == "\n") {
+            // cout << "Blank line" << endl;
+            break;
+        }
+        // cout << placeHolder << endl;
         temp.index = stoi(placeHolder);
         getline(in_file, temp.id, ',');
         getline(in_file, temp.firstName, ',');
@@ -129,7 +134,7 @@ void addStudentByFile(studentNode *&head, const string &className) {
     }
     studentNode* curr = head;
     //the last line will be a blank line so we have to manually remove it
-    while (curr->next && curr->next->next) {
+    while (curr->next) {
         curr = curr->next;
     }
     curr->next = nullptr;
@@ -143,8 +148,7 @@ void addStudentIndividually(student &s) {
     cout << "Enter ID of student: ";
     cin >> s.id;
     if (s.id.length() != 8) {
-        student newStudent;
-        s = newStudent;
+        s.id = "NULL";
         cout << "Wrong ID format! The ID should consist of 8 numbers" << endl;
         return;
     }
@@ -152,7 +156,6 @@ void addStudentIndividually(student &s) {
     cin.ignore();
     getline(cin, s.firstName);
     cout << "Enter student's last name: ";
-    cin.ignore();
     getline(cin, s.lastName);
     cout << "Enter student's gender [M/F]: ";
     cin >> s.gender;
@@ -163,8 +166,7 @@ void addStudentIndividually(student &s) {
     cin >> s.socialid;
     if (s.socialid.length() != 12) {
         cout << "Wrong social ID format" << endl;
-        student newStudent;
-        s = newStudent;
+        s.id = "NULL";
         return;
     }
 }
@@ -594,7 +596,7 @@ void createClass(schoolYear &SC) {
         int r1;
         cin >> r1;
         int r2;
-        cout << " to " << className;
+        cout << "to " << className;
         cin >> r2;
         if (r2 < r1) {
             cout << "Invalid range! Please try again!" << endl;
@@ -647,6 +649,9 @@ void addStudentToClass(schoolYear &_schoolYear) {
     if (choice == 1) {
         student temp;
         addStudentIndividually(temp);
+        if (temp.id == "NULL") {
+            return;
+        }
         if (checkStudentExistence(_schoolYear, temp)) {
             cout << "This student has already been added" << endl;
             return;
@@ -660,6 +665,8 @@ void addStudentToClass(schoolYear &_schoolYear) {
         studentNode *_student = nullptr;
         addStudentByFile(_student, c.name);
         studentNode *currStudentNode = _student;
+        // cout << "Preview student list" << endl;
+        // displayStudentList(_student);
         //check duplicate in input file
         while (currStudentNode) {
             if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
@@ -669,8 +676,23 @@ void addStudentToClass(schoolYear &_schoolYear) {
             }
             currStudentNode = currStudentNode->next;
         }
-        c._student = _student;
-        _student = currStudentNode = nullptr;
+        if (c._student == nullptr) {
+            c._student = _student;
+            curr->data = c;
+            _student = currStudentNode = nullptr;
+            return;
+        }
+        studentNode *traverseNode = c._student;
+        while (traverseNode->next) {
+            traverseNode = traverseNode->next;
+        }
+        int currIdx = traverseNode->data.index;
+        traverseNode->next = _student;        
+        while (traverseNode->next) {
+            traverseNode = traverseNode->next;
+            traverseNode->data.index += currIdx;
+        }
+        _student = currStudentNode = traverseNode = nullptr;
         curr->data = c;
     }
     else {
@@ -769,7 +791,7 @@ void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course) {
         }
         //check if the className provided was valid
         classNode *studentClass = findClassName(currYearClasses, tempStudent.className);
-        if (studentClass = nullptr) {
+        if (studentClass == nullptr) {
             cout << "The class of this student has not been created in the current year" << endl;
             continue;
         }
