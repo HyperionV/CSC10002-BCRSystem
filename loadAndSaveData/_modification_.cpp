@@ -736,11 +736,11 @@ semester loadSemester(const string &path, string semesterName) {
             string entry_name = dir_entry->d_name;
             if(entry_name != "." && entry_name != "..") {
                 string full_path = path + "/" + entry_name;
-                if(dir_entry->d_type == DT_DIR) {
+                if(entry_name != "info.txt") {
                     course hold= loadCourse(full_path);
                     addCourseNode(curr._course, hold);
                 }
-                else if(dir_entry->d_type == DT_REG) {
+                else {
                     ifstream in_file {path + "/" + entry_name};
                     getline(in_file, curr.start, ',');
                     getline(in_file, curr.end);
@@ -853,7 +853,7 @@ schoolYear loadSchoolyear(const string &path, const string &sY)
                 DIR* direc= opendir(full_path.c_str());
                 while(dir_entry1 = readdir(direc)) {
                     string entry_name1= dir_entry1->d_name;
-                    if(entry_name1 != "." && entry_name1 != ".." && dir_entry1->d_type == DT_DIR) {
+                    if(entry_name1 != "." && entry_name1 != "..") {
                         if(entry_name1 == "Classes") {
                             string cur_path =  full_path + '/' + entry_name1;
                             curr._class= loadClass(cur_path);
@@ -1003,17 +1003,22 @@ void delete_directory(const string& path)
         struct dirent* dir_entry;
         while ((dir_entry = readdir(directory)) != NULL)
         {
+            DIR* sub_folder = NULL;
             string entry_name = dir_entry->d_name;
             if (entry_name != "." && entry_name != "..")
             {
                 string full_path = path + "/" + entry_name;
-                if (dir_entry->d_type == DT_DIR)
+                if (sub_folder = opendir(full_path.c_str()))
                 {
+                    closedir(sub_folder);
                     delete_directory(full_path);
                     rmdir(full_path.c_str());
                 }
-                else if (dir_entry->d_type == DT_REG)
-                {
+                else 
+                {   
+                    ifstream ifs {full_path};
+                    if(ifs)
+                        ifs.close();
                     remove(full_path.c_str());
                 }
             }
@@ -1026,6 +1031,7 @@ void delete_directory(const string& path)
     }
     return;
 }
+
 
 
 /////////////////////////////// SAVE DATA //////////////////////////////////////////////
