@@ -106,6 +106,7 @@ void addStudentByFile(studentNode *&head, const string &className) {
     cout << "Enter file path: ";
     string filePath;
     cin >> filePath;
+    filePath = "TestData/" + filePath;
     ifstream in_file {filePath};
     if (!in_file) {
         cout << "Error while opening file! Please check if the path was correct" << endl;
@@ -479,7 +480,7 @@ int getNumberOfStudents(studentNode *_student) {
 //main features functions
 
 void createSchoolYear(schoolYear &year) {
-    cout << "\n---------Create new school year----------\n" << endl;
+    cout << "\n---------Create new school year----------" << endl;
     string SC;
     cout << "Enter school year: ";
     cin >> SC;
@@ -590,7 +591,8 @@ void createClass(schoolYear &SC) {
             cout << "Unknown type! Please try again!" << endl;
             return;
         }
-        string yearNum = SC._schoolYear.substr(7);
+        string tmpYearNum = SC._schoolYear.substr(0, 4);
+        string yearNum = tmpYearNum.substr(2);
         string className = yearNum+type;
         cout << "New classes range starts from: " << className;
         int r1;
