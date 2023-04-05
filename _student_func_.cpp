@@ -51,7 +51,7 @@ student getStudentData(string id, string pathStudent, string schoolYear) {
 	getStudentData(id, pathStudent);
 }
 
-void viewProfile(student A, schoolYear *_yr) {
+void viewProfile(student A, schoolYear _yr) {
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
 	cout << A.id << endl;
@@ -66,7 +66,7 @@ void viewProfile(student A, schoolYear *_yr) {
 	menuStudent(A, _yr);
 }
 
-void menuStudent(student A, schoolYear *_yr) {
+void menuStudent(const student &A, const schoolYear &_yr) {
 	
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
@@ -80,7 +80,7 @@ void menuStudent(student A, schoolYear *_yr) {
 	cout << endl << endl;
 	cout << "Input: ";
 	int choice; cin >> choice;
-	while (true) {
+	
 		switch (choice) {
 		case 1:
 			viewScoreboard(A);
@@ -92,12 +92,13 @@ void menuStudent(student A, schoolYear *_yr) {
 			changePassStudent(A);
 			break;
 		case 0:
+			menu_version1();
 			return;
 		default:
 			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
 			break;
 		}
-	}
+	
 	menuStudent(A);
 }
 
