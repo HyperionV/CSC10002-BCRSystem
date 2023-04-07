@@ -900,7 +900,7 @@ void updateCourseInfo(course &_course) {
     cout << "\n\t4. Teacher: ";
     cin.ignore();
     getline(cin, _course.teacher);
-    //repeatedly asking user to re-enter information if input wrongly
+    //repeatedly asking user to re-enter information if inputted wrongly
     while (true) {
         cout << "\n\t5. Credits: ";
         cin >> placeHolder;
