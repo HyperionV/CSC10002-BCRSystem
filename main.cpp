@@ -1,13 +1,13 @@
-#include "_modification_.cpp"
+#include "_modification_.h"
 
 int main() {
-    schoolYear _schoolYear;
-    createSchoolYear(_schoolYear);
-    deleteClassList(_schoolYear._class);
+    // schoolYear _schoolYear;
+    // createSchoolYear(_schoolYear);
+    // deleteClassList(_schoolYear._class);
 
-    string start_path = "Data";
+    // string start_path = "Data";
 
-    schoolYearNode* list = loadDataFolder(start_path);
+    // schoolYearNode* list = loadDataFolder(start_path);
 
 
 
@@ -37,6 +37,10 @@ int main() {
     //         hold._semester[i]._course = hold._semester[i]._course->next;
     //     }
     // }
+
+    schoolYearNode *_schoolYear = nullptr;
+    schoolYear mainSY = programStart(_schoolYear);
+    mainMenuStaff(mainSY);
 
     return 0;
 }

@@ -74,8 +74,13 @@ void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
 
 
-//Workflow
+//Workflow/Menu
 schoolYear programStart(schoolYearNode *&head);
-void mainMenu(schoolYear &_schoolYear);
+void mainMenuStaff(schoolYear &_schoolYear);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
-void viewSemesterInfo(const schoolYear &_schoolYear);
+bool viewSemestersInfo(const schoolYear &_schoolYear);
+void viewClassesInfo(const schoolYear &_schoolYear);
+void viewDetailedClassInfo(const _class &source);
+void viewSchoolYearAllStudent(const schoolYear &_schoolYear);
+void viewDetailedCourseInfo(const course &_course);
+void viewStudentInfo(const schoolYear &_schoolYear);

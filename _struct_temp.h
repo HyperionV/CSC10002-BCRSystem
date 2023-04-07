@@ -14,6 +14,9 @@ struct courseNode;
 struct scoreboardNode;
 struct basicCourseInfo;
 struct schoolYearNode;
+struct credential;
+struct account;
+struct staffInfo;
 
 struct stringNode {
     int idx;
