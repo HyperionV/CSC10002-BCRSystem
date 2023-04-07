@@ -52,12 +52,14 @@ studentNode* loadStudentsFromClass(const string &path ,const string& className);
 schoolYear loadSchoolyear(const string &path, const string &sY);
 classNode* loadClass(const string &path);
 scoreboard* newScoreBoard(scoreboard curr);
+
 ///LOAD DATA
 
 void loadStudentByFile(studentNode *&head, const string &filePath);
 void loadStudentByFile(studentNode *&head, const string &classname, const string &filePath);
 void loadStudentScoreboard(scoreboardNode* &list, const string &path);
 void loadCourseScoreboard(scoreboardNode* &list, const string &path);
+schoolYearNode* loadDataFolder(const string &path);
 ///SAVE DATA
 void delete_directory(const string &path);
 void writeStudentInClass(studentNode *studentList, const string &path);

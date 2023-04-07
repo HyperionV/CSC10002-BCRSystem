@@ -98,3 +98,9 @@ struct schoolYear {
     classNode* _class = nullptr;
     semester *_semester = new semester[3];
 };
+
+struct schoolYearNode {
+    schoolYear data;
+    schoolYearNode* next= nullptr;
+};
+

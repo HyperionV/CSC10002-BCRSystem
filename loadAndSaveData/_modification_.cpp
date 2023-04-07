@@ -709,6 +709,21 @@ void updateStudentResult(const schoolYear &_schoolYear, const course &_course) {
 
 //Data export functions
 
+void addSchoolYearNode(schoolYearNode *&head, const schoolYear &_schoolYear) {
+    if (head == nullptr) {
+        head = new schoolYearNode;
+        head->data = _schoolYear;
+        return;
+    }
+    schoolYearNode *curr = head;
+    while (curr->next) {
+        curr = curr->next;
+    }
+    curr->next = new schoolYearNode;
+    curr->next->data = _schoolYear;
+    curr = nullptr;
+}
+
 void exportCourseStudent(const string &_schoolYear, const course &_course) {
     string filePath = "Export/"+_schoolYear+"_"+_course.name+".csv";
     ofstream exportFile {filePath};
@@ -845,28 +860,20 @@ schoolYear loadSchoolyear(const string &path, const string &sY)
     DIR* directory = opendir(path.c_str());
     if(directory != NULL) 
     {   
-        struct dirent *dir_entry, *dir_entry1;
+        struct dirent *dir_entry;
         while (dir_entry = readdir(directory)) {
             string entry_name = dir_entry->d_name;
-            if(entry_name != "." && entry_name != ".." && entry_name == sY) {
-                string full_path = path + "/" + entry_name;
-                DIR* direc= opendir(full_path.c_str());
-                while(dir_entry1 = readdir(direc)) {
-                    string entry_name1= dir_entry1->d_name;
-                    if(entry_name1 != "." && entry_name1 != "..") {
-                        if(entry_name1 == "Classes") {
-                            string cur_path =  full_path + '/' + entry_name1;
-                            curr._class= loadClass(cur_path);
-                        }
-                        else {
-                            string cur_path = full_path + "/" + entry_name1;
-                            curr._semester[index++] = loadSemester(cur_path, entry_name1);
-                        }
-                    }
+            if(entry_name != "." && entry_name != ".." ) {
+                if(entry_name == "Classes") {
+                    string cur_path =  path + '/' + entry_name;
+                    curr._class= loadClass(cur_path);
                 }
-                break;
+                else {
+                    string cur_path = path + "/" + entry_name;
+                    curr._semester[index++] = loadSemester(cur_path, entry_name);
+                }
             }
-        }
+        }   
     }
     closedir(directory);
     return curr;
@@ -1033,7 +1040,6 @@ void delete_directory(const string& path)
 }
 
 
-
 /////////////////////////////// SAVE DATA //////////////////////////////////////////////
 
 
@@ -1160,3 +1166,34 @@ void writeSchoolyear(string path, schoolYear sY)
     writeClass(sY._class, path + "/Classes");
 
 }
+
+void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
+    schoolYearNode* schoolYearList= SYlist;
+    while(schoolYearList) {
+        writeSchoolyear(path, schoolYearList->data);
+        schoolYearList= schoolYearList->next;
+    }
+
+    // deleteSchoolYearList(schoolYearList);
+}
+
+schoolYearNode* loadDataFolder(const string &path) {
+    schoolYearNode* schoolYearList= nullptr;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {   
+        struct dirent *dir_entry;
+        while (dir_entry = readdir(directory)) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                string full_path = path + "/" + entry_name;
+                schoolYear curr= loadSchoolyear(full_path, entry_name);
+                addSchoolYearNode(schoolYearList, curr);
+            }
+        }
+    }
+    closedir(directory);
+    return schoolYearList;
+}
+
+
