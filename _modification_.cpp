@@ -1041,3 +1041,525 @@ void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
     currStudentList = nullptr;
     importFile.close();
 }
+
+//////////////////////Huy - Load and save data////////////////////////
+
+/////////////////////////////// LOAD DATA //////////////////////////////////////////////
+
+semester loadSemester(const string &path, string semesterName) {
+    semester curr;
+    curr.name = semesterName;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {
+        struct dirent *dir_entry;
+        while((dir_entry = readdir(directory))) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                string full_path = path + "/" + entry_name;
+                if(entry_name != "info.txt") {
+                    course hold= loadCourse(full_path);
+                    addCourseNode(curr._course, hold);
+                }
+                else {
+                    ifstream in_file {path + "/" + entry_name};
+                    getline(in_file, curr.start, ',');
+                    getline(in_file, curr.end);
+                    in_file.close();
+                }
+            }
+        }
+        closedir(directory);
+    }
+    return curr;
+}
+
+// scoreboard* newScoreBoard(scoreboard curr) {
+//     scoreboard* temp= new scoreboard;
+//     temp->courseID = curr.courseID;
+//     temp->midterm = curr.midterm;
+//     temp->final = curr.final;
+//     temp->other = curr.other;
+//     temp->total = curr.total;
+//     return temp;
+// }
+
+course loadCourse(const string &path) {
+    course curr;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {
+        struct dirent *dir_entry;
+        while((dir_entry = readdir(directory))) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                if(entry_name == "enrolled.txt") {
+                    string full_path = path + "/" + entry_name;
+                    loadStudentByFile(curr.enrolled, full_path);
+                }
+                else {
+                    string full_path = path + "/" + entry_name;
+                    ifstream in_file {full_path};
+                    string hold;
+                    getline(in_file, curr.id, ',');
+                    getline(in_file, curr.name, ',');
+                    getline(in_file, curr.className, ',');
+                    getline(in_file, curr.teacher, ',');
+                    getline(in_file, hold, ',');
+                    curr.credit = stoi(hold);
+                    getline(in_file, hold, ',');
+                    curr.max = stoi(hold);
+                    getline(in_file, curr.day, ',');
+                    getline(in_file, curr.session);
+                    in_file.close();
+                }
+            }
+        }
+    }
+    return curr;
+}
+
+studentNode* loadStudentsFromClass(const string &path ,const string& className) {
+    studentNode* curr = nullptr;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {
+        struct dirent *dir_entry;
+        while((dir_entry = readdir(directory))) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                loadStudentByFile(curr, className, path);
+                break;
+            }
+        }
+    }
+    closedir(directory);
+    return curr;
+}
+
+classNode* loadClass(const string &path) {
+    classNode* list = nullptr;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {
+        struct dirent *dir_entry;
+        while((dir_entry = readdir(directory))) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                _class curr;
+                string full_path = path + "/" + entry_name;
+                curr._student= loadStudentsFromClass(full_path, entry_name);
+                curr.name = entry_name;
+                addClassNode(list, curr);
+            }
+        }
+    }
+    closedir(directory);
+    return list;
+}
+
+schoolYear loadSchoolyear(const string &path, const string &sY) 
+{
+    int index= 0;
+    schoolYear curr;
+    curr._schoolYear = sY;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {   
+        struct dirent *dir_entry;
+        while (dir_entry = readdir(directory)) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != ".." ) {
+                if(entry_name == "Classes") {
+                    string cur_path =  path + '/' + entry_name;
+                    curr._class= loadClass(cur_path);
+                }
+                else {
+                    string cur_path = path + "/" + entry_name;
+                    curr._semester[index++] = loadSemester(cur_path, entry_name);
+                }
+            }
+        }   
+    }
+    closedir(directory);
+    return curr;
+}
+
+void loadStudentByFile(studentNode *&head, const string &path) {
+    ifstream in_file {path};
+    if (!in_file) {
+        cout << "Error while opening file! Please check if the path was correct" << endl;
+        return;
+    }
+    //validate input
+    while (!in_file.eof()) {
+        student temp;
+        temp._course = new scoreboardNode;
+        temp._course->next= nullptr;
+        string placeHolder="";
+        getline(in_file, temp.id, ',');
+        getline(in_file, temp.firstName, ',');
+        getline(in_file, temp.lastName, ',');
+        getline(in_file, temp.className, ',');
+        getline(in_file, placeHolder, ',');
+        temp._course->data.other= stod(placeHolder);
+        getline(in_file, placeHolder, ',');
+        temp._course->data.midterm= stod(placeHolder);
+        getline(in_file, placeHolder, ',');
+        temp._course->data.final= stod(placeHolder);
+        getline(in_file, placeHolder);
+        temp._course->data.total= stod(placeHolder);
+        addStudentNode(head, temp);
+    }
+    in_file.close();
+}
+
+void loadStudentByFile(studentNode *&head, const string &classname, const string &path) {
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {
+        struct dirent *dir_entry;
+        while((dir_entry = readdir(directory))) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                string full_path = path + "/" + entry_name ;
+                ifstream in_file {full_path + "/info.txt"};
+                if (!in_file) {
+                    cout << "Error while opening file! Please check if the path was correct" << endl;
+                    return;
+                }
+                student temp;
+                string placeHolder;
+                getline(in_file, placeHolder, ',');
+                temp.index = stoi(placeHolder);
+                getline(in_file, temp.id, ',');
+                getline(in_file, temp.firstName, ',');
+                getline(in_file, temp.lastName, ',');
+                getline(in_file, temp.gender, ',');
+                getline(in_file, temp.dob, ',');
+                getline(in_file, temp.socialid);
+                temp.className = classname;
+
+
+                ifstream in_file1 {full_path + "/Scoreboard.txt"};
+                if(!in_file1) {
+                    cout << "Error while opening file ! Please try agian later !" << endl;
+                    return;
+                }
+                while(!in_file1.eof()) {
+                    scoreboard curr;
+                    string hold;
+                    getline(in_file1, curr.courseID, ',');
+                    getline(in_file1, curr.courseName, ',');
+                    getline(in_file1, hold, ',');
+                    curr.other = stod(hold);
+                    getline(in_file1, hold, ',');
+                    curr.midterm = stod(hold);
+                    getline(in_file1, hold, ',');
+                    curr.final = stod(hold);
+                    getline(in_file1, hold);
+                    curr.total = stod(hold);
+                    hold.clear();
+                    addScoreboardNode(temp._course, curr);
+                }
+                in_file1.close();
+                addStudentNode(head, temp);
+                in_file.close();
+            }
+        }
+    }
+    return;
+}
+
+void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path) {
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {
+        struct dirent *dir_entry;
+        while((dir_entry = readdir(directory))) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                string full_path = path + "/" + entry_name + "/Scoreboard.txt";
+                ifstream in_file {full_path};
+                if(!in_file) {
+                    cout << "Error while opening file ! Please try agian later !" << endl;
+                    return;
+                }
+                while(!in_file.eof()) {
+                    scoreboard curr;
+                    string hold;
+                    getline(in_file, curr.courseID, ',');
+                    getline(in_file, curr.courseName, ',');
+                    getline(in_file, hold, ',');
+                    curr.other = stod(hold);
+                    getline(in_file, hold, ',');
+                    curr.midterm = stod(hold);
+                    getline(in_file, hold, ',');
+                    curr.final = stod(hold);
+                    getline(in_file, hold);
+                    curr.total = stod(hold);
+                    hold.clear();
+                    addScoreboardNode(scoreboardList, curr);
+                }
+            in_file.close();
+            }
+        }
+    }
+    return;
+}
+
+void delete_directory(const string& path)
+{
+    DIR* directory = opendir(path.c_str());
+    if (directory != NULL)
+    {
+        struct dirent* dir_entry;
+        while ((dir_entry = readdir(directory)) != NULL)
+        {
+            DIR* sub_folder = NULL;
+            string entry_name = dir_entry->d_name;
+            if (entry_name != "." && entry_name != "..")
+            {
+                string full_path = path + "/" + entry_name;
+                if (sub_folder = opendir(full_path.c_str()))
+                {
+                    closedir(sub_folder);
+                    delete_directory(full_path);
+                    rmdir(full_path.c_str());
+                }
+                else 
+                {   
+                    ifstream ifs {full_path};
+                    if(ifs)
+                        ifs.close();
+                    remove(full_path.c_str());
+                }
+            }
+        }
+        closedir(directory);
+    }
+    else
+    {
+        cerr << "Error: Failed to open directory " << path << endl;
+    }
+    return;
+}
+
+
+/////////////////////////////// SAVE DATA //////////////////////////////////////////////
+
+
+void writeStudentInClass(studentNode *studentList, const string &path) {
+    while(studentList) {
+        string full_path= path + "/" + studentList->data.id;
+        mkdir((path + "/" + studentList->data.id).c_str());
+        ofstream out_file {full_path + "/info.txt"};
+        out_file << studentList->data.index << "," ;
+        out_file << studentList->data.id << ",";
+        out_file << studentList->data.firstName << ",";
+        out_file << studentList->data.lastName << ",";
+        out_file << studentList->data.gender << ",";
+        out_file << studentList->data.dob << ',';
+        out_file << studentList->data.socialid ;
+        if(studentList->next)
+            out_file << endl;
+        out_file.close();
+
+        ofstream out_file1 {full_path + "/Scoreboard.txt"};
+        while(studentList->data._course) {
+            out_file1 << studentList->data._course->data.courseID << ",";
+            out_file1 << studentList->data._course->data.courseName << ",";
+            out_file1 << studentList->data._course->data.other << ",";
+            out_file1 << studentList->data._course->data.midterm << ",";
+            out_file1 << studentList->data._course->data.final << ",";
+            out_file1 << studentList->data._course->data.total;
+            if(studentList->data._course->next)
+                out_file1 << endl;
+            //DELETE AFTER DATA IS SAVED
+            scoreboardNode* del= studentList->data._course;
+            studentList->data._course= studentList->data._course->next;
+            delete del;
+            del = nullptr;
+        }
+        out_file1.close();
+        //DELETE AFTER DATA IS SAVED
+        studentNode* del= studentList;
+        studentList = studentList->next;
+        delete del;
+        del= nullptr;
+    }
+    return;
+}
+
+void writeCourseEnrolls(courseNode* &courseList, const string &path) {
+    ofstream out_file {path};
+    courseNode* holdToDelete= courseList;
+    while(courseList->data.enrolled) {
+        out_file << courseList->data.enrolled->data.id << "," << courseList->data.enrolled->data.firstName << "," << courseList->data.enrolled->data.lastName << "," << courseList->data.enrolled->data.className << ",";
+        out_file << courseList->data.enrolled->data._course->data.other << ",";
+        out_file << courseList->data.enrolled->data._course->data.midterm << ",";
+        out_file << courseList->data.enrolled->data._course->data.total << ",";
+        out_file << courseList->data.enrolled->data._course->data.final;
+        if(courseList->data.enrolled->next)
+            out_file << endl;
+        //DELETE AFTER DATA IS SAVED
+        deleteScoreboardList(courseList->data.enrolled->data._course);
+        studentNode* del= courseList->data.enrolled;
+        courseList->data.enrolled= courseList->data.enrolled->next;
+        delete del;
+        del = nullptr;
+    }
+    out_file.close();
+    return;
+}
+
+void writeCourse(courseNode* &courseList , const string &path) {
+    courseNode* holdToDelete = courseList;
+    ofstream out_file; 
+    while(courseList) {
+        ////create course folder
+        string full_path = path + "/" + courseList->data.id;
+        mkdir((full_path).c_str());
+        ////write enrolls to course
+        writeCourseEnrolls(courseList, full_path + "/enrolled.txt");
+        ////write course info to file
+        out_file.open(full_path + "/info.txt");
+        out_file << courseList->data.id << "," << courseList->data.name << "," << courseList->data.className << "," << courseList->data.teacher << "," << courseList->data.credit << "," << courseList->data.max << "," << courseList->data.day << "," << courseList->data.session;
+        out_file.close();
+        
+        courseList= courseList->next;
+    }
+    //DELETE AFTER DATA IS SAVED
+    deleteCourseList(holdToDelete);
+    return;
+}
+
+void writeClass(classNode* &classList ,const string &path) {
+    classNode* holdToDelete= classList;
+    while(classList) {
+        string full_path = path + "/" + classList->data.name;
+        mkdir((full_path).c_str());
+        writeStudentInClass(classList->data._student, full_path);
+
+        classList = classList->next;
+    }
+    //DELETE AFTER DATA IS SAVED
+    deleteClassList(holdToDelete);
+    return;
+}
+
+void writeSchoolyear(string path, schoolYear sY)  
+{
+    path = path + "/" + sY._schoolYear;
+    ////create school year folder
+    mkdir(path.c_str());
+    ////Write semesters to folder
+    for(int i= 0; i< 3; i++) {
+        ofstream out_file;
+        string full_path = path + "/" + sY._semester[i].name;
+        ////create semester folder
+        mkdir(full_path.c_str());
+        ////create info file of semester
+        out_file.open(full_path + "/info.txt");
+        out_file << sY._semester[i].start << "," << sY._semester[i].end;
+        ////write courses to semester's folder
+        writeCourse(sY._semester[i]._course, full_path);
+        out_file.close();
+    }
+    delete [] sY._semester;
+    ////Write student to classes 
+    mkdir((path + "/Classes").c_str());
+    writeClass(sY._class, path + "/Classes");
+
+}
+
+void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
+    schoolYearNode* schoolYearList= SYlist;
+    while(schoolYearList) {
+        writeSchoolyear(path, schoolYearList->data);
+        schoolYearList= schoolYearList->next;
+    }
+
+    // deleteSchoolYearList(schoolYearList);
+}
+
+schoolYearNode* loadDataFolder(const string &path) {
+    schoolYearNode* schoolYearList= nullptr;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {   
+        struct dirent *dir_entry;
+        while (dir_entry = readdir(directory)) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != "..") {
+                string full_path = path + "/" + entry_name;
+                schoolYear curr= loadSchoolyear(full_path, entry_name);
+                addSchoolYearNode(schoolYearList, curr);
+            }
+        }
+    }
+    closedir(directory);
+    return schoolYearList;
+}
+
+void addAccountNode(accountNode*& head, account curr) {
+    accountNode* temp= new accountNode;
+    temp->userAccount = curr;
+    if(!head) {
+        head= temp;
+        return;
+    }
+    else {
+        accountNode* move = head;
+        while(move->next) {
+            move = move->next;
+        }
+        move->next = temp;
+    }
+    return;
+}
+
+void loadUserAccount (credential accountSystem, const string &path) {
+    ifstream inStaff, inStudent;
+    inStaff.open(path + "/" + "staff.txt");
+    inStudent.open(path + "/" + "student.txt");
+
+    while(!inStaff.eof()) {
+        account curr;
+        getline(inStaff, curr.ID , ',');
+        getline(inStaff, curr.password);
+        addAccountNode(accountSystem.staff, curr);
+    }
+    while(!inStudent.eof()) {
+        account curr;
+        getline(inStudent, curr.ID, ',');
+        getline(inStudent, curr.password);
+        addAccountNode(accountSystem.student, curr);
+    }
+    inStudent.close();
+    inStaff.close();
+}
+
+bool changeAccountPassword(credential accountSystem, string userID, bool isStaff, string newPassword) {
+    if(isStaff) {
+        accountNode* temp = accountSystem.staff;
+        while(temp) {
+            if(temp->userAccount.ID == userID) {
+                temp->userAccount.password = newPassword;
+                return true;
+            }
+            temp = temp->next;
+        }
+    }
+    else {
+        accountNode* temp= accountSystem.student;
+        while(temp) {
+            if(temp->userAccount.ID == userID) {
+                temp->userAccount.password = newPassword;
+                return true;
+            }
+            temp= temp->next;
+        }
+    }
+    return false;
+}

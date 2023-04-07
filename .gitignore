@@ -1,5 +1,18 @@
+<<<<<<< HEAD
 *.exe
 *.json
 Debug/
 *.mk
 *.project
+=======
+newest/
+*.pptx
+*.txt
+*.proj
+*.exe
+*.code-workspace
+FourthVersion/
+.vscode/
+Backup/
+Data/
+>>>>>>> Huy
