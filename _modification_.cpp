@@ -979,7 +979,7 @@ void updateStudentResult(const schoolYear &_schoolYear, const course &_course) {
 
 //Data export functions
 
-void exportCourseStudent(const string &_schoolYear, const course &_course) {
+void exportStudentInfoList(const string &_schoolYear, const course &_course) {
     string filePath = "Export/"+_schoolYear+"_"+_course.name+".csv";
     ofstream exportFile {filePath};
     exportFile << "Index,ID,Name,Other,Midterm,Final,Total" << endl;
