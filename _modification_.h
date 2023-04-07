@@ -62,16 +62,17 @@ classNode* loadClass(const string &path);
 ///LOAD DATA
 void loadStudentByFile(studentNode *&head, const string &filePath);
 void loadStudentByFile(studentNode *&head, const string &classname, const string &filePath);
-void loadStudentScoreboard(scoreboardNode* &list, const string &path);
+void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path);
 schoolYearNode* loadDataFolder(const string &path);
 
 ///SAVE DATA
 void delete_directory(const string &path);
 void writeStudentInClass(studentNode *studentList, const string &path);
 void writeSchoolyear(string path, schoolYear sY);
-void writeCourseEnrolls(courseNode* &list, const string &path);
-void writeCourse(courseNode* &list , const string &path);
+void writeCourseEnrolls(courseNode* &courseList, const string &path);
+void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
+
 
 //Workflow
 schoolYear programStart(schoolYearNode *&head);
