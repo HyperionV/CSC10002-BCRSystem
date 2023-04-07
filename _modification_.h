@@ -18,7 +18,7 @@ void deleteStringList(stringNode *&head);
 void deleteStudentList(studentNode *&head);
 void deleteCourseList(courseNode *&head);
 void deleteClassList(classNode *&head);
-void deleteScoreboardList(schoolYearNode *&head);
+void deleteScoreboardList(scoreboardNode *&head);
 void deleteSchoolYearList(schoolYearNode *&head);
 classNode* findClassName(classNode *head, const string &className);
 studentNode* findStudent(studentNode *head, const string &studentID);
