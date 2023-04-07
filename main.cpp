@@ -1,15 +1,10 @@
-<<<<<<< HEAD
 #include "_modification_.cpp"
 
 int main() {
     schoolYear _schoolYear;
     createSchoolYear(_schoolYear);
     deleteClassList(_schoolYear._class);
-=======
-#include "_modification_.h"
 
-int main()
-{
     string start_path = "Data";
 
     schoolYearNode* list = loadDataFolder(start_path);
@@ -44,5 +39,4 @@ int main()
     // }
 
     return 0;
->>>>>>> Huy
 }

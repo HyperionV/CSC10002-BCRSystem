@@ -1563,3 +1563,42 @@ bool changeAccountPassword(credential accountSystem, string userID, bool isStaff
     }
     return false;
 }
+
+//Work flow
+
+schoolYear programStart(schoolYearNode *&head) {
+    head = loadDataFolder("Data");
+    if (head == nullptr) {
+        cout << "Database is empty! Please create a new school year to continue!";
+        head = new schoolYearNode;
+        createSchoolYear(head->data);
+    }
+    system("cls");
+    schoolYearNode *currSchoolYearNode = head;
+    cout << "Choose a schoolyear to work on: ";
+    int idx = 1;
+    while (currSchoolYearNode) {
+        cout << "\t" << idx << ". " << currSchoolYearNode->data._schoolYear << endl;
+        currSchoolYearNode = currSchoolYearNode->next;
+    }
+    cout << "Your choice: ";
+    int choice;
+    cin >> choice;
+    currSchoolYearNode = head;
+    idx = 1;
+    while (idx != choice) {
+        currSchoolYearNode = currSchoolYearNode->next;
+        idx++;
+    }
+    return currSchoolYearNode->data;
+}
+
+void mainMenuStaff(schoolYear &_schoolYear) {
+    while (true) {
+        cout << "\n---------Main menu - staff---------" << endl;
+        cout << "\t1. View current school year information" << endl;
+        cout << "\t2. Edit current school year" << endl;
+        cout << "\t3. Exit program" << endl;
+    }
+}
+

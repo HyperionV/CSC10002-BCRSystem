@@ -115,3 +115,8 @@ struct credential {
     accountNode* student = nullptr;
     accountNode* staff = nullptr;
 };
+
+struct staffInfo {
+    string name;
+    account _accont;
+};

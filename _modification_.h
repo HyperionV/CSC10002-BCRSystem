@@ -72,3 +72,7 @@ void writeSchoolyear(string path, schoolYear sY);
 void writeCourseEnrolls(courseNode* &list, const string &path);
 void writeCourse(courseNode* &list , const string &path);
 void writeClass(classNode* &classList ,const string &path);
+
+//Workflow
+schoolYear programStart(schoolYearNode *&head);
+void mainMenu(schoolYear &_schoolYear);
