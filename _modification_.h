@@ -77,3 +77,5 @@ void writeClass(classNode* &classList ,const string &path);
 //Workflow
 schoolYear programStart(schoolYearNode *&head);
 void mainMenu(schoolYear &_schoolYear);
+void viewCurrentYearInfo(const schoolYear &_schoolYear);
+void viewSemesterInfo(const schoolYear &_schoolYear);

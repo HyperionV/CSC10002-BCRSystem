@@ -1565,7 +1565,6 @@ bool changeAccountPassword(credential accountSystem, string userID, bool isStaff
 }
 
 //Work flow
-
 schoolYear programStart(schoolYearNode *&head) {
     head = loadDataFolder("Data");
     if (head == nullptr) {
@@ -1602,3 +1601,44 @@ void mainMenuStaff(schoolYear &_schoolYear) {
     }
 }
 
+void viewCurrentYearInfo(const schoolYear &_schoolYear) {
+    while (true) {
+        cout << "\n---------View current school year information---------" << endl;
+        cout << "\t1. View semesters information" << endl;
+        cout << "\t2. View classes information" << endl;
+        cout << "\t3. Back to main menu" << endl;
+    }
+}
+
+void viewSemestersInfo(const schoolYear &_schoolYear) {
+    while (true) {
+        cout << "Choose a semester: ";
+        for (int i = 0; i < 3; i++) {
+            cout << "\t" << i << ". " << _schoolYear._semester[i].name << endl;
+        }    
+        cout << "Your choice: ";
+        int choice;
+        cin >> choice;
+        if (choice > 3 || choice < 1) {
+            cout << "Invalid choice! Please try again" << endl;
+            continue;
+        }
+        choice--;
+        if (_schoolYear._semester[choice].start == "NULL" || _schoolYear._semester[choice].end == "NULL") {
+            cout << "This semester has not been created yet!" << endl;
+            return;
+        }
+        cout << "---Semester information---" << endl;
+        cout << "\tSemester: " << _schoolYear._semester[choice].name << endl;
+        cout << "\tStart date: " << _schoolYear._semester[choice].start << endl;
+        cout << "\tEnd date: " << _schoolYear._semester[choice].end << endl;
+        courseNode* curr = _schoolYear._semester[choice]._course;
+        cout << "\tCourses: " << endl;
+        while (curr) {
+            cout << "\t\t" << curr->data.id << " - " << curr->data.name << endl;
+            curr = curr->next;
+        }
+        system("pause");
+        break;
+    }
+}
