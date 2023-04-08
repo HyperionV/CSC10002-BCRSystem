@@ -15,44 +15,19 @@ string returnPath(string schoolYear, string StudentClass, string studentID) {
 	return pathStudent;
 }
 
-student getStudentData(string id, string pathStudent, string schoolYear) {
-
-	pathStudent = returnPath(schoolYear , ,id); //how to define which class
-	ifstream findId;
-	findId.open(pathStudent);
-	if (!findId.is_open()) {
-		std::cout << "Unable to locate student file\n";
-		return;
+student getStudentData(string id, string schoolYr, studentNode* head) {
+	studentNode* stu = findStudent(head, &id);
+	if (!stu)
+	{
+		cout << "Couldn't find student with that ID. Please retype your id and try again.\n";
+		cin >> id;
+		getStudentData(id, schoolYr, head);
 	}
-	student A;
-	while (!findId.eof()) {
-		string tmp;
-		getline(findId, tmp);
-		//Assuming the format is:  No, Student ID, First name, Last name, Gender, Date of Birth, and Social ID.
-
-		string tmpid = tmp.substr(findNthOccurrence(tmp, ',', 1) + 1,8); //8 can be changed to an appropriate id length
-		if (tmpid == id) {
-			A.id = id;
-			int FnameLth = findNthOccurrence(tmp, ',', 3) - findNthOccurrence(tmp, ',', 2);
-			A.firstName = tmp.substr(findNthOccurrence(tmp, ',', 2) + 1, FnameLth);
-			int LnameLth = findNthOccurrence(tmp, ',', 4) - findNthOccurrence(tmp, ',', 3);
-			A.firstName = tmp.substr(findNthOccurrence(tmp, ',', 3) + 1, LnameLth);
-
-			if (tmp.substr(findNthOccurrence(tmp, ',', 4) + 1, 1) == "M") A.gender = "M"; else A.gender = "F"; //M/F
-			A.socialid = tmp.substr(findNthOccurrence(tmp, ',', 6) + 1, 12); //1234567890ab
-
-			A.dob = tmp.substr(findNthOccurrence(tmp,',',5)+1,10);// dd/mm/yyyy
-			findId.close();
-			return A;
-		}
-	}
-	findId.close();
-	cout << "Couldn't find student with that ID. Please retype your id and try again.\n";
-	cin >> id;
-	getStudentData(id, pathStudent);
+	return stu->data;
 }
 
 void viewProfile(student A, schoolYear _yr) {
+	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
 	cout << A.id << endl;
@@ -82,6 +57,7 @@ void menuStudent(student &A, const schoolYear &_yr) {
 	cout << "Input: ";
 	int choice; cin >> choice;
 	
+		system("CLS");
 		switch (choice) {
 		case 1:
 			viewScoreboard(A);
@@ -100,7 +76,7 @@ void menuStudent(student &A, const schoolYear &_yr) {
 			break;
 		}
 	
-	menuStudent(A, _yr);
+	viewProfile(A, _yr);
 }
 
 void viewScoreboard(student A) {
@@ -167,6 +143,7 @@ void viewCourse(student A, schoolYear _yr) {
 }
 
 void changePassStudent(string* password, student A) {
+	system("CLS");
 	cout << endl << "Input previous password (default is 123456): ";
 	string temp;
 	cin.ignore();
