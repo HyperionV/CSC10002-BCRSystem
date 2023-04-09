@@ -14,5 +14,5 @@ void viewScoreboard(student A);
 void viewCourse(student A, schoolYear _yr);
 void viewProfile(student A, schoolYear _yr);
 void changePassStudent(string* password, student A);
-int StudentMain(string schoolYr, string id, studentNode* stuNode);
+int StudentMain(schoolYearNode* schoolYr, string id, studentNode* stuNode);
 #endif
