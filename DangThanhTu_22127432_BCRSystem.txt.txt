@@ -1,6 +1,6 @@
 -- Profile of Me --
-Họ và Tên: Vũ Lê Trọng Văn
-Mã số sinh viên: 20127095
+Họ và Tên: Đặng Thanh Tú
+Mã số sinh viên: 22127432
 Lớp: 22CLC06
 Dự án đang tham gia: BCRSystem (Better/Best Course Registration System
 
