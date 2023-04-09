@@ -39,8 +39,8 @@ int main() {
     // }
 
     schoolYearNode *_schoolYear = nullptr;
-    schoolYear mainSY = programStart(_schoolYear);
-    mainMenuStaff(mainSY);
+    _schoolYear = loadDataFolder("Data");
+    mainMenuStaff(_schoolYear);
 
     return 0;
 }

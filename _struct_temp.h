@@ -62,8 +62,8 @@ struct course {
     string name;
     string className;
     string teacher;
-    unsigned int credit;
-    unsigned int max = 50;
+    int credit;
+    int max = 50;
     string day;
     string session;
     studentNode* enrolled = nullptr;

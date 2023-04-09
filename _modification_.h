@@ -32,18 +32,21 @@ void deleteStudentNode(studentNode *&head, const string &studentID);
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID);
 void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear);
 bool checkStudentExistence(const schoolYear &_schoolYear, const student &_student);
+studentNode* findStudentInDatabase(schoolYearNode *_schoolYearNode, const string &ID);
+courseNode* findCourseInDatabase(schoolYearNode *_schoolYearNode, const string &ID);
 int getNumberOfStudents(studentNode *_student);
 
 //main features functions prototypes
-void createSchoolYear(schoolYear &year);
+bool createSchoolYear(schoolYearNode *&head, schoolYear &year);
 void createClass(schoolYear &SC);
 void addStudentToClass(schoolYear &_schoolYear);
 void createSemester(schoolYear &SY);
 void createCourse(semester &_semester);
 void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
 void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course);
-void removeStudentFromCourse(course &_course, const string &studentID);
+void removeStudentFromCourse(course &_course);
 void deleteCourse(semester &_semester, const string &ID);
+void viewCourseInfo(const course &_course);
 void updateCourseInfo(course &_course);
 void updateStudentResult(const schoolYear &_schoolYear, const course &_course);
 
@@ -73,10 +76,10 @@ void writeCourseEnrolls(courseNode* &courseList, const string &path);
 void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
 
-
-//Workflow/Menu
+//Menu/support functions
 schoolYear programStart(schoolYearNode *&head);
-void mainMenuStaff(schoolYear &_schoolYear);
+bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
+void mainMenuStaff(schoolYearNode *&head);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
 bool viewSemestersInfo(const schoolYear &_schoolYear);
 void viewClassesInfo(const schoolYear &_schoolYear);
@@ -84,3 +87,8 @@ void viewDetailedClassInfo(const _class &source);
 void viewSchoolYearAllStudent(const schoolYear &_schoolYear);
 void viewDetailedCourseInfo(const course &_course);
 void viewStudentInfo(const schoolYear &_schoolYear);
+void updateCurrentYearInfo(schoolYear &_schoolYear);
+bool updateSemesterInfo(schoolYear &_schoolYear);
+void createNewCourseUI(schoolYear &_schoolYear);
+bool updateCourseInfoUI(schoolYear &_schoolYear);
+// void updateClassInfo(schoolyear &_schoolYear);
