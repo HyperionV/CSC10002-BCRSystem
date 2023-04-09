@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "_struct_temp.h"
 
+bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr);
 int findNthOccurrence(string s, char x, int count);
 student getStudentData(string id, string schoolYr, studentNode* head);
 void menuStudent(student &A, const schoolYear &_yr);

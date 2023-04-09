@@ -5,17 +5,7 @@ int StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode)
     string yr = id.substr(0,2);
     yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
     schoolYear thisYr;
-    bool check = false;
-    while (schoolYrHead)
-    {
-        if (schoolYrHead->data._schoolYear == yr) {
-            thisYr = schoolYrHead->data;
-            check = true;
-            break;
-        }
-        schoolYrHead = schoolYrHead->next;
-    }
-    if (check)
+    if (getSchoolYear(id,schoolYrHead,thisYr))
     {
         classNode* tmp =thisYr._class;
         studentNode* tmpStu;
@@ -36,7 +26,7 @@ int StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode)
                 cout << "No student exists with such student id\n";
                 break;
             } 
-            tmp=tmp->next;
+            tmp = tmp->next;
         }
         if (stuNode){
             student A = getStudentData(id, thisYr._schoolYear, stuNode);
@@ -47,4 +37,5 @@ int StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode)
         cout << "Unable to locate school year\n";
         return 0;
     }
+    
 }

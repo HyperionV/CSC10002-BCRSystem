@@ -1,6 +1,23 @@
 #include "_student_h.h"
 //main function file 
 
+bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr){
+	string yr = id.substr(0,2);
+    yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
+    schoolYear thisYr;
+    bool check = false;
+    while (schoolYrHead)
+    {
+        if (schoolYrHead->data._schoolYear == yr) {
+            thisYr = schoolYrHead->data;
+            return true;
+            break;
+        }
+        schoolYrHead = schoolYrHead->next;
+    }
+	return false;
+}
+
 int findNthOccurrence(string s, char x, int count) {
 	int tmp = 0;
 	for (int i = 0; i < s.length(); i++) {
