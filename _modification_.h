@@ -20,6 +20,7 @@ void deleteCourseList(courseNode *&head);
 void deleteClassList(classNode *&head);
 void deleteScoreboardList(scoreboardNode *&head);
 void deleteSchoolYearList(schoolYearNode *&head);
+stringNode* findString(stringNode *head, const string &str);
 classNode* findClassName(classNode *head, const string &className);
 studentNode* findStudent(studentNode *head, const string &studentID);
 courseNode* findCourse(courseNode *head, const string &ID);
@@ -41,7 +42,7 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year);
 void createClass(schoolYear &SC);
 void addStudentToClass(schoolYear &_schoolYear);
 void createSemester(schoolYear &SY);
-void createCourse(semester &_semester);
+void createCourse(schoolYear &_schoolYear, semester &_semester);
 void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
 void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course);
 void removeStudentFromCourse(course &_course);
@@ -75,17 +76,21 @@ void writeSchoolyear(string path, schoolYear sY);
 void writeCourseEnrolls(courseNode* &courseList, const string &path);
 void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
+void writeDataFolder(const string &path, schoolYearNode* &SYlist);
+
 
 //Menu/support functions
 schoolYear programStart(schoolYearNode *&head);
 bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
 void mainMenuStaff(schoolYearNode *&head);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
+void viewCourseScoreboard(studentNode *_student, const string &ID);
 bool viewSemestersInfo(const schoolYear &_schoolYear);
 void viewClassesInfo(const schoolYear &_schoolYear);
 void viewDetailedClassInfo(const _class &source);
 void viewSchoolYearAllStudent(const schoolYear &_schoolYear);
 void viewDetailedCourseInfo(const course &_course);
+void viewStudentResult(const student &source);
 void viewStudentInfo(const schoolYear &_schoolYear);
 void updateCurrentYearInfo(schoolYear &_schoolYear);
 bool updateSemesterInfo(schoolYear &_schoolYear);
