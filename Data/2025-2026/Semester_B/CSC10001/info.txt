@@ -1,1 +1,0 @@
-CSC10001,Introduction To Programming, I52,Le Ngoc Thanh,4,50,WED,S2

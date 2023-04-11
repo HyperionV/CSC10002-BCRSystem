@@ -20,6 +20,7 @@ void deleteCourseList(courseNode *&head);
 void deleteClassList(classNode *&head);
 void deleteScoreboardList(scoreboardNode *&head);
 void deleteSchoolYearList(schoolYearNode *&head);
+stringNode* findString(stringNode *head, const string &str);
 classNode* findClassName(classNode *head, const string &className);
 studentNode* findStudent(studentNode *head, const string &studentID);
 courseNode* findCourse(courseNode *head, const string &ID);
@@ -41,7 +42,7 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year);
 void createClass(schoolYear &SC);
 void addStudentToClass(schoolYear &_schoolYear);
 void createSemester(schoolYear &SY);
-void createCourse(semester &_semester);
+void createCourse(schoolYear &_schoolYear, semester &_semester);
 void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
 void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course);
 void removeStudentFromCourse(course &_course);
@@ -60,18 +61,18 @@ semester loadSemester(const string &path);
 studentNode* loadStudentsFromClass(const string &path ,const string& className);
 schoolYear loadSchoolyear(const string &path, const string &sY);
 classNode* loadClass(const string &path);
-// scoreboard* newScoreBoard(scoreboard curr);
+
+
+//staff
+bool standardizeName(string &name);
+bool createStaffAccount(staffInfo &newStaff);
+string createEmail(string fullName);
 
 ///LOAD DATA
 void loadStudentByFile(studentNode *&head, const string &filePath);
 void loadStudentByFile(studentNode *&head, const string &classname, const string &filePath);
 void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path);
 schoolYearNode* loadDataFolder(const string &path);
-
-//STAFF
-bool createStaffAccount(staffInfo &newStaff);
-bool standardizeName(string &name);
-string createEmail(string fullName);
 
 ///SAVE DATA
 void delete_directory(const string &path);
@@ -81,7 +82,7 @@ void writeCourseEnrolls(courseNode* &courseList, const string &path);
 void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
 void writeDataFolder(const string &path, schoolYearNode* &SYlist);
-void autoSaveClass(studentNode *studentInClass);
+void autoSaveClass(studentNode *&studentInClass);
 void autoSaveCourse(semester sem, string courseName);
 
 //Menu/support functions
@@ -89,11 +90,13 @@ schoolYear programStart(schoolYearNode *&head);
 bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
 void mainMenuStaff(schoolYearNode *&head);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
+void viewCourseScoreboard(studentNode *_student, const string &ID);
 bool viewSemestersInfo(const schoolYear &_schoolYear);
 void viewClassesInfo(const schoolYear &_schoolYear);
 void viewDetailedClassInfo(const _class &source);
 void viewSchoolYearAllStudent(const schoolYear &_schoolYear);
 void viewDetailedCourseInfo(const course &_course);
+void viewStudentResult(const student &source);
 void viewStudentInfo(const schoolYear &_schoolYear);
 void updateCurrentYearInfo(schoolYear &_schoolYear);
 bool updateSemesterInfo(schoolYear &_schoolYear);

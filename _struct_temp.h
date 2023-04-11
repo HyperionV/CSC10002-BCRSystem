@@ -27,10 +27,10 @@ struct stringNode {
 struct scoreboard {
     string courseID;
     string courseName;
-    double total= 0.0;
-    double final= 0.0;
+    double total = 0.0;
+    double final = 0.0;
     double midterm = 0.0;
-    double other= 0.0;
+    double other = 0.0;
 };
 
 struct scoreboardNode {
@@ -96,7 +96,7 @@ struct classNode {
 struct schoolYear {
     string _schoolYear;
     classNode* _class = nullptr;
-    semester *_semester;
+    semester *_semester = new semester[3];
 };
 
 struct schoolYearNode {
@@ -121,7 +121,6 @@ struct credential {
 
 struct staffInfo {
     string name;
-    string email;
-    string gender;
+    string mail;
     account _accont;
 };
