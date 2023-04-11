@@ -1,19 +1,102 @@
 #include "_struct_temp.h"
 
-void addStringNode(stringNode *&head, const string &data);
-void createSchoolYear(schoolYear &object, string name);
-void createSemester(semester &s);
-void createClass(schoolYear &object);
+//miscellaneous/support function prototypes
 void getContentOfFile(const string &path, stringNode *&head);
 void displayListContent(stringNode *head);
 void displayListContentWithIndex(stringNode *head);
-void createCourse(const semester &obj);
-
-void addStudentToCourse(course &c);
-void addStudentToClass(classes &c);
-void addStudentByFile(studentNode *&head);
+void displayStudentList(studentNode *head);
+void addStudentByFile(studentNode *&head, const string &className);
 void addStudentIndividually(student &s);
 void saveStudentInfo(string path, const student &source);
+void addStringNode(stringNode *&head, const string &data);
 void addStudentNode(studentNode *&head, const student &source);
+void addCourseNode(courseNode *&head, const course &_course);
+void addClassNode(classNode *&head, const _class &c);
+void addScoreboardNode(scoreboardNode *&head, const scoreboard &score);
+void addSchoolYearNode(schoolYearNode *&head, const schoolYear &_head);
+void deleteStringList(stringNode *&head);
+void deleteStudentList(studentNode *&head);
+void deleteCourseList(courseNode *&head);
+void deleteClassList(classNode *&head);
+void deleteScoreboardList(scoreboardNode *&head);
+void deleteSchoolYearList(schoolYearNode *&head);
+classNode* findClassName(classNode *head, const string &className);
+studentNode* findStudent(studentNode *head, const string &studentID);
+courseNode* findCourse(courseNode *head, const string &ID);
+scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID);
+schoolYearNode* findSchoolYear(schoolYearNode *head, const string &_schoolYear);
+void deleteStringNode(stringNode *&head, const string &target);
+void deleteCourseNode(courseNode *&head, const string &ID);
+void deleteClassNode(classNode *&head, const string &className);
+void deleteStudentNode(studentNode *&head, const string &studentID);
+void deleteScoreboardNode(scoreboardNode *&head, const string &ID);
+void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear);
+bool checkStudentExistence(const schoolYear &_schoolYear, const student &_student);
+studentNode* findStudentInDatabase(schoolYearNode *_schoolYearNode, const string &ID);
+courseNode* findCourseInDatabase(schoolYearNode *_schoolYearNode, const string &ID);
+int getNumberOfStudents(studentNode *_student);
 
-string checkClassOfStudent(const student &obj, const string &schoolYear);
+//main features functions prototypes
+bool createSchoolYear(schoolYearNode *&head, schoolYear &year);
+void createClass(schoolYear &SC);
+void addStudentToClass(schoolYear &_schoolYear);
+void createSemester(schoolYear &SY);
+void createCourse(semester &_semester);
+void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
+void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course);
+void removeStudentFromCourse(course &_course);
+void deleteCourse(semester &_semester, const string &ID);
+void viewCourseInfo(const course &_course);
+void updateCourseInfo(course &_course);
+void updateStudentResult(const schoolYear &_schoolYear, const course &_course);
+
+//Data export function prototypes
+void exportStudentInfoList(const string &_schoolYear, const course &_course);
+void importStudentScore(const schoolYear &_schooolYear, const course &_course);
+
+//Load and save data
+course loadCourse(const string &path);
+semester loadSemester(const string &path);
+studentNode* loadStudentsFromClass(const string &path ,const string& className);
+schoolYear loadSchoolyear(const string &path, const string &sY);
+classNode* loadClass(const string &path);
+// scoreboard* newScoreBoard(scoreboard curr);
+
+///LOAD DATA
+void loadStudentByFile(studentNode *&head, const string &filePath);
+void loadStudentByFile(studentNode *&head, const string &classname, const string &filePath);
+void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path);
+schoolYearNode* loadDataFolder(const string &path);
+
+//STAFF
+bool createStaffAccount(staffInfo &newStaff);
+bool standardizeName(string &name);
+string createEmail(string fullName);
+
+///SAVE DATA
+void delete_directory(const string &path);
+void writeStudentInClass(studentNode *studentList, const string &path);
+void writeSchoolyear(string path, schoolYear sY);
+void writeCourseEnrolls(courseNode* &courseList, const string &path);
+void writeCourse(courseNode* &courseList , const string &path);
+void writeClass(classNode* &classList ,const string &path);
+void writeDataFolder(const string &path, schoolYearNode* &SYlist);
+void autoSaveClass(studentNode *studentInClass);
+void autoSaveCourse(semester sem, string courseName);
+
+//Menu/support functions
+schoolYear programStart(schoolYearNode *&head);
+bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
+void mainMenuStaff(schoolYearNode *&head);
+void viewCurrentYearInfo(const schoolYear &_schoolYear);
+bool viewSemestersInfo(const schoolYear &_schoolYear);
+void viewClassesInfo(const schoolYear &_schoolYear);
+void viewDetailedClassInfo(const _class &source);
+void viewSchoolYearAllStudent(const schoolYear &_schoolYear);
+void viewDetailedCourseInfo(const course &_course);
+void viewStudentInfo(const schoolYear &_schoolYear);
+void updateCurrentYearInfo(schoolYear &_schoolYear);
+bool updateSemesterInfo(schoolYear &_schoolYear);
+void createNewCourseUI(schoolYear &_schoolYear);
+bool updateCourseInfoUI(schoolYear &_schoolYear);
+// void updateClassInfo(schoolyear &_schoolYear);

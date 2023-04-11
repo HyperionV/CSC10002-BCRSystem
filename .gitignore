@@ -1,6 +1,7 @@
+<<<<<<< HEAD
 *.exe
 *.json
 Debug/
 *.mk
 *.project
-*.txt
+
