@@ -1,4 +1,4 @@
-#include "_struct_temp.h"
+#include "_struct_.h"
 
 //miscellaneous/support function prototypes
 void getContentOfFile(const string &path, stringNode *&head);
