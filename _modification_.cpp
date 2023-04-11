@@ -119,7 +119,7 @@ void addStudentByFile(studentNode *&head, const string &className) {
         string placeHolder;
         getline(in_file, placeHolder, ',');
         if (placeHolder == "" || placeHolder == "\n") {
-            // cout << "Blank line" << endl;
+            cout << "Wrong student index format" << endl;
             break;
         }
         // cout << placeHolder << endl;
@@ -1112,12 +1112,16 @@ void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
         getline(importFile, placeHolder, ',');  //get firstname
         getline(importFile, placeHolder, ',');  //get lastname
         getline(importFile, placeHolder, ',');  //get other scores
+        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
         tempScoreBoard.other = stod(placeHolder);
         getline(importFile, placeHolder, ',');  //get midterm score
+        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
         tempScoreBoard.midterm = stod(placeHolder);
         getline(importFile, placeHolder, ',');  //get final score
+        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
         tempScoreBoard.final = stod(placeHolder);
         getline(importFile, placeHolder, ',');  //get total score
+        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
         tempScoreBoard.total = stod(placeHolder);
         //find student in course to change scoreboard
         studentNode *targetStudent = findStudent(currStudentList, studentID);
@@ -1171,16 +1175,6 @@ semester loadSemester(const string &path, string semesterName) {
     return curr;
 }
 
-// scoreboard* newScoreBoard(scoreboard curr) {
-//     scoreboard* temp= new scoreboard;
-//     temp->courseID = curr.courseID;
-//     temp->midterm = curr.midterm;
-//     temp->final = curr.final;
-//     temp->other = curr.other;
-//     temp->total = curr.total;
-//     return temp;
-// }
-
 course loadCourse(const string &path) {
     course curr;
     DIR* directory = opendir(path.c_str());
@@ -1203,8 +1197,10 @@ course loadCourse(const string &path) {
                     getline(in_file, curr.className, ',');
                     getline(in_file, curr.teacher, ',');
                     getline(in_file, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1";
                     curr.credit = stoi(hold);
                     getline(in_file, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1";
                     curr.max = stoi(hold);
                     getline(in_file, curr.day, ',');
                     getline(in_file, curr.session);
@@ -1351,12 +1347,16 @@ void loadStudentByFile(studentNode *&head, const string &classname, const string
                     getline(in_file1, curr.courseID, ',');
                     getline(in_file1, curr.courseName, ',');
                     getline(in_file1, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.other = stod(hold);
                     getline(in_file1, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.midterm = stod(hold);
                     getline(in_file1, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.final = stod(hold);
                     getline(in_file1, hold);
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.total = stod(hold);
                     hold.clear();
                     addScoreboardNode(temp._course, curr);
@@ -1390,12 +1390,16 @@ void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path) 
                     getline(in_file, curr.courseID, ',');
                     getline(in_file, curr.courseName, ',');
                     getline(in_file, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.other = stod(hold);
                     getline(in_file, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.midterm = stod(hold);
                     getline(in_file, hold, ',');
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.final = stod(hold);
                     getline(in_file, hold);
+                    if (hold == "" || hold == "\n") hold = "-1.0";
                     curr.total = stod(hold);
                     hold.clear();
                     addScoreboardNode(scoreboardList, curr);
@@ -1479,18 +1483,12 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
             out_file1 << studentList->data._course->data.total;
             if(studentList->data._course->next)
                 out_file1 << endl;
-            //DELETE AFTER DATA IS SAVED
-            scoreboardNode* del= studentList->data._course;
+
             studentList->data._course= studentList->data._course->next;
-            delete del;
-            del = nullptr;
         }
         out_file1.close();
-        //DELETE AFTER DATA IS SAVED
-        studentNode* del= studentList;
+
         studentList = studentList->next;
-        delete del;
-        del= nullptr;
     }
     return;
 }
@@ -1509,12 +1507,9 @@ void writeCourseEnrolls(courseNode* &courseList, const string &path) {
         out_file << courseList->data.enrolled->data._course->data.final;
         if(courseList->data.enrolled->next)
             out_file << endl;
-        //DELETE AFTER DATA IS SAVED
-        deleteScoreboardList(courseList->data.enrolled->data._course);
-        studentNode* del= courseList->data.enrolled;
+
         courseList->data.enrolled= courseList->data.enrolled->next;
-        delete del;
-        del = nullptr;
+
     }
     out_file.close();
     return;
@@ -1536,8 +1531,7 @@ void writeCourse(courseNode* &courseList , const string &path) {
         
         courseList= courseList->next;
     }
-    //DELETE AFTER DATA IS SAVED
-    deleteCourseList(holdToDelete);
+
     return;
 }
 
@@ -1550,8 +1544,7 @@ void writeClass(classNode* &classList ,const string &path) {
 
         classList = classList->next;
     }
-    //DELETE AFTER DATA IS SAVED
-    deleteClassList(holdToDelete);
+
     return;
 }
 
@@ -1573,8 +1566,7 @@ void writeSchoolyear(string path, schoolYear sY)
         writeCourse(sY._semester[i]._course, full_path);
         out_file.close();
     }
-    delete [] sY._semester;
-    ////Write student to classes 
+
     mkdir((path + "/Classes").c_str());
     writeClass(sY._class, path + "/Classes");
 
@@ -1588,6 +1580,65 @@ void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
     }
 
     // deleteSchoolYearList(schoolYearList);
+}
+
+void autoSaveClass(studentNode *studentInClass) {
+    string full_path = "Data/Classes/" + studentInClass->data.className;
+
+    delete_directory(full_path);
+
+    writeStudentInClass(studentInClass, full_path);
+}
+
+void autoSaveCourse(const semester &sem, const string &courseName) {
+    courseNode* temp = sem._course;
+    while(temp) {
+        if(temp->data.name == courseName) {
+            string full_path = "Data/" + sem.name + "/" + courseName;
+            delete_directory(full_path);
+            writeCourseEnrolls(temp, full_path);
+            return;
+        }
+        temp = temp->next;
+    }
+}
+
+bool standardizeName(string &name) {
+    for(int i= 0; i< name.length(); i++) {
+        if(i == 0) {
+            if(name[i] <= 'a' && name[i] >= 'z') {
+                name[i] -= 32;
+            }
+        }
+        else {
+            if(name[i] <= 'A' && name[i] >= 'Z') {
+                name[i] += 32;
+            }
+        }
+        if((name[i] < 'a' && name[i] > 'z') || (name[i] < 'A' && name[i] > 'Z'))
+            return false;
+    }
+    return true;
+}
+
+string createEmail(const string &fullName) {
+    stringstream ss {fullName};
+    string temp, email;
+    while(ss >> temp) {
+        standardizeName(temp);
+        email += temp;
+        temp.clear();
+    }
+    email += "@staff.hcmus.edu.vn";
+    return email;
+}
+
+bool createStaffAccount(staffInfo &newStaff) {
+    cout << "----------------Create new staff account--------------------" << endl;
+    cout << "Input staff's full name : "; 
+    getline(cin, newStaff.name);
+    newStaff.mail = createEmail(newStaff.name);
+    return true;
 }
 
 schoolYearNode* loadDataFolder(const string &path) {
@@ -1920,8 +1971,7 @@ void viewClassesInfo(const schoolYear &_schoolYear) {
     }
 }
 
-void viewDetailedClassInfo(const _class &source) {
-    //get every course of every student in the class
+void viewWholeClassScoreboard(const _class &source) {
     scoreboardNode *courseName = nullptr;
     studentNode *currStudent = source._student;
     while (currStudent) {
@@ -1935,6 +1985,11 @@ void viewDetailedClassInfo(const _class &source) {
         }
         currStudent = currStudent->next;
     }
+    //unfinished
+    cout << setw(5) << left << "Index" << setw(10) << right << "Student ID" << setw(30) << "Full name" << endl;
+}
+
+void viewDetailedClassInfo(const _class &source) {
     //view scoreboard of the whole class and overall GPA
     cout << "\n----------View detailed class info----------" << endl;
     cout << "Class: " << source.name << endl;

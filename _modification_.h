@@ -61,7 +61,12 @@ semester loadSemester(const string &path);
 studentNode* loadStudentsFromClass(const string &path ,const string& className);
 schoolYear loadSchoolyear(const string &path, const string &sY);
 classNode* loadClass(const string &path);
-// scoreboard* newScoreBoard(scoreboard curr);
+
+
+//staff
+bool standardizeName(string &name);
+bool createStaffAccount(staffInfo &newStaff);
+string createEmail(const string &fullName);
 
 ///LOAD DATA
 void loadStudentByFile(studentNode *&head, const string &filePath);
@@ -77,7 +82,8 @@ void writeCourseEnrolls(courseNode* &courseList, const string &path);
 void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
 void writeDataFolder(const string &path, schoolYearNode* &SYlist);
-
+void autoSaveClass(studentNode *studentInClass);
+void autoSaveCourse(const semester &sem, const string &courseName);
 
 //Menu/support functions
 schoolYear programStart(schoolYearNode *&head);
