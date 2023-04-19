@@ -1584,9 +1584,7 @@ void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
 
 void autoSaveClass(studentNode *studentInClass) {
     string full_path = "Data/Classes/" + studentInClass->data.className;
-
     delete_directory(full_path);
-
     writeStudentInClass(studentInClass, full_path);
 }
 
