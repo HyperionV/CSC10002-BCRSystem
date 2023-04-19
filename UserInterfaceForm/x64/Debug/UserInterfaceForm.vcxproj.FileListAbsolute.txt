@@ -1,0 +1,7 @@
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.vcxproj.AssemblyReference.cache
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.vcxproj.SuggestedBindingRedirects.cache
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.LoadingForm.resources
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.vcxproj.GenerateResource.cache
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.vcxproj.CopyComplete
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.LoginForm.resources
+C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\UserInterfaceForm\x64\Debug\UserInterfaceForm.StaffForm.resources

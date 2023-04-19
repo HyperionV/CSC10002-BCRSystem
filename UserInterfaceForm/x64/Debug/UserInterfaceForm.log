@@ -1,0 +1,6 @@
+﻿  LoadingForm.cpp
+  LoginForm.cpp
+  StaffForm.cpp
+  Generating Code...
+  LoadingForm.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+  UserInterfaceForm.vcxproj -> C:\Users\kevin\OneDrive\Desktop\Project_BCRSystem\x64\Debug\UserInterfaceForm.exe
