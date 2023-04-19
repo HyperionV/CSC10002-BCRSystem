@@ -1,0 +1,1 @@
+CSC1001,Introduction to programming,i42,Le Ngoc Thanh,4,20,MON,1
