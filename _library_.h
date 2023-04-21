@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <dirent.h>
+#include <stdlib.h>
+#include <sstream>
 
 using namespace std;
 

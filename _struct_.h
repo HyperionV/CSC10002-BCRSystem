@@ -48,12 +48,10 @@ struct student {
     string socialid;
     scoreboardNode* _course = nullptr;
     string className;
-    string password = defaultPassword;
 };
 
 struct studentNode {
     student data;
-    int idx= data.index;
     studentNode* next = nullptr;
 };
 
@@ -62,8 +60,8 @@ struct course {
     string name;
     string className;
     string teacher;
-    int credit;
-    int max = 50;
+    unsigned int credit;
+    unsigned int max = 50;
     string day;
     string session;
     studentNode* enrolled = nullptr;
@@ -122,5 +120,4 @@ struct credential {
 struct staffInfo {
     string name;
     string mail;
-    account _account;
 };

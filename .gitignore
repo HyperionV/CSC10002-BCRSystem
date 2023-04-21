@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 *.exe
 *.json
 Debug/
 *.mk
 *.project
-=======
 newest/
 *.pptx
 *.txt
@@ -15,4 +13,3 @@ FourthVersion/
 .vscode/
 Backup/
 Data/
->>>>>>> Huy

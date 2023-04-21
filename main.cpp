@@ -39,6 +39,8 @@ int main() {
     // }
 
     schoolYearNode *_schoolYear = nullptr;
+    credential accountSytem;
+    loadUserAccount(accountSytem, "credential");
     _schoolYear = loadDataFolder("Data");
     mainMenuStaff(_schoolYear);
 

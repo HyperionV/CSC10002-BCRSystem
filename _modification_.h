@@ -1,4 +1,5 @@
-#include "_struct_temp.h"
+#include "_struct_.h"
+#include "_validate_.h"
 
 //miscellaneous/support function prototypes
 void getContentOfFile(const string &path, stringNode *&head);
@@ -66,12 +67,13 @@ classNode* loadClass(const string &path);
 //staff
 bool standardizeName(string &name);
 bool createStaffAccount(staffInfo &newStaff);
-string createEmail(string fullName);
+string createEmail(const string &fullName);
 
 ///LOAD DATA
 void loadStudentByFile(studentNode *&head, const string &filePath);
 void loadStudentByFile(studentNode *&head, const string &classname, const string &filePath);
 void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path);
+void loadUserAccount (credential &accountSystem, const string &path);
 schoolYearNode* loadDataFolder(const string &path);
 
 ///SAVE DATA
@@ -82,11 +84,13 @@ void writeCourseEnrolls(courseNode* &courseList, const string &path);
 void writeCourse(courseNode* &courseList , const string &path);
 void writeClass(classNode* &classList ,const string &path);
 void writeDataFolder(const string &path, schoolYearNode* &SYlist);
-void autoSaveClass(studentNode *&studentInClass);
-void autoSaveCourse(semester sem, string courseName);
+void autoSaveClass(studentNode *studentInClass);
+void autoSaveCourse(const semester &sem, const string &courseName);
 
 //Menu/support functions
 schoolYear programStart(schoolYearNode *&head);
+void viewProfileStudent(student curStudent);
+void viewProfileStaff(staffInfo curStaff, credential accountSystem);
 bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
 void mainMenuStaff(schoolYearNode *&head);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
