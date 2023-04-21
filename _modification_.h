@@ -1,4 +1,5 @@
 #include "_struct_.h"
+#include "_validate_.h"
 
 //miscellaneous/support function prototypes
 void getContentOfFile(const string &path, stringNode *&head);
