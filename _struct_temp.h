@@ -52,8 +52,8 @@ struct student {
 };
 
 struct studentNode {
-    int idx;
     student data;
+    int idx= data.index;
     studentNode* next = nullptr;
 };
 
@@ -122,5 +122,5 @@ struct credential {
 struct staffInfo {
     string name;
     string mail;
-    account _accont;
+    account _account;
 };

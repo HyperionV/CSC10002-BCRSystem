@@ -527,9 +527,9 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year) {
     cout << "Enter school year: ";
     cin >> SC;
     if (SC.length() < 5) {
-        string temp = SC;
-        temp[3] += 1;
-        SC += "-" + temp;
+        int temp = stoi(SC);
+        temp++;
+        SC += "-" + to_string(temp);
     }
     if (SC.length() > 5) {
         string temp1 = SC.substr(5);
@@ -1441,7 +1441,7 @@ void delete_directory(const string& path)
 void writeStudentInClass(studentNode *studentList, const string &path) {
     while(studentList) {
         string full_path= path + "/" + studentList->data.id;
-        mkdir((path + "/" + studentList->data.id).c_str());
+        mkdir((path + "/" + to_string(studentList->idx) + "." + studentList->data.id).c_str());
         ofstream out_file {full_path + "/info.txt"};
         out_file << studentList->data.index << "," ;
         out_file << studentList->data.id << ",";
