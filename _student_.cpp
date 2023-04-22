@@ -69,7 +69,7 @@ void menuStudent(student &A, const schoolYear &_yr) {
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			changePassStudent(&A.password, A);
+			// changePassStudent(&A.password, A);
 			break;
 		case 0:
 			//menu_version1(); Accessing login menu
@@ -174,7 +174,7 @@ void changePassStudent(string* password, student A) {
 		} while (choice < 1 || choice > 2);
 		switch (choice) {
 		case 1:
-			changePassStudent(&A.password, A);
+			// changePassStudent(&A.password, A);
 			break;
 		case 2:
 			return;
