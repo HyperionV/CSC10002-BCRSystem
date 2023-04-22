@@ -185,7 +185,7 @@ void changePassStudent(string* password, student A) {
 	return;
 }
 
-void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode)
+void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode, credential &accountSystem)
 {
     string yr = id.substr(0,2);
     yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
@@ -215,8 +215,8 @@ void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode)
         }
         if (stuNode){
             student A = getStudentData(id, thisYr._schoolYear, stuNode);
-            viewProfile(A,thisYr);
-        }
+			viewProfile(A, thisYr, accountSystem);
+		}
     }
     else {
         cout << "Unable to locate school year\n";

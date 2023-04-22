@@ -5,10 +5,10 @@
 
 bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr);
 student getStudentData(string id, string schoolYr, studentNode* head);
-void menuStudent(student &A, const schoolYear &_yr);
+void menuStudent(student &A, const schoolYear &_yr, credential &accountSystem);
 void viewScoreboard(student A);
 void viewCourse(student A, schoolYear _yr);
-void viewProfile(student A, schoolYear _yr);
+void viewProfile(student A, schoolYear _yr, credential &accountSystem);
 void changePassStudent(string* password, student A);
-void StudentMain(schoolYearNode* schoolYr, string id, studentNode* stuNode);
+void StudentMain(schoolYearNode* schoolYr, string id, studentNode* stuNode, credential &accountSystem);
 #endif
