@@ -2,3 +2,4 @@
 
 int getChoiceInt();
 char getChoiceChar();
+bool standardizeName(string &name);

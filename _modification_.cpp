@@ -548,9 +548,9 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year) {
     year._schoolYear = SC;
     year._class = nullptr;
     // year._semester = new semester[3];
-    year._semester[0].name = "Spring semester";
-    year._semester[1].name = "Summer semester";
-    year._semester[2].name = "Autumn semester";
+    year._semester[0].name = "Semester_A";
+    year._semester[1].name = "Semester_B";
+    year._semester[2].name = "Semester_C";
     for (int i = 0; i < 3; i++){
         year._semester[i].start = "NULL";
         year._semester[i].end = "NULL";
@@ -758,7 +758,7 @@ void addStudentToClass(schoolYear &_schoolYear) {
 
 void createSemester(schoolYear &SY) {
     cout << "\n----------Create semester----------" << endl;
-    cout << "Choose a semester to create: \n\t1. Spring semester \n\t2. Summer semester \n\t3. Autumn semester" << endl;
+    cout << "Choose a semester to create: \n\t1. Semester_A \n\t2. Semester_B \n\t3. Semester_C" << endl;
     int choice;
     cout << "Choose an option: ";
     choice = getChoiceInt();
@@ -825,7 +825,7 @@ void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course) {
     string placeHolder;
     int counter = getNumberOfStudents(_course.enrolled);
     getline(inputFile, placeHolder);    //skip the content line in the csv file
-    while (!inputFile.eof()) {
+    while (inputFile.good()) {
         //check if the course is full
         if (counter >= _course.max) {
             break;
@@ -865,10 +865,13 @@ void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course) {
         }
         //update scoreboard node inside student object contained in a class list -> add new course to that student profile in the class list
         scoreboard tempScoreboard;
-        tempScoreboard.courseID = _course.id;
-        tempScoreboard.courseName = _course.name;
+        tempScoreboard.courseID = _course.id; 
+        tempScoreboard.courseName = _course.name; 
         addScoreboardNode(studentObject->data._course, tempScoreboard);
-        tempStudent = studentObject->data;
+        tempStudent= studentObject->data;
+        deleteScoreboardList(tempStudent._course);
+
+        addScoreboardNode(tempStudent._course, tempScoreboard);
         addStudentNode(_course.enrolled, tempStudent);
         counter++;
         studentObject = nullptr;
@@ -1091,60 +1094,110 @@ void exportStudentInfoList(const string &_schoolYear, const course &_course) {
     curr = nullptr;
 }
 
-void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
+// void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
+//     string path;
+//     cout << "Enter scoreboard path: ";
+//     cin >> path;
+//     ifstream importFile {path};
+//     if (!importFile) {
+//         cout << "Error! Cannot open import file" << endl;
+//         return;
+//     }
+//     classNode *currClassList = _schoolYear._class;
+//     studentNode *currStudentList = _course.enrolled;
+//     while (!importFile.eof()) {
+//         string placeHolder;
+//         string idx;
+//         string studentID;
+//         scoreboard tempScoreBoard;
+//         tempScoreBoard.courseID = _course.id;
+//         tempScoreBoard.courseName = _course.name;
+//         getline(importFile, idx, ',');  //get index
+//         getline(importFile, studentID, ',');    //get student id
+//         getline(importFile, placeHolder, ',');  //get firstname
+//         getline(importFile, placeHolder, ',');  //get lastname
+//         getline(importFile, placeHolder, ',');  //get other scores
+//         if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
+//         tempScoreBoard.other = stod(placeHolder);
+//         getline(importFile, placeHolder, ',');  //get midterm score
+//         if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
+//         tempScoreBoard.midterm = stod(placeHolder);
+//         getline(importFile, placeHolder, ',');  //get final score
+//         if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
+//         tempScoreBoard.final = stod(placeHolder);
+//         getline(importFile, placeHolder, ',');  //get total score
+//         if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
+//         tempScoreBoard.total = stod(placeHolder);
+//         //find student in course to change scoreboard
+//         studentNode *targetStudent = findStudent(currStudentList, studentID);
+//         scoreboardNode *targetScoreboard = findCourseScoreboard(targetStudent->data._course, _course.id);
+//         targetScoreboard->data = tempScoreBoard;
+//         targetScoreboard = nullptr;
+//         //find student in class to change scoreboard
+//         classNode *targetClass = findClassName(currClassList, targetStudent->data.className);
+//         targetStudent = findStudent(targetClass->data._student, studentID);
+//         targetScoreboard = findCourseScoreboard(targetStudent->data._course, _course.id);
+//         targetScoreboard->data = tempScoreBoard;
+//         targetStudent = nullptr;
+//         targetClass = nullptr;
+//         targetScoreboard = nullptr;
+//     }   
+//     //need better optimization here
+//     currClassList = nullptr;
+//     currStudentList = nullptr;
+//     importFile.close();
+// }
+
+
+void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     string path;
-    cout << "Enter scoreboard path: ";
+    cout << "Enter scoreboard path : " ;
     cin >> path;
-    ifstream importFile {path};
-    if (!importFile) {
-        cout << "Error! Cannot open import file" << endl;
+
+    ifstream in_file(path);
+
+    if(!in_file) {
+        cout << "Could not open the file, please try again !" << endl;
         return;
     }
-    classNode *currClassList = _schoolYear._class;
-    studentNode *currStudentList = _course.enrolled;
-    while (!importFile.eof()) {
-        string placeHolder;
-        string idx;
-        string studentID;
-        scoreboard tempScoreBoard;
-        tempScoreBoard.courseID = _course.id;
-        tempScoreBoard.courseName = _course.name;
-        getline(importFile, idx, ',');  //get index
-        getline(importFile, studentID, ',');    //get student id
-        getline(importFile, placeHolder, ',');  //get firstname
-        getline(importFile, placeHolder, ',');  //get lastname
-        getline(importFile, placeHolder, ',');  //get other scores
-        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
-        tempScoreBoard.other = stod(placeHolder);
-        getline(importFile, placeHolder, ',');  //get midterm score
-        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
-        tempScoreBoard.midterm = stod(placeHolder);
-        getline(importFile, placeHolder, ',');  //get final score
-        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
-        tempScoreBoard.final = stod(placeHolder);
-        getline(importFile, placeHolder, ',');  //get total score
-        if (placeHolder == "" || placeHolder == "\n") placeHolder = "-1.0";
-        tempScoreBoard.total = stod(placeHolder);
-        //find student in course to change scoreboard
-        studentNode *targetStudent = findStudent(currStudentList, studentID);
-        scoreboardNode *targetScoreboard = findCourseScoreboard(targetStudent->data._course, _course.id);
-        targetScoreboard->data = tempScoreBoard;
-        targetScoreboard = nullptr;
-        //find student in class to change scoreboard
-        classNode *targetClass = findClassName(currClassList, targetStudent->data.className);
-        targetStudent = findStudent(targetClass->data._student, studentID);
-        targetScoreboard = findCourseScoreboard(targetStudent->data._course, _course.id);
-        targetScoreboard->data = tempScoreBoard;
-        targetStudent = nullptr;
-        targetClass = nullptr;
-        targetScoreboard = nullptr;
-    }   
-    //need better optimization here
-    currClassList = nullptr;
-    currStudentList = nullptr;
-    importFile.close();
-}
+    else {
+        classNode *currClassList = _schoolYear._class;
+        studentNode* temp = _course.enrolled;
+        while(in_file.good()) {
+            string placeholder;
+            getline(in_file, placeholder, ',');
+            getline(in_file, placeholder, ',');
+            getline(in_file, placeholder, ',');
+            getline(in_file, placeholder, ',');
+            getline(in_file, placeholder, ',');
+            temp->data._course->data.other = stod(placeholder);
+            getline(in_file, placeholder, ',');
+            temp->data._course->data.midterm = stod(placeholder);
+            getline(in_file, placeholder, ',');
+            temp->data._course->data.final = stod(placeholder);
+            getline(in_file, placeholder);
+            temp->data._course->data.total = stod(placeholder);
+            placeholder.clear();
 
+            classNode *targetClass = findClassName(currClassList, temp->data.className);
+            studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
+            scoreboardNode *tempScoreboard = targetStudent->data._course;
+            cout << tempScoreboard->data.courseID;
+            while(tempScoreboard) {
+                if(tempScoreboard->data.courseID == _course.id) {
+                    tempScoreboard->data.other = temp->data._course->data.other;
+                    tempScoreboard->data.midterm = temp->data._course->data.midterm;
+                    tempScoreboard->data.final = temp->data._course->data.final;
+                    tempScoreboard->data.total = temp->data._course->data.total;
+                    break;
+                }
+                tempScoreboard= tempScoreboard->next;
+            }
+            temp= temp->next;
+        }
+    }
+    return;
+}
 //////////////////////Huy - Load and save data////////////////////////
 
 /////////////////////////////// LOAD DATA //////////////////////////////////////////////
@@ -1340,10 +1393,12 @@ void loadStudentByFile(studentNode *&head, const string &classname, const string
 
                 ifstream in_file1 {full_path + "/Scoreboard.txt"};
                 if(!in_file1) {
-                    cout << "Error while opening file! Please try again later!" << endl;
-                    return;
+                    in_file1.close();
+                    addStudentNode(head, temp);
+                    in_file.close();
+                    continue;
                 }
-                while(!in_file1.eof()) {
+                while(in_file1.good()) {
                     scoreboard curr;
                     string hold;
                     getline(in_file1, curr.courseID, ',');
@@ -1504,8 +1559,8 @@ void writeCourseEnrolls(courseNode* &courseList, const string &path) {
         out_file << courseList->data.enrolled->data.id << "," << courseList->data.enrolled->data.firstName << "," << courseList->data.enrolled->data.lastName << "," << courseList->data.enrolled->data.className << ",";
         out_file << courseList->data.enrolled->data._course->data.other << ",";
         out_file << courseList->data.enrolled->data._course->data.midterm << ",";
-        out_file << courseList->data.enrolled->data._course->data.total << ",";
-        out_file << courseList->data.enrolled->data._course->data.final;
+        out_file << courseList->data.enrolled->data._course->data.final << ",";
+        out_file << courseList->data.enrolled->data._course->data.total;
         if(courseList->data.enrolled->next)
             out_file << endl;
 
@@ -1595,30 +1650,17 @@ void autoSaveCourse(const semester &sem, const string &courseName) {
         if(temp->data.name == courseName) {
             string full_path = "Data/" + sem.name + "/" + courseName;
             delete_directory(full_path);
-            writeCourseEnrolls(temp, full_path);
+            writeCourseEnrolls(temp, full_path + "/enrolled.txt");
+            ofstream out_file(full_path + "/info.txt");
+            out_file << temp->data.id << "," << temp->data.name << "," << temp->data.className << "," << temp->data.teacher << "," << temp->data.credit << "," << temp->data.max << "," << temp->data.day << "," << temp->data.session;
+            out_file.close();
             return;
         }
         temp = temp->next;
     }
 }
 
-bool standardizeName(string &name) {
-    for(int i= 0; i< name.length(); i++) {
-        if(i == 0) {
-            if(name[i] <= 'a' && name[i] >= 'z') {
-                name[i] -= 32;
-            }
-        }
-        else {
-            if(name[i] <= 'A' && name[i] >= 'Z') {
-                name[i] += 32;
-            }
-        }
-        if((name[i] < 'a' && name[i] > 'z') || (name[i] < 'A' && name[i] > 'Z'))
-            return false;
-    }
-    return true;
-}
+
 
 string createEmail(const string &fullName) {
     stringstream ss {fullName};
@@ -1730,6 +1772,7 @@ bool changeAccountPassword(credential accountSystem, string userID, bool isStaff
             }
             temp = temp->next;
         }
+        delete temp;
     }
     else {
         accountNode* temp= accountSystem.student;
@@ -1740,6 +1783,7 @@ bool changeAccountPassword(credential accountSystem, string userID, bool isStaff
             }
             temp= temp->next;
         }
+        delete temp;
     }
     return false;
 }
@@ -1895,7 +1939,7 @@ void viewCourseScoreboard(studentNode *_student, const string &ID) {
     while (curr) {
         // scoreboardNode *tmp = findCourseScoreboard(curr->data._course, ID);
         string fullName = curr->data.firstName + " " + curr->data.lastName;
-        cout << setw(5) << left << curr->data.index << setw(30) << left << curr->data.id << setw(40) << left << fullName << setw(10) << left << curr->data._course->data.other << setw(10) << left << curr->data._course->data.midterm  << setw(10) << left << curr->data._course->data.final << setw(10) << left << curr->data._course->data.total << endl;           
+        cout << setw(5) << left << curr->data.index << setw(30) << left << curr->data.id << setw(40) << left << fullName << setw(10) << left << curr->data.className << setw(10) << left << curr->data._course->data.other << setw(10) << left << curr->data._course->data.midterm  << setw(10) << left << curr->data._course->data.final << setw(10) << left << curr->data._course->data.total << endl;           
         // cout << setw(5) << left << curr->data.index << setw(30) << left << curr->data.id << setw(40) << left << fullName << setw(10) << left << curr->data.className << setw(10) << right << tmp->data.other << setw(10) << tmp->data.midterm << setw(10) << tmp->data.final << setw(10) << tmp->data.total << endl; 
         curr = curr->next;
     }
@@ -2229,23 +2273,18 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
     switch (choice3) {
         case 1:
             updateCourseInfo(currCourseNode->data);
-            autoSaveCourse(_schoolYear._semester[choice], currCourseNode->data.name);
             break;
         case 2:
             addStudentToCourseManually(_schoolYear, currCourseNode->data);
-            autoSaveCourse(_schoolYear._semester[choice], currCourseNode->data.name);
             break;
         case 3: 
             removeStudentFromCourse(currCourseNode->data);
-            autoSaveCourse(_schoolYear._semester[choice], currCourseNode->data.name);
             break;
         case 4:
             importStudentScore(_schoolYear, currCourseNode->data);
-            autoSaveCourse(_schoolYear._semester[choice], currCourseNode->data.name);
             break;
         case 5:
             deleteCourse(_schoolYear, currCourseNode->data);
-            autoSaveCourse(_schoolYear._semester[choice], currCourseNode->data.name);
             break;
         case 6:
             return false;
@@ -2383,5 +2422,42 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
         }
         system("pause");
         break;
+    }
+}
+
+bool login(credential *accountList) {
+    string userID, pw;
+    bool isStaff;
+    cout << "-----------------LOGIN----------------" << endl;
+    cout << "User ID : ";
+    cin >> userID;
+    cout << "Password : ";
+    cin >> pw;
+    cout << "Enter role (1 is staff, 0 otherwise) : ";
+    cin >> isStaff;
+    if(isStaff) {
+        accountNode* temp = accountList->staff;
+        while(temp) {
+            if(temp->userAccount.ID == userID) {
+                if(temp->userAccount.password == pw) {
+                    return true;
+                }
+            }
+            temp= temp->next;
+        }
+        delete temp;
+        return false;
+    }
+    else {
+        accountNode* temp = accountList->student;
+        while(temp) {
+            if(temp->userAccount.ID == userID) {
+                if(temp->userAccount.password == pw) {
+                    return true;
+                }
+            }
+            temp= temp->next;
+        }
+        return false;
     }
 }
