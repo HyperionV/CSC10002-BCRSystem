@@ -29,7 +29,7 @@ student getStudentData(string id, string schoolYr, studentNode* head) {
 	return stu->data;
 }
 
-void viewProfile(student A, schoolYear _yr) {
+void viewProfile(student A, schoolYear _yr, credential &accountSystem) {
 	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
@@ -42,11 +42,11 @@ void viewProfile(student A, schoolYear _yr) {
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
-	menuStudent(A, _yr);
+	menuStudent(A, _yr, accountSystem);
 }
 
-void menuStudent(student &A, const schoolYear &_yr) {
-	
+void menuStudent(student &A, const schoolYear &_yr, credential &accountSystem) {
+	string newPass;
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
 	cout << "-------------------------------------------------------------------\n";
@@ -69,7 +69,9 @@ void menuStudent(student &A, const schoolYear &_yr) {
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			// changePassStudent(&A.password, A);
+			cout << "Please input your new password (No spacing): ";
+			cin >> newPass;
+			changeAccountPassword(accountSystem, A.id, 0, newPass);
 			break;
 		case 0:
 			//menu_version1(); Accessing login menu
