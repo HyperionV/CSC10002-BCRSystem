@@ -372,22 +372,29 @@ void deleteStringNode(stringNode *&head, const string &target) {
 }
 
 void deleteCourseNode(courseNode *&head, const string &ID) {
-    courseNode *newhead = nullptr;
-    courseNode *delHead = head;
-    while (head) {
-        if (head->data.id == ID) {
-            courseNode *curr = head;
-            deleteStudentList(curr->data.enrolled);
-            head = head->next;
-            delete curr;
-            continue;
-        }
-        addCourseNode(newhead, head->data);
+    if(head == nullptr)
+        return;
+    if(head->data.id == ID) {
+        courseNode *curr = head;
+        deleteStudentList(curr->data.enrolled);
         head = head->next;
+        delete curr;
+        return;
     }
-    head = newhead;
-    deleteCourseList(delHead);
-    newhead = nullptr;
+    courseNode *prevhead = nullptr;
+    courseNode *delHead = head;
+    while (delHead) {
+        if (delHead->data.id == ID) {
+            courseNode *curr = delHead;
+            deleteStudentList(curr->data.enrolled);
+            prevhead->next = delHead->next;
+            delete curr;
+            return;
+        }
+        prevhead = delHead;
+        delHead = delHead->next;
+    }
+    return;
 }
 
 void deleteClassNode(classNode *&head, const string &className) {
@@ -429,21 +436,27 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
 }
 
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
-    scoreboardNode *newhead = nullptr;
-    scoreboardNode *delHead = head;
-    while (head) {
-        if (head->data.courseID == ID) {
-            scoreboardNode *curr = head;
-            head = head->next;
-            delete curr;
-            continue;
-        }
-        addScoreboardNode(newhead, head->data);
+    if(head ==  nullptr)
+        return;
+    if(head->data.courseID == ID) {
+        scoreboardNode *curr = head;
         head = head->next;
+        delete curr;
+        return;
     }
-    head = newhead;
-    deleteScoreboardList(delHead);
-    newhead = nullptr;
+    scoreboardNode *delHead = head, *prev= nullptr;
+
+    while (delHead) {
+        if (delHead->data.courseID == ID) {
+            scoreboardNode *curr = delHead;
+            prev->next = delHead->next;
+            delete curr;
+            return;
+        }
+        prev = delHead;
+        delHead = delHead->next;
+    }
+    return;
 }
 
 void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear) {
@@ -946,16 +959,18 @@ void removeStudentFromCourse(course &_course) {
 }
 
 void deleteCourse(schoolYear &_schoolYear, course &_course) {
-    // cout << "\n----------Delete course----------" << endl;
     studentNode* enrolledList = _course.enrolled;
     while (enrolledList) {
         string className = enrolledList->data.className;
+
         classNode *studentClass = findClassName(_schoolYear._class, className);
         studentNode *currStudent = findStudent(studentClass->data._student, enrolledList->data.id);
         deleteScoreboardNode(currStudent->data._course, _course.id);
         enrolledList = enrolledList->next;
     }
+    
     deleteStudentList(_course.enrolled);
+
     for (int i = 0; i < 3; i++) {
         courseNode* target = findCourse(_schoolYear._semester[i]._course, _course.id);
         if (target != nullptr) {
@@ -963,6 +978,7 @@ void deleteCourse(schoolYear &_schoolYear, course &_course) {
             return;
         }
     }
+    cout << "DONE ! << endl";
 }
 
 void viewCourseInfo(const course &_course) {
@@ -1036,25 +1052,31 @@ void updateCourseInfo(course &_course) {
 
 void updateStudentResult(const schoolYear &_schoolYear, const string &ID, student &source) {
     cout << "\n----------Update student result----------" << endl;
-    scoreboardNode *currCourse = findCourseScoreboard(source._course, ID);
+    cout << "\n\tStudent : " << source.firstName << source.lastName ;
+    cout << "\n\tID : " << source.id << endl;
     cout << "Current result: ";
-    cout << "\n\tTotal: " << currCourse->data.total;
-    cout << "\n\tFinal: " << currCourse->data.final;
-    cout << "\n\tMidterm: " << currCourse->data.midterm;
-    cout << "\n\tOther: " << currCourse->data.other << endl;
+    cout << "\n\tTotal: " << source._course->data.total;
+    cout << "\n\tFinal: " << source._course->data.final;
+    cout << "\n\tMidterm: " << source._course->data.midterm;
+    cout << "\n\tOther: " << source._course->data.other << endl;
     cout << "Enter new value for each type of scores: ";
     cout << "\n\tTotal: "; 
-    cin >> currCourse->data.total;
-    cout << "\n\tFinal: "; 
-    cin >> currCourse->data.final;
-    cout << "\n\tMidterm: "; 
-    cin >> currCourse->data.midterm;
-    cout << "\n\tOther: "; 
-    cin >> currCourse->data.other;
+    cin >> source._course->data.total;
+    cout << "\tFinal: "; 
+    cin >> source._course->data.final;
+    cout << "\tMidterm: "; 
+    cin >> source._course->data.midterm;
+    cout << "\tOther: "; 
+    cin >> source._course->data.other;
     classNode *studentClass = findClassName(_schoolYear._class, source.className);
     studentNode *OG = findStudent(studentClass->data._student, source.id);
     scoreboardNode *studentScore = findCourseScoreboard(OG->data._course, ID);
-    studentScore->data = currCourse->data;
+
+    studentScore->data.final = source._course->data.final;
+    studentScore->data.other = source._course->data.other;
+    studentScore->data.midterm = source._course->data.midterm;
+    studentScore->data.total = source._course->data.total;
+
     system("pause");
 }
 
@@ -1066,7 +1088,10 @@ void exportStudentInfoList(const string &_schoolYear, const course &_course) {
     exportFile << "Index,ID,Name,Other,Midterm,Final,Total" << endl;
     studentNode *curr = _course.enrolled;
     while (curr) {
-        exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<",0,0,0,0"<<endl;
+        exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<",0,0,0,0";
+        if(curr->next) {
+            exportFile << endl;
+        }
         curr = curr->next;
     }
     exportFile.close();
@@ -1132,7 +1157,7 @@ void exportStudentInfoList(const string &_schoolYear, const course &_course) {
 void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     string path;
     cout << "Enter scoreboard path : " ;
-    cin >> path;
+    getline(cin, path);
 
     ifstream in_file(path);
 
@@ -1143,9 +1168,9 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     else {
         classNode *currClassList = _schoolYear._class;
         studentNode* temp = _course.enrolled;
+        string placeholder;
+        getline(in_file, placeholder);
         while(in_file.good()) {
-            string placeholder;
-            getline(in_file, placeholder, ',');
             getline(in_file, placeholder, ',');
             getline(in_file, placeholder, ',');
             getline(in_file, placeholder, ',');
@@ -1162,7 +1187,6 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             scoreboardNode *tempScoreboard = targetStudent->data._course;
-            cout << tempScoreboard->data.courseID;
             while(tempScoreboard) {
                 if(tempScoreboard->data.courseID == _course.id) {
                     tempScoreboard->data.other = temp->data._course->data.other;
@@ -1175,6 +1199,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             }
             temp= temp->next;
         }
+        in_file.close();
     }
     return;
 }
@@ -1221,7 +1246,6 @@ course loadCourse(const string &path) {
             if(entry_name != "." && entry_name != "..") {
                 if(entry_name == "enrolled.txt") {
                     string full_path = path + "/enrolled.txt";
-                    cout << full_path << endl;
                     loadStudentByFile(curr.enrolled, full_path);
                 }
                 else {
@@ -1925,7 +1949,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
     int choice3;
     while (true) {
         choice3 = getChoiceInt();
-        if (choice3 > idx || choice3 < 0) {
+        if (choice3 > 3 || choice3 < 0) {
             cout << "Invalid option" << endl;
             continue;
         }
@@ -1937,7 +1961,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
             break;
         case 2:
             //export
-            cout << "Not developed yet" << endl;
+            importStudentScore(_schoolYear, currCourseNode->data);
             break;
         case 3:
             return;
@@ -2594,9 +2618,9 @@ void updateStudentResultWithID(schoolYear &_schoolYear) {
 }
 
 void updateStudentResultFromCourse(schoolYear &_schoolYear) {
-    cout << "Choose a semester: ";
+    cout << "Choose a semester: " << endl;
     for (int i = 0; i < 3; i++) {
-        cout << i+1 << ". " << _schoolYear._semester[i].name << endl;
+        cout << "\t" << i+1 << ". " << _schoolYear._semester[i].name << endl;
     }
     cout << "\t4. Back to previous menu" << endl;
     cout << "Your choice: ";
