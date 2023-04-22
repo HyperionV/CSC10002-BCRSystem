@@ -50,7 +50,7 @@ void removeStudentFromCourse(course &_course);
 void deleteCourse(semester &_semester, const string &ID);
 void viewCourseInfo(const course &_course);
 void updateCourseInfo(course &_course);
-void updateStudentResult(const schoolYear &_schoolYear, const course &_course);
+void updateStudentResult(const schoolYear &_schoolYear, const string &ID, student &source);
 
 //Data export function prototypes
 void exportStudentInfoList(const string &_schoolYear, const course &_course);
@@ -106,4 +106,14 @@ void updateCurrentYearInfo(schoolYear &_schoolYear);
 bool updateSemesterInfo(schoolYear &_schoolYear);
 void createNewCourseUI(schoolYear &_schoolYear);
 bool updateCourseInfoUI(schoolYear &_schoolYear);
-// void updateClassInfo(schoolyear &_schoolYear);
+bool updateStudentResultUI(schoolYear &_schoolYear);
+void updateStudentResultWithID(schoolYear &_schoolYear);
+void updateStudentResultFromCourse(schoolYear &_schoolYear);
+void updateStudentResultFromClass(schoolYear &_schoolYear);
+bool changeAccountPassword(credential accountSystem, string userID, bool isStaff, string newPassword);
+void viewScoreBoardUI(schoolYear &_schoolYear);
+void viewStudentResultUI(schoolYear &_schoolYear);
+void viewCourseScoreBoardUI(schoolYear &_schoolYear);
+void viewClassScoreboardUI(const schoolYear &_schoolYear);
+void viewWholeClassScoreboard(const _class &source);
+void updateScoreboardUI(schoolYear &_schoolYear);

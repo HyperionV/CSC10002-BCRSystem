@@ -13,3 +13,4 @@ FourthVersion/
 .vscode/
 Backup/
 Data/
+*.vsidx
