@@ -1797,6 +1797,10 @@ void mainMenuStaff(schoolYearNode *&head) {
             _schoolYear = programStart(head);
             continue;
         }
+        else if (choice == 5) {
+            viewScoreBoardUI(_schoolYear);
+            continue;
+        }
         else if (choice == 7) {
             cout << "In development lol" << endl;
             continue;
@@ -1812,45 +1816,134 @@ void mainMenuStaff(schoolYearNode *&head) {
     }
 }
 
-// void viewScoreBoardUI(schoolYear &_schoolYear) {
-//     system("cls");
-//     cout << "----------View Scoreboard----------" << endl;
-//     cout << "\t1. View class scoreboard" << endl;
-//     cout << "\t2. View course scoreboard" << endl;
-//     cout << "\t3. View student scoreboard" << endl;
-//     cout << "\t4. Return to main menu" << endl;
-//     cout << "Your choice: ";
-//     int choice;
-//     while (true) {
-//         choice = getChoiceInt();
-//         if (choice > 4 || choice < 1) {
-//             cout << "Invalid option" << endl;
-//             continue;
-//         }
-//         break;
-//     }
-//     switch (choice) {
-//         case 1:
+void viewScoreBoardUI(schoolYear &_schoolYear) {
+    while (true) {
+        system("cls");
+        cout << "----------View Scoreboard----------" << endl;
+        cout << "\t1. View class scoreboard" << endl;
+        cout << "\t2. View course scoreboard" << endl;
+        cout << "\t3. View student scoreboard" << endl;
+        cout << "\t4. Return to main menu" << endl;
+        cout << "Your choice: ";
+        int choice;
+        while (true) {
+            choice = getChoiceInt();
+            if (choice > 4 || choice < 1) {
+                cout << "Invalid option" << endl;
+                continue;
+            }
+            break;
+        }
+        switch (choice) {
+            case 1:
+                viewClassScoreboardUI(_schoolYear);
+                break;
+            case 2:
+                viewCourseScoreBoardUI(_schoolYear);
+                break;
+            case 3:
+                viewStudentResultUI(_schoolYear);
+                break;
+            case 4:
+                return;
+        }
+    }
+}
 
-//     }
-// }
+void viewStudentResultUI(schoolYear &_schoolYear) {
+    cout << "Enter student ID: ";
+    string id;
+    cin >> id;
+    if (id.length() != 8) {
+        cout << "Wrong ID format" << endl;
+        return;
+    }
+    classNode* currClassNode = _schoolYear._class;
+    studentNode* target = nullptr;
+    while (currClassNode) {
+        target = findStudent(currClassNode->data._student, id);
+        if (target != nullptr) {
+            break;
+        }
+        currClassNode = currClassNode->next;
+    }
+    if (target == nullptr && currClassNode == nullptr) {
+        cout << "Cannot find student in current school year" << endl;
+        return;
+    }
+    viewStudentResult(target->data);
+}
+
+void viewCourseScoreBoardUI(schoolYear &_schoolYear) {
+    cout << "Choose a semester: " << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << i+1 << ". " << _schoolYear._semester[i].name << endl;
+    }
+    cout << "\t4. Back to previous menu" << endl;
+    cout << "Your choice: ";
+    int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 4 || choice < 1) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
+    if (choice == 4) return;
+    choice--;
+    if (_schoolYear._semester[choice].start == "NULL" || _schoolYear._semester[choice].end == "NULL") {
+        cout << "This semester is not created!" << endl;
+        return;
+    }
+    courseNode *currCourseNode = _schoolYear._semester[choice]._course;
+    cout << "Courses created in this semester: " << endl;
+    int idx = 1;
+    while (currCourseNode) {
+        cout << "\t" << idx++ << ". " << currCourseNode->data.id << "\t" << currCourseNode->data.name << endl;
+        currCourseNode = currCourseNode->next;
+    }
+    int choice2;
+    cout << "Choose a course or input \"0\" to cancel: ";
+    while (true) {
+        choice2 = getChoiceInt();
+        if (choice2 > idx || choice2 < 0) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
+    if (choice2 == 0) {
+        return;
+    }
+    idx = 1;
+    currCourseNode = _schoolYear._semester[choice]._course;
+    while (idx != choice2) {
+        currCourseNode = currCourseNode->next;
+        idx++;
+    }
+    viewCourseScoreboard(currCourseNode->data.enrolled, currCourseNode->data.id);
+}
 
 void viewClassScoreboardUI(const schoolYear &_schoolYear) {
     classNode *currClassNode = _schoolYear._class;
     int idx = 1;
     while (currClassNode) {
-        cout << idx++ << ". " << currClassNode << endl;
+        cout << idx++ << ". " << currClassNode->data.name << endl;
         currClassNode = currClassNode->next;
     }
     cout << "Choose a class to view scoreboard or input \"0\" to cancel: ";
     int choice;
     while (true) {
         choice = getChoiceInt();
-        if (choice > idx || choice < 1) {
+        if (choice > idx || choice < 0) {
             cout << "Invalid option" << endl;
             continue;
         }
         break;
+    }
+    if (choice == 0) {
+        return;
     }
     idx = 1;
     currClassNode = _schoolYear._class;
@@ -1858,7 +1951,45 @@ void viewClassScoreboardUI(const schoolYear &_schoolYear) {
         currClassNode = currClassNode->next;
         idx++;
     }
+    viewWholeClassScoreboard(currClassNode->data);
+}
 
+void viewWholeClassScoreboard(const _class &source) {
+    scoreboardNode *courseName = nullptr;
+    studentNode *currStudent = source._student;
+    while (currStudent) {
+        scoreboardNode* currScoreboard = currStudent->data._course;
+        while (currScoreboard) {
+            if (findCourseScoreboard(courseName, currScoreboard->data.courseID) == nullptr) {
+                scoreboard tmp = currScoreboard->data;
+                addScoreboardNode(courseName, tmp);
+            }
+            currScoreboard = currScoreboard->next;
+        }
+        currStudent = currStudent->next;
+    }
+    cout << setw(5) << left << "No. " << setw(30) << "Student ID" << setw(40) << "Full name";
+    scoreboardNode *curr = courseName;
+    while (curr) {
+        cout << setw(10) << left << curr->data.courseName;
+        curr = curr->next;
+    } 
+    cout << endl;
+    curr = courseName;
+    currStudent = source._student;
+    while (currStudent) {
+        string fullName = currStudent->data.firstName + " " + currStudent->data.lastName;
+        cout << setw(5) << left << currStudent->data.index << setw(30) << currStudent->data.id << setw(40) << fullName;
+        while (curr) {
+            scoreboardNode *tmp = findCourseScoreboard(currStudent->data._course, curr->data.courseID);
+            cout << setw(10) << left << ((tmp) ? to_string(tmp->data.total):"X") ;
+            curr = curr->next;
+        } 
+        currStudent = currStudent->next;
+        curr = courseName;
+        cout << endl;
+    }
+    system("pause");
 }
 
 ///View class scoreboard
@@ -2107,24 +2238,6 @@ void viewClassesInfo(const schoolYear &_schoolYear) {
     }
 }
 
-void viewWholeClassScoreboard(const _class &source) {
-    scoreboardNode *courseName = nullptr;
-    studentNode *currStudent = source._student;
-    while (currStudent) {
-        scoreboardNode* currScoreboard = currStudent->data._course;
-        while (currScoreboard) {
-            if (findCourseScoreboard(courseName, currScoreboard->data.courseID) == nullptr) {
-                scoreboard tmp = currScoreboard->data;
-                addScoreboardNode(courseName, tmp);
-            }
-            currScoreboard = currScoreboard->next;
-        }
-        currStudent = currStudent->next;
-    }
-    //unfinished
-    // cout << setw(5) << left << "Index" << setw(10) << right << "Student ID" << setw(30) << "Full name"
-}
-
 void viewDetailedClassInfo(const _class &source) {
     //view scoreboard of the whole class and overall GPA
     cout << "\n----------View detailed class info----------" << endl;
@@ -2156,10 +2269,10 @@ void viewSchoolYearAllStudent(const schoolYear &_schoolyear) {
 void viewStudentResult(const student &source) {
     // cout << "View student result" << endl;
 
-    cout << setw(15) << left << "Course ID" << setw(30) << left << "Course name" << setw(5) << right << "Other" << setw(10) << right << "Midterm" << setw(5) << right << "Final" << setw(5) << right << "Total" << endl;
+    cout << setw(15) << left << "Course ID" << setw(30) << left << "Course name" << setw(10) << "Other" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10) << "Total" << endl;
     scoreboardNode *curr = source._course;
     while (curr) {
-        cout << setw(15) << left << curr->data.courseID << setw(30) << left << curr->data.courseName << setw(5) << right << curr->data.other << setw(5) << right << curr->data.midterm << setw(5) << right << curr->data.final << setw(5) << right << curr->data.total << endl;
+        cout << setw(15) << left << curr->data.courseID << setw(30) << left << curr->data.courseName << setw(10) << curr->data.other << setw(10) << curr->data.midterm << setw(10) << curr->data.final << setw(10) << curr->data.total << endl;
         curr = curr->next;
     }
     system("pause");
