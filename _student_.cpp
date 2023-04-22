@@ -46,7 +46,7 @@ void viewProfile(student A, schoolYear _yr) {
 }
 
 void menuStudent(student &A, const schoolYear &_yr) {
-	
+	string newPass;
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
 	cout << "-------------------------------------------------------------------\n";
@@ -69,7 +69,9 @@ void menuStudent(student &A, const schoolYear &_yr) {
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			changePassStudent(&A.password, A);
+			cout << "Please input your new password (No spacing): ";
+			cin >> newPass;
+			changeAccountPassword(accountSystem, A.id, 0, newPass);
 			break;
 		case 0:
 			//menu_version1(); Accessing login menu
