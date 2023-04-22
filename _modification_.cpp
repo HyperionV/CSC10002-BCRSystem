@@ -1063,11 +1063,12 @@ void exportStudentInfoList(const string &_schoolYear, const course &_course) {
     exportFile << "Index,ID,Name,Other,Midterm,Final,Total" << endl;
     studentNode *curr = _course.enrolled;
     while (curr) {
-        exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<endl;
+        exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<",0,0,0,0"<<endl;
         curr = curr->next;
     }
     exportFile.close();
-    curr = nullptr;
+    cout << "Empty scoreboard exported at: " << filePath << endl;
+    system("pause");
 }
 
 void importStudentScore(const schoolYear &_schoolYear, const course &_course) {
@@ -1801,6 +1802,10 @@ void mainMenuStaff(schoolYearNode *&head) {
             viewScoreBoardUI(_schoolYear);
             continue;
         }
+        else if (choice == 6) {
+            updateScoreboardUI(_schoolYear);
+            continue;
+        }
         else if (choice == 7) {
             cout << "In development lol" << endl;
             continue;
@@ -1813,6 +1818,81 @@ void mainMenuStaff(schoolYearNode *&head) {
         else {
             cout << "Not a valid option!" << endl;
         }
+    }
+}
+
+void updateScoreboardUI(schoolYear &_schoolYear) {
+    cout << "Choose a semester: " << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << "\t" << i+1 << ". " << _schoolYear._semester[i].name << endl;
+    }
+    cout << "\t4. Back to previous menu" << endl;
+    cout << "Your choice: ";
+    int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 4 || choice < 1) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
+    if (choice == 4) return;
+    choice--;
+    if (_schoolYear._semester[choice].start == "NULL" || _schoolYear._semester[choice].end == "NULL") {
+        cout << "This semester is not created!" << endl;
+        return;
+    }
+    courseNode *currCourseNode = _schoolYear._semester[choice]._course;
+    cout << "Courses created in this semester: " << endl;
+    int idx = 1;
+    while (currCourseNode) {
+        cout << "\t" << idx++ << ". " << currCourseNode->data.id << "\t" << currCourseNode->data.name << endl;
+        currCourseNode = currCourseNode->next;
+    }
+    int choice2;
+    cout << "Choose a course or input \"0\" to cancel: ";
+    while (true) {
+        choice2 = getChoiceInt();
+        if (choice2 > idx || choice2 < 0) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
+    if (choice2 == 0) {
+        return;
+    }
+    idx = 1;
+    currCourseNode = _schoolYear._semester[choice]._course;
+    while (idx != choice2) {
+        currCourseNode = currCourseNode->next;
+        idx++;
+    }
+    cout << "----------Import scoreboard----------" << endl;
+    cout << "\t1. Export empty course scoreboard" << endl;
+    cout << "\t2. Import scoreboard for this course" << endl;
+    cout << "\t3. Return to main menu" << endl;
+    cout << "Your choice: ";
+    int choice3;
+    while (true) {
+        choice3 = getChoiceInt();
+        if (choice3 > idx || choice3 < 0) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
+    switch (choice3) {
+        case 1:
+            exportStudentInfoList(_schoolYear._schoolYear, currCourseNode->data);
+            break;
+        case 2:
+            //export
+            cout << "Not developed yet" << endl;
+            break;
+        case 3:
+            return;
     }
 }
 
@@ -1877,7 +1957,7 @@ void viewStudentResultUI(schoolYear &_schoolYear) {
 void viewCourseScoreBoardUI(schoolYear &_schoolYear) {
     cout << "Choose a semester: " << endl;
     for (int i = 0; i < 3; i++) {
-        cout << i+1 << ". " << _schoolYear._semester[i].name << endl;
+        cout << "\t" << i+1 << ". " << _schoolYear._semester[i].name << endl;
     }
     cout << "\t4. Back to previous menu" << endl;
     cout << "Your choice: ";
@@ -1929,7 +2009,7 @@ void viewClassScoreboardUI(const schoolYear &_schoolYear) {
     classNode *currClassNode = _schoolYear._class;
     int idx = 1;
     while (currClassNode) {
-        cout << idx++ << ". " << currClassNode->data.name << endl;
+        cout << "\t" << idx++ << ". " << currClassNode->data.name << endl;
         currClassNode = currClassNode->next;
     }
     cout << "Choose a class to view scoreboard or input \"0\" to cancel: ";
