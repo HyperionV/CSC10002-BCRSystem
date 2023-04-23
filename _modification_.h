@@ -44,7 +44,7 @@ void createClass(schoolYear &SC);
 void addStudentToClass(schoolYear &_schoolYear);
 void createSemester(schoolYear &SY);
 void createCourse(schoolYear &_schoolYear, semester &_semester);
-void addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
+bool addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
 void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course);
 void removeStudentFromCourse(course &_course);
 void deleteCourse(semester &_semester, const string &ID);
