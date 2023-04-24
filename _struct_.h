@@ -111,3 +111,18 @@ struct staffNode {
     staffInfo staff;
     staffNode* next = nullptr;
 };
+
+struct account {
+    string ID;
+    string password = defaultPassword;
+};
+
+struct accountNode {
+    account userAccount;
+    accountNode* next= nullptr;
+};
+
+struct credential {
+    accountNode* student = nullptr;
+    accountNode* staff = nullptr;
+};

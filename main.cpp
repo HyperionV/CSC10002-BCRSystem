@@ -13,6 +13,9 @@ int main() {
         _schoolYear = loadDataFolder("Data");
         mainMenuStaff(_schoolYear);
     }
+    else if (login(accountList, isStaff) && !isStaff) {
+        //studentMain
+    }
 
     return 0;
 }
