@@ -44,6 +44,23 @@ void addStudentNode(studentNode *&head, const student &source) {
     temp = curr = nullptr;
 }
 
+void addStaffNode(staffNode *&head, const staffInfo &curStaff) {
+    staffNode* temp = new staffNode;
+    temp->staff= curStaff;
+    if(head == nullptr) {
+        head= temp;
+        return;
+    }
+    else {
+        staffNode* cur = head;
+        while(cur->next) {
+            cur= cur->next;
+        }
+        cur->next= temp;
+        cur= nullptr;
+    }
+    return;
+}
 void getContentOfFile(const string &path, stringNode *&head) {
     ifstream ifile {path};
     if (!ifile) {
@@ -88,8 +105,9 @@ void displayStudentList(studentNode *head) {
         return;
     }
     studentNode *curr = head;
+    int index= 1;
     while (curr) {
-        cout << "\t" << curr->data.index << ". " << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << endl;
+        cout << "\t" << index++ << ". " << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << endl;
         curr = curr->next;
     }
     curr = nullptr;
@@ -444,7 +462,7 @@ void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
         delete curr;
         return;
     }
-    scoreboardNode *delHead = head, *prev= nullptr;
+    scoreboardNode *delHead = head, *prev= head;
 
     while (delHead) {
         if (delHead->data.courseID == ID) {
@@ -906,7 +924,9 @@ bool addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course) {
         tempScoreboard.courseName = _course.name; 
         addScoreboardNode(studentObject->data._course, tempScoreboard);
         tempStudent= studentObject->data;
-        tempStudent._course = nullptr;
+        tempStudent._course = new scoreboardNode;
+        tempStudent._course->data = tempScoreboard;
+
         // deleteScoreboardList(tempStudent._course);
 
         addScoreboardNode(tempStudent._course, tempScoreboard);
@@ -968,19 +988,23 @@ void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course) 
     tempScoreboard.courseName = _course.name;
     addScoreboardNode(checkStudent->data._course, tempScoreboard);
     tempStudent = checkStudent->data;
+    tempStudent._course = new scoreboardNode;
+    tempStudent._course->data= tempScoreboard;
+
+
     addStudentNode(_course.enrolled, tempStudent);
     cout << "\nSuccessfully enrolled this student to the course" << endl;
     system("pause");
     system("cls");
 }
 
-void removeStudentFromCourse(course &_course) {
+void removeStudentFromCourse(schoolYear &_schoolYear, course &_course) {
     // cout << "\n----------Remove student from course----------" << endl;
     cout << "Students enrolled in this course: " << endl;
     displayStudentList(_course.enrolled);
     cout << "Choose a student to remove: ";
-    int choice = getChoiceInt();
     int counter = getNumberOfStudents(_course.enrolled);
+    int choice;
     while (true) {
         choice = getChoiceInt();
         if (choice > counter || choice < 0) {
@@ -989,15 +1013,28 @@ void removeStudentFromCourse(course &_course) {
         }
         break;
     }
-    studentNode *curr = _course.enrolled;
+    studentNode *curr = _course.enrolled, *prevCur= nullptr;
     int idx = 1;
     while (idx != choice) {
         idx++;
+        prevCur = curr;
         curr = curr->next;
     }
+    //find the student in to delete the course in his/her scoreboard list
+    string className = curr->data.className;
+    classNode *studentClass = findClassName(_schoolYear._class, className);
+    studentNode *currStudent = findStudent(studentClass->data._student, curr->data.id);
+    deleteScoreboardNode(currStudent->data._course, _course.id);
+
+    //delete him/her from the course
+    deleteScoreboardList(curr->data._course);
     cout << "\nRemoved student " << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << " from this course" << endl;
-    deleteScoreboardNode(curr->data._course, _course.id);
-    deleteStudentNode(_course.enrolled, curr->data.id);
+    if(idx != 1)
+        prevCur->next = curr->next;
+    else 
+        _course.enrolled = curr->next;
+    delete curr;
+
     system("pause");
     system("cls");
 }
@@ -1022,6 +1059,7 @@ void deleteCourse(schoolYear &_schoolYear, course &_course) {
             return;
         }
     }
+
     // cout << "DONE ! << endl";
 }
 
@@ -1135,8 +1173,9 @@ void exportStudentInfoList(const string &_schoolYear, const course &_course) {
     ofstream exportFile {filePath};
     exportFile << "Index,ID,Name,Other,Midterm,Final,Total" << endl;
     studentNode *curr = _course.enrolled;
+    int index= 1;
     while (curr) {
-        exportFile << curr->data.index <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<",0,0,0,0";
+        exportFile << index++ <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<",0,0,0,0";
         if(curr->next) {
             exportFile << endl;
         }
@@ -1262,6 +1301,7 @@ course loadCourse(const string &path) {
             }
         }
     }
+    closedir(directory);
     return curr;
 }
 
@@ -1333,7 +1373,6 @@ schoolYear loadSchoolyear(const string &path, const string &sY)
 
 void loadStudentByFile(studentNode *&head, const string &path) {
     ifstream in_file {path};
-    int idx = 1;
     if (!in_file) {
         cout << "Error while opening file! Please check if the path was correct" << endl;
         return;
@@ -1343,7 +1382,6 @@ void loadStudentByFile(studentNode *&head, const string &path) {
         student temp;
         temp._course = new scoreboardNode;
         temp._course->next= nullptr;
-        temp.index= idx++;
         string placeHolder="";
         getline(in_file, temp.id, ',');
         getline(in_file, temp.firstName, ',');
@@ -1417,6 +1455,7 @@ void loadStudentByFile(studentNode *&head, const string &classname, const string
             }
         }
     }
+    closedir(directory);
     return;
 }
 
@@ -1459,6 +1498,7 @@ void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path) 
             }
         }
     }
+    closedir(directory);
     return;
 }
 
@@ -1484,9 +1524,10 @@ void delete_directory(const string& path)
                 else 
                 {   
                     ifstream ifs {full_path};
-                    if(ifs)
+                    if(ifs) {
                         ifs.close();
-                    remove(full_path.c_str());
+                        remove(full_path.c_str());
+                    }
                 }
             }
         }
@@ -1514,8 +1555,7 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
         out_file << studentList->data.gender << ",";
         out_file << studentList->data.dob << ',';
         out_file << studentList->data.socialid ;
-        if(studentList->next)
-            out_file << endl;
+
         out_file.close();
 
         if(!studentList->data._course) {
@@ -1523,18 +1563,20 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
             continue;
         }
 
+
         ofstream out_file1 {full_path + "/Scoreboard.txt"};
-        while(studentList->data._course) {
-            out_file1 << studentList->data._course->data.courseID << ",";
-            out_file1 << studentList->data._course->data.courseName << ",";
-            out_file1 << studentList->data._course->data.other << ",";
-            out_file1 << studentList->data._course->data.midterm << ",";
-            out_file1 << studentList->data._course->data.final << ",";
-            out_file1 << studentList->data._course->data.total;
-            if(studentList->data._course->next)
+        scoreboardNode* tempCourseList = studentList->data._course;
+        while(tempCourseList) {
+            out_file1 << tempCourseList->data.courseID << ",";
+            out_file1 << tempCourseList->data.courseName << ",";
+            out_file1 << tempCourseList->data.other << ",";
+            out_file1 << tempCourseList->data.midterm << ",";
+            out_file1 << tempCourseList->data.final << ",";
+            out_file1 << tempCourseList->data.total;
+            if(tempCourseList->next)
                 out_file1 << endl;
 
-            studentList->data._course= studentList->data._course->next;
+            tempCourseList= tempCourseList->next;
         }
         out_file1.close();
 
@@ -1543,30 +1585,31 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
     return;
 }
 
-void writeCourseEnrolls(courseNode* &courseList, const string &path) {
+
+void writeCourseEnrolls(courseNode* courseList, const string &path) {
     if(!courseList->data.enrolled) {
         return;
     }
     ofstream out_file {path};
-    courseNode* holdToDelete= courseList;
-    while(courseList->data.enrolled) {
-        out_file << courseList->data.enrolled->data.id << "," << courseList->data.enrolled->data.firstName << "," << courseList->data.enrolled->data.lastName << "," << courseList->data.enrolled->data.className << ",";
-        out_file << courseList->data.enrolled->data._course->data.other << ",";
-        out_file << courseList->data.enrolled->data._course->data.midterm << ",";
-        out_file << courseList->data.enrolled->data._course->data.final << ",";
-        out_file << courseList->data.enrolled->data._course->data.total;
-        if(courseList->data.enrolled->next)
+
+    studentNode* tempEnrolledList = courseList->data.enrolled;
+    while(tempEnrolledList) {
+        out_file << tempEnrolledList->data.id << "," << tempEnrolledList->data.firstName << "," << tempEnrolledList->data.lastName << "," << tempEnrolledList->data.className << ",";
+        out_file << tempEnrolledList->data._course->data.other << ",";
+        out_file << tempEnrolledList->data._course->data.midterm << ",";
+        out_file << tempEnrolledList->data._course->data.final << ",";
+        out_file << tempEnrolledList->data._course->data.total;
+        if(tempEnrolledList->next)
             out_file << endl;
 
-        courseList->data.enrolled= courseList->data.enrolled->next;
+        tempEnrolledList= tempEnrolledList->next;
 
     }
     out_file.close();
     return;
 }
 
-void writeCourse(courseNode* &courseList , const string &path) {
-    courseNode* holdToDelete = courseList;
+void writeCourse(courseNode* courseList , const string &path) {
     ofstream out_file; 
     while(courseList) {
         ////create course folder
@@ -1585,8 +1628,7 @@ void writeCourse(courseNode* &courseList , const string &path) {
     return;
 }
 
-void writeClass(classNode* &classList ,const string &path) {
-    classNode* holdToDelete= classList;
+void writeClass(classNode* classList ,const string &path) {
     while(classList) {
         string full_path = path + "/" + classList->data.name;
         mkdir((full_path).c_str());
@@ -1632,26 +1674,12 @@ void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
     // deleteSchoolYearList(schoolYearList);
 }
 
-void autoSaveClass(studentNode *studentInClass) {
-    string full_path = "Data/Classes/" + studentInClass->data.className;
+void autoSaveSchoolyear(schoolYear curSchoolyear) {
+    string full_path = "Data/" + curSchoolyear._schoolYear;
     delete_directory(full_path);
-    writeStudentInClass(studentInClass, full_path);
-}
-
-void autoSaveCourse(const semester &sem, const string &courseName) {
-    courseNode* temp = sem._course;
-    while(temp) {
-        if(temp->data.name == courseName) {
-            string full_path = "Data/" + sem.name + "/" + courseName;
-            delete_directory(full_path);
-            writeCourseEnrolls(temp, full_path + "/enrolled.txt");
-            ofstream out_file(full_path + "/info.txt");
-            out_file << temp->data.id << "," << temp->data.name << "," << temp->data.className << "," << temp->data.teacher << "," << temp->data.credit << "," << temp->data.max << "," << temp->data.day << "," << temp->data.session;
-            out_file.close();
-            return;
-        }
-        temp = temp->next;
-    }
+    rmdir(full_path.c_str());
+    writeSchoolyear("Data", curSchoolyear);
+    return;
 }
 
 
@@ -1695,89 +1723,59 @@ schoolYearNode* loadDataFolder(const string &path) {
     return schoolYearList;
 }
 
-void addAccountNode(accountNode*& head, account curr) {
-    accountNode* temp= new accountNode;
-    temp->userAccount = curr;
-    if(!head) {
-        head= temp;
+
+void loadUserAccount (stringNode* &head) {
+    ifstream in_file("credential.txt");
+
+    if(!in_file) {
+        cout << "Could not open the file ! " << endl;
         return;
     }
-    else {
-        accountNode* move = head;
-        while(move->next) {
-            move = move->next;
-        }
-        move->next = temp;
+    string temp;
+    while(getline(in_file, temp)) {
+        addStringNode(head, temp);
+    }
+
+    in_file.close();
+    return;
+}
+
+void loadStaffInfo(staffNode *& staffList) {
+    ifstream in_file("staff.txt");
+
+    string temp;
+    while(in_file.good()) {
+        staffInfo tempStaff;
+        getline(in_file, tempStaff.name, ',');
+        getline(in_file, tempStaff.mail);
+        addStaffNode(staffList, tempStaff);
     }
     return;
 }
 
-void loadUserAccount (credential &accountSystem, const string &path) {
-    ifstream inStaff, inStudent;
-    inStaff.open(path + "/" + "staff.txt");
-    inStudent.open(path + "/" + "student.txt");
+void autoSaveCredential(stringNode *accountList) {
+    string path = "credential.txt";
 
-    while(!inStaff.eof()) {
-        account curr;
-        getline(inStaff, curr.ID , ',');
-        getline(inStaff, curr.password);
-        addAccountNode(accountSystem.staff, curr);
+    ofstream out_file(path, ios::out);
+    while(accountList) {
+        out_file << accountList->data << endl;
+        accountList = accountList->next;
     }
-    while(!inStudent.eof()) {
-        account curr;
-        getline(inStudent, curr.ID, ',');
-        getline(inStudent, curr.password);
-        addAccountNode(accountSystem.student, curr);
-    }
-    inStudent.close();
-    inStaff.close();
-}
-
-void autoSaveCredential(credential accountSystem) {
-    string path = "credential";
-    ofstream out_file(path + "/staff.txt"), out_file1(path + "/student.txt");
-    delete_directory(path);
-    accountNode* temp= accountSystem.staff;
-    while(temp) {
-        out_file << temp->userAccount.ID << "," << temp->userAccount.password << endl;
-        temp= temp->next;
-    }
-
-    temp = accountSystem.student;
-    while(temp) {
-        out_file1 << temp->userAccount.ID << "," << temp->userAccount.password << endl;
-        temp = temp->next;
-    }
-
-    out_file1.close(), out_file.close();
-
-    delete temp;
 
     return;
 }
 
-bool changeAccountPassword(credential accountSystem, string userID, bool isStaff, string newPassword) {
-    if(isStaff) {
-        accountNode* temp = accountSystem.staff;
-        while(temp) {
-            if(temp->userAccount.ID == userID) {
-                temp->userAccount.password = newPassword;
-                return true;
-            }
-            temp = temp->next;
+bool changeAccountPassword(stringNode* accountList, string newPassword, string userAccount) {
+    while(accountList) {
+        if(userAccount == accountList->data) {
+            string temp(accountList->data);
+            temp= temp.substr(0, temp.find_last_of(':') + 1);
+            temp+=newPassword;
+            accountList->data= temp;
+            autoSaveCredential(accountList);
+            return true;
         }
-        delete temp;
-    }
-    else {
-        accountNode* temp= accountSystem.student;
-        while(temp) {
-            if(temp->userAccount.ID == userID) {
-                temp->userAccount.password = newPassword;
-                return true;
-            }
-            temp= temp->next;
-        }
-        delete temp;
+        accountList= accountList->next;
     }
     return false;
 }
@@ -1849,6 +1847,7 @@ void mainMenuStaff(schoolYearNode *&head) {
             break;
         }
         if (choice == 1) {
+            // void viewProfileStaff(staffInfo curStaff)
             cout << "In development lol" << endl;
         }
         else if (choice == 2) {
@@ -2151,20 +2150,11 @@ void viewProfileStudent(student curStudent) {
     system("pause");
 }
 
-void viewProfileStaff(staffInfo curStaff, credential accountSystem) {
+void viewProfileStaff(staffInfo curStaff) {
     // system("cls");
     cout << "------------------PROFILE--------------" << endl;
     cout << "Full name : " << curStaff.name << endl;
     cout << "Email : " << curStaff.mail << endl;
-    accountNode* temp = accountSystem.staff;
-    while(temp) {
-        if(curStaff.mail == temp->userAccount.ID) {
-            cout << "Password : " << temp->userAccount.password << endl;
-            break;
-        }
-        temp = temp->next;
-    }
-    delete temp;
     system("pause");
 }
 
@@ -2214,10 +2204,11 @@ void viewCourseScoreboard(studentNode *_student, const string &ID) {
     cout << endl;
     cout << setw(5) << left << "No. " << setw(30) << left << "Student ID" << setw(40) << left << "Full name" << setw(10) << left << "Class" << setw(10) << left << "Other" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10)<< "Total" << endl; 
     studentNode *curr = _student;
+    int index = 1;
     while (curr) {
         // scoreboardNode *tmp = findCourseScoreboard(curr->data._course, ID);
         string fullName = curr->data.firstName + " " + curr->data.lastName;
-        cout << setw(5) << left << curr->data.index << setw(30) << left << curr->data.id << setw(40) << left << fullName << setw(10) << left << curr->data.className << setw(10) << curr->data._course->data.other << setw(10) << curr->data._course->data.midterm << setw(10) << curr->data._course->data.final << setw(10) << curr->data._course->data.total << endl; 
+        cout << setw(5) << left << index++ << setw(30) << left << curr->data.id << setw(40) << left << fullName << setw(10) << left << curr->data.className << setw(10) << curr->data._course->data.other << setw(10) << curr->data._course->data.midterm << setw(10) << curr->data._course->data.final << setw(10) << curr->data._course->data.total << endl; 
         curr = curr->next;
     }
     system("pause");
@@ -2292,7 +2283,7 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
             cout << "Your choice: ";
             while (true) {
                 choice3 = getChoiceInt();
-                if (choice3 > idx || choice3 < 1) {
+                if (choice3 > --idx || choice3 < 1) {
                     cout << "Invalid option" << endl;
                     continue;
                 }
@@ -2305,7 +2296,6 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
                 idx++;
             }
             viewDetailedCourseInfo(currCourseNode->data);
-            system("pause");
             break;
         }
         else if (choice2 == 2) {
@@ -2525,7 +2515,6 @@ void updateCurrentYearInfo(schoolYear &_schoolYear) {
             default:
                 cout << "Invalid option!" << endl;
         }
-        //add auto save
     }
 }
 
@@ -2561,6 +2550,7 @@ bool updateStudentResultUI(schoolYear &_schoolYear) {
         case 5:
             return true;
     }
+    autoSaveSchoolyear(_schoolYear);
     return false;
 }
 
@@ -2819,7 +2809,7 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
     int choice2;
     while (true) {
         choice2 = getChoiceInt();
-        if (choice2 > idx || choice2 < 1) {
+        if (choice2 > --idx || choice2 < 1) {
             cout << "Invalid option" << endl;
             continue;
         }
@@ -2858,7 +2848,7 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
             addStudentToCourseManually(_schoolYear, currCourseNode->data);
             break;
         case 3: 
-            removeStudentFromCourse(currCourseNode->data);
+            removeStudentFromCourse(_schoolYear, currCourseNode->data);
             break;
         case 4:
             importStudentScore(_schoolYear, currCourseNode->data);
@@ -2869,8 +2859,9 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
         case 6:
             return false;
         case 7:
-            return true;
+            return false;
     }
+    autoSaveSchoolyear(_schoolYear);
     return false;
 }
 
@@ -3038,39 +3029,37 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
     }
 }
 
-bool login(credential *accountList) {
-    string userID, pw;
-    bool isStaff;
-    cout << "-----------------LOGIN----------------" << endl;
-    cout << "User ID : ";
-    cin >> userID;
-    cout << "Password : ";
-    cin >> pw;
-    cout << "Enter role (1 is staff, 0 otherwise) : ";
-    cin >> isStaff;
-    if(isStaff) {
-        accountNode* temp = accountList->staff;
+bool login(stringNode *accountList, bool &isStaff) {
+    int loginAttempt= 0;
+    while(loginAttempt < 5) {
+        system("cls");
+        if(loginAttempt > 0) {
+            cout << "Invalid user ID or password ! Please try again !" << endl;
+        }
+        string ID, PW;
+        cout << "------------LOGIN------------" << endl;
+        cout << "User ID : "; 
+        cin >> ID;
+        cout << "Password : ";
+        cin >> PW;
+
+        if(PW.find_last_of(':') != string::npos) {
+            loginAttempt++;
+            continue;
+        }   
+        string userAccount = ID + ':' + PW;
+        stringNode *temp= accountList;
         while(temp) {
-            if(temp->userAccount.ID == userID) {
-                if(temp->userAccount.password == pw) {
-                    return true;
-                }
+            if(temp->data == userAccount) {
+                cout << "Login successfully - welcome back ! " << endl;
+                if(!isdigit(userAccount[0]))
+                    isStaff = 1;
+                return true;
             }
             temp= temp->next;
         }
-        delete temp;
-        return false;
+        loginAttempt++;
     }
-    else {
-        accountNode* temp = accountList->student;
-        while(temp) {
-            if(temp->userAccount.ID == userID) {
-                if(temp->userAccount.password == pw) {
-                    return true;
-                }
-            }
-            temp= temp->next;
-        }
-        return false;
-    }
+    cout << "Too many login, please try again in a 1 minute ! " << endl;
+    return false;
 }

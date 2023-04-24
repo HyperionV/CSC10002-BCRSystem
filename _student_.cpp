@@ -29,7 +29,7 @@ student getStudentData(string id, string schoolYr, studentNode* head) {
 	return stu->data;
 }
 
-void viewProfile(student A, schoolYear _yr, credential &accountSystem) {
+void viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
@@ -45,7 +45,7 @@ void viewProfile(student A, schoolYear _yr, credential &accountSystem) {
 	menuStudent(A, _yr, accountSystem);
 }
 
-void menuStudent(student &A, const schoolYear &_yr, credential &accountSystem) {
+void menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
 	string newPass;
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
@@ -71,7 +71,7 @@ void menuStudent(student &A, const schoolYear &_yr, credential &accountSystem) {
 		case 3:
 			cout << "Please input your new password (No spacing): ";
 			cin >> newPass;
-			changeAccountPassword(accountSystem, A.id, 0, newPass);
+			changeAccountPassword(accountSystem, A.id, newPass);
 			break;
 		case 0:
 			//menu_version1(); Accessing login menu
@@ -81,7 +81,7 @@ void menuStudent(student &A, const schoolYear &_yr, credential &accountSystem) {
 			break;
 		}
 	
-	viewProfile(A, _yr);
+	viewProfile(A, _yr, accountSystem);
 }
 
 void viewScoreboard(student A) {
@@ -190,7 +190,7 @@ void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode, 
     string yr = id.substr(0,2);
     yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
     schoolYear thisYr;
-    if (getSchoolYear(id,schoolYrHead,thisYr))
+    if (getSchoolYear(id, schoolYrHead, thisYr))
     {
         classNode* tmp =thisYr._class;
         studentNode* tmpStu;

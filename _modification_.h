@@ -11,6 +11,7 @@ void addStudentIndividually(student &s);
 void saveStudentInfo(string path, const student &source);
 void addStringNode(stringNode *&head, const string &data);
 void addStudentNode(studentNode *&head, const student &source);
+void addStaffNode(staffNode *&head, const staffInfo &curStaff);
 void addCourseNode(courseNode *&head, const course &_course);
 void addClassNode(classNode *&head, const _class &c);
 void addScoreboardNode(scoreboardNode *&head, const scoreboard &score);
@@ -73,19 +74,19 @@ string createEmail(const string &fullName);
 void loadStudentByFile(studentNode *&head, const string &filePath);
 void loadStudentByFile(studentNode *&head, const string &classname, const string &filePath);
 void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path);
-void loadUserAccount (credential &accountSystem, const string &path);
+void loadUserAccount (stringNode*& head);
+void loadStaffInfo(staffNode *& staffList);
 schoolYearNode* loadDataFolder(const string &path);
 
 ///SAVE DATA
 void delete_directory(const string &path);
 void writeStudentInClass(studentNode *studentList, const string &path);
 void writeSchoolyear(string path, schoolYear sY);
-void writeCourseEnrolls(courseNode* &courseList, const string &path);
-void writeCourse(courseNode* &courseList , const string &path);
-void writeClass(classNode* &classList ,const string &path);
-void writeDataFolder(const string &path, schoolYearNode* &SYlist);
-void autoSaveClass(studentNode *studentInClass);
-void autoSaveCourse(const semester &sem, const string &courseName);
+void writeCourseEnrolls(courseNode* courseList, const string &path);
+void writeCourse(courseNode* courseList , const string &path);
+void writeClass(classNode* classList ,const string &path);
+void writeDataFolder(const string &path, schoolYearNode*& SYlist);
+void autoSaveSchoolyear(schoolYear curSchoolyear);
 
 //Menu/support functions
 schoolYear programStart(schoolYearNode *&head);
@@ -110,10 +111,12 @@ bool updateStudentResultUI(schoolYear &_schoolYear);
 void updateStudentResultWithID(schoolYear &_schoolYear);
 void updateStudentResultFromCourse(schoolYear &_schoolYear);
 void updateStudentResultFromClass(schoolYear &_schoolYear);
-bool changeAccountPassword(credential accountSystem, string userID, bool isStaff, string newPassword);
+bool changeAccountPassword(stringNode* accountList, string newPassword, string userAccount);
 void viewScoreBoardUI(schoolYear &_schoolYear);
 void viewStudentResultUI(schoolYear &_schoolYear);
 void viewCourseScoreBoardUI(schoolYear &_schoolYear);
 void viewClassScoreboardUI(const schoolYear &_schoolYear);
 void viewWholeClassScoreboard(const _class &source);
 void updateScoreboardUI(schoolYear &_schoolYear);
+
+bool login(stringNode *accountList, bool &isStaff);
