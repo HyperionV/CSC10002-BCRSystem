@@ -190,7 +190,7 @@ void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode, 
     string yr = id.substr(0,2);
     yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
     schoolYear thisYr;
-    if (getSchoolYear(id,schoolYrHead,thisYr))
+    if (getSchoolYear(id, schoolYrHead, thisYr))
     {
         classNode* tmp =thisYr._class;
         studentNode* tmpStu;
