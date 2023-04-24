@@ -50,12 +50,13 @@ void login(credential& accountSystem, const string path, schoolYearNode* head)
 
     if (isStaff == 2)
     {
-         cout << "Username: ";
+        studentNode *stuNode = nullptr;
+        cout << "Username: ";
         cin >> ID;
         cout << "Password: ";
         cin >> passTmp;
         if (checkAccount(ID, passTmp, accountSystem.student))
-            StudentMain(head, ID, stuNode, accountSystem);
+            StudentMain(head, ID, stuNode, accountSystem); // stuNode is studentNode head
         return;
     }
 }
