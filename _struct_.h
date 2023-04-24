@@ -102,22 +102,12 @@ struct schoolYearNode {
     schoolYearNode* next = nullptr;
 };
 
-struct account {
-    string ID;
-    string password = defaultPassword;
-};
-
-struct accountNode {
-    account userAccount;
-    accountNode* next= nullptr;
-};
-
-struct credential {
-    accountNode* student = nullptr;
-    accountNode* staff = nullptr;
-};
-
 struct staffInfo {
     string name;
     string mail;
+};
+
+struct staffNode {
+    staffInfo staff;
+    staffNode* next = nullptr;
 };
