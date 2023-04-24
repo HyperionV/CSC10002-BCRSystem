@@ -1997,6 +1997,8 @@ void viewStudentResultUI(schoolYear &_schoolYear) {
     cin >> id;
     if (id.length() != 8) {
         cout << "Wrong ID format" << endl;
+        system("pause");
+        system("cls");
         return;
     }
     classNode* currClassNode = _schoolYear._class;
@@ -2168,7 +2170,7 @@ void viewProfileStaff(staffInfo curStaff, credential accountSystem) {
 
 void viewCurrentYearInfo(const schoolYear &_schoolYear) {
     while (true) {
-        // system("cls");
+        system("cls");
         cout << "\n---------View current school year information---------" << endl;
         cout << "\t1. View semesters information" << endl;
         cout << "\t2. View classes information" << endl;
