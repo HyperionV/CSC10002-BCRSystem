@@ -4,3 +4,4 @@ int getChoiceInt();
 char getChoiceChar();
 bool standardizeName(string &name);
 bool checkValidDate(string date);
+void deleteSpacing(string &str);

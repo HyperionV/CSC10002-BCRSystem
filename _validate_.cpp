@@ -117,3 +117,13 @@ bool checkValidDate(string date)
 
     return true;
 }
+
+void deleteSpacing(string& str)
+{
+    int count = 0;
+    while (count < str.length())
+    {
+        if (str[count] == ' ') str.replace(count, 1, "");
+        else count++;
+    }
+}
