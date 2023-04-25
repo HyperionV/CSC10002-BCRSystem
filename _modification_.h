@@ -107,6 +107,8 @@ bool updateStudentResultUI(schoolYear &_schoolYear);
 void updateStudentResultWithID(schoolYear &_schoolYear);
 void updateStudentResultFromCourse(schoolYear &_schoolYear);
 void updateStudentResultFromClass(schoolYear &_schoolYear);
+void updateStudentResult(const schoolYear &_schoolYear, scoreboardNode *curScoreboard, student& source);
+void updateStudentResult(const schoolYear &_schoolYear, const string &ID, student &source);
 bool changeAccountPassword(stringNode* accountList, string newPassword, string userAccount);
 void viewScoreBoardUI(schoolYear &_schoolYear);
 void viewStudentResultUI(schoolYear &_schoolYear);
