@@ -53,10 +53,24 @@ bool checkValidDate(string date)
         return false;
     }
 
+    string dummy = "";
+
+    if (date.find("/") > date.length())
+    {
+        if (date.find("-") > date.length())
+        {
+            cout << "No date seperation symbol is found or the symbol is incorrect ('/' and '-' )\n";
+            return false;
+        }
+        dummy += "-";
+    }
+    else
+        dummy += "/";
+
     //getting date 
-    int d = stoi(date.substr(0, date.find("/")));
-    int m = stoi(date.substr(date.find("/") + 1, date.find_last_of("/") - 1));
-    int y = stoi(date.substr(date.find_last_of("/") + 1));
+    int d = stoi(date.substr(0, date.find(dummy)));
+    int m = stoi(date.substr(date.find(dummy) + 1, date.find_last_of(dummy) - 1));
+    int y = stoi(date.substr(date.find_last_of(dummy) + 1));
 
     //checking 
     if (d > 31 || d < 1)
