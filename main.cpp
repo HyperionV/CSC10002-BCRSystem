@@ -5,7 +5,8 @@ int main() {
     stringNode* accountList= nullptr;
     loadUserAccount(accountList);
 
-    if(login(accountList, isStaff) && isStaff) { //user id : DinhBaTien   --- pw : 123456
+    bool isLogin = login(accountList, isStaff);
+    if(isLogin && isStaff) { //user id : DinhBaTien   --- pw : 123456
         // staffNode* staffList = nullptr;
         // loadStaffInfo(staffList);
 
@@ -13,9 +14,8 @@ int main() {
         _schoolYear = loadDataFolder("Data");
         mainMenuStaff(_schoolYear);
     }
-    else if (login(accountList, isStaff) && !isStaff) {
-        //studentMain
-    }
-
+    // else if (isLogin && !isStaff) {
+    //     //studentMain
+    // }
     return 0;
 }

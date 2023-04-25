@@ -1141,7 +1141,7 @@ void updateStudentResult(const schoolYear &_schoolYear, const string &ID, studen
     cout << "\n\tMidterm: " << source._course->data.midterm;
     cout << "\n\tFinal: " << source._course->data.final;
     cout << "\n\tTotal: " << source._course->data.total << endl;
-    cout << "Enter new value for each type of scores: ";
+    cout << "Enter new value for each type of scores: " << endl;
     cout << "\tOther: "; 
     cin >> source._course->data.other;
     cout << "\tMidterm: "; 
@@ -1153,6 +1153,7 @@ void updateStudentResult(const schoolYear &_schoolYear, const string &ID, studen
     classNode *studentClass = findClassName(_schoolYear._class, source.className);
     studentNode *OG = findStudent(studentClass->data._student, source.id);
     scoreboardNode *studentScore = findCourseScoreboard(OG->data._course, ID);
+
     if (!studentScore) {
         cout << "Error while update student result" << endl;
         system("pause");
@@ -1164,8 +1165,42 @@ void updateStudentResult(const schoolYear &_schoolYear, const string &ID, studen
     studentScore->data.total = source._course->data.total;
 
     system("pause");
+    return ;
 }
 
+
+void updateStudentResult(const schoolYear &_schoolYear, scoreboardNode *curScoreboard, student& source) {
+    cout << "\n----------Update student result----------" << endl;
+    cout << "Student : " << source.firstName << " " << source.lastName ;
+    cout << "\nID : " << source.id << endl;
+    cout << "\nCurrent result: ";
+    cout << "\n\tOther: " << curScoreboard->data.other;
+    cout << "\n\tMidterm: " << curScoreboard->data.midterm;
+    cout << "\n\tFinal: " << curScoreboard->data.final;
+    cout << "\n\tTotal: " << curScoreboard->data.total << endl;
+    cout << "Enter new value for each type of scores: " << endl;
+    cout << "\tOther: "; 
+    cin >> curScoreboard->data.other;
+    cout << "\tMidterm: "; 
+    cin >> curScoreboard->data.midterm;
+    cout << "\tFinal: "; 
+    cin >> curScoreboard->data.final;
+    cout << "\tTotal: "; 
+    cin >> curScoreboard->data.total;
+    
+
+    courseNode* currCourseNode = nullptr;
+    for (int i = 0; i < 3; i++) {
+        currCourseNode = findCourse(_schoolYear._semester[i]._course, curScoreboard->data.courseID);
+        if (currCourseNode) {
+            break;
+        }
+    }
+    studentNode *courseStudent = findStudent(currCourseNode->data.enrolled, source.id);
+    courseStudent->data._course->data = curScoreboard->data;
+    system("pause");
+    return ;
+}
 //Data export functions
 
 void exportStudentInfoList(const string &_schoolYear, const course &_course) {
@@ -2449,7 +2484,7 @@ void viewStudentInfo(const schoolYear &_schoolYear) {
                     viewStudentResult(target->data);
                 target = nullptr;
                 currClassNode = nullptr;
-                system("pause");
+                // system("pause");
                 found = true;
                 break;
             }
@@ -2458,7 +2493,7 @@ void viewStudentInfo(const schoolYear &_schoolYear) {
         if (!found) {
             cout << "There is no student associated with the provided student ID! Please try again" << endl;
             currClassNode = nullptr;
-            system("pause");
+            // system("pause");
             system("cls");
             continue;
         }
@@ -2609,7 +2644,8 @@ void updateStudentResultWithID(schoolYear &_schoolYear) {
         currScoreboardNode = currScoreboardNode->next;
         idx++;
     }
-    updateStudentResult(_schoolYear, currScoreboardNode->data.courseID, target->data);
+
+    updateStudentResult(_schoolYear, currScoreboardNode, target->data);
 }
 
 void updateStudentResultFromCourse(schoolYear &_schoolYear) {
@@ -2749,6 +2785,7 @@ void updateStudentResultFromClass(schoolYear &_schoolYear) {
     idx = 1;
     while (idx != choice3) {
         currScoreboardNode = currScoreboardNode->next;
+        idx++;
     }
     //change the result for the student object in classes
     updateStudentResult(_schoolYear, currScoreboardNode->data.courseID, currStudentNode->data);
@@ -2761,7 +2798,7 @@ void updateStudentResultFromClass(schoolYear &_schoolYear) {
         }
     }
     studentNode *courseStudent = findStudent(currCourseNode->data.enrolled, currStudentNode->data.id);
-    findCourseScoreboard(courseStudent->data._course, currScoreboardNode->data.courseID)->data = currScoreboardNode->data;
+    courseStudent->data._course->data = currScoreboardNode->data;
 }
 
 bool updateCourseInfoUI(schoolYear &_schoolYear) {
@@ -3058,6 +3095,6 @@ bool login(stringNode *accountList, bool &isStaff) {
         }
         loginAttempt++;
     }
-    cout << "Too many login, please try again in a 1 minute ! " << endl;
+    cout << "Too many login, please try again in a minute ! " << endl;
     return false;
 }
