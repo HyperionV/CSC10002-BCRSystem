@@ -1,4 +1,7 @@
-#include "_login_.h"
+#include "_library_.h"
+#include "_struct_.h"
+#include "_student_.h"
+#include "_modification_.h"
 
 bool checkAccount(string ID, string passTemp, accountNode * acc)
 {
@@ -44,7 +47,7 @@ void login(credential& accountSystem, const string path, schoolYearNode* head)
         cout << "Password: ";
         cin >> passTmp;
         if (checkAccount(ID, passTmp, accountSystem.staff))
-            mainMenuStaff(head, ID);
+            mainMenuStaff(head);
         return;
     }
 
