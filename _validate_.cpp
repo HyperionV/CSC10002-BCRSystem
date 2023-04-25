@@ -44,7 +44,7 @@ bool standardizeName(string &name) {
     return true;
 }
 
-bool standardizeDate(string& date)
+bool checkValidDate(string date)
 {
     //Assuming date format is dd/mm/yyyy or d/m/yyyy or dd/m/yyyy or d/mm/yyyy => minLength == 8, maxLength == 10 
     if (date.length() < 8 || date.length() > 10)
