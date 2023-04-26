@@ -26,7 +26,6 @@ scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID);
 schoolYearNode* findSchoolYear(schoolYearNode *head, const string &_schoolYear);
 void deleteStringNode(stringNode *&head, const string &target);
 void deleteCourseNode(courseNode *&head, const string &ID);
-void deleteClassNode(classNode *&head, const string &className);
 void deleteStudentNode(studentNode *&head, const string &studentID);
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID);
 void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear);

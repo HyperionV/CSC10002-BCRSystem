@@ -349,47 +349,19 @@ void deleteStringNode(stringNode *&head, const string &target) {
 }
 
 void deleteCourseNode(courseNode *&head, const string &ID) {
-    if(head == nullptr)
-        return;
-    if(head->data.id == ID) {
-        courseNode *curr = head;
-        deleteStudentList(curr->data.enrolled);
-        head = head->next;
-        delete curr;
-        return;
-    }
-    courseNode *prevhead = nullptr;
-    courseNode *delHead = head;
-    while (delHead) {
-        if (delHead->data.id == ID) {
-            courseNode *curr = delHead;
-            deleteStudentList(curr->data.enrolled);
-            prevhead->next = delHead->next;
-            delete curr;
-            return;
-        }
-        prevhead = delHead;
-        delHead = delHead->next;
-    }
-    return;
-}
-
-void deleteClassNode(classNode *&head, const string &className) {
-    classNode* newhead = nullptr;
-    classNode* delHead = head;
+    courseNode* newhead = nullptr;
+    courseNode* delHead = head;
     while (head) {
-        if (head->data.name == className) {
-            classNode *curr = head;
-            deleteStudentList(curr->data._student);
-            head = head->next;
-            delete curr;
-            continue;
+        if (head->data.name != ID) {
+            addCourseNode(newhead, head->data);
         }
-        addClassNode(newhead, head->data);
+        else {
+            deleteStudentList(head->data.enrolled);
+        }
         head = head->next;
     }
     head = newhead;
-    deleteClassList(delHead);
+    deleteCourseList(delHead);
     newhead = nullptr;
 }
 
