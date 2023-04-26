@@ -1046,7 +1046,10 @@ void viewCourseInfo(const course &_course) {
     cout << "\t7. Schedule: " << _course.session << " - " << _course.day << endl;
 }
 
-void updateCourseInfo(course &_course) {
+//bug: change number of enrolled students when changing course information
+
+void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
+    string prevID = _course.id;
     cout << "\n---------Update course info----------" << endl;
     string placeHolder;
     cout << "Current course info:";
@@ -1055,17 +1058,17 @@ void updateCourseInfo(course &_course) {
     cout << "\nEnter new information for this course: ";
     cout << "\n\t1. ID: ";
     cin >> _course.id;
-    cout << "\n\t2. Name: "; 
+    cout << "\t2. Name: "; 
     cin.ignore();
     getline(cin, _course.name);
-    cout << "\n\t3. Classroom: ";
+    cout << "\t3. Classroom: ";
     cin >> _course.className;
-    cout << "\n\t4. Teacher: ";
+    cout << "\t4. Teacher: ";
     cin.ignore();
     getline(cin, _course.teacher);
     //repeatedly asking user to re-enter information if inputted wrongly
     while (true) {
-        cout << "\n\t5. Credits: ";
+        cout << "\t5. Credits: ";
         cin >> placeHolder;
         _course.credit = stoi(placeHolder);
         if (_course.credit > 5 || _course.credit <= 0) {
@@ -1076,7 +1079,7 @@ void updateCourseInfo(course &_course) {
     }
     //repeatedly asking user to re-enter information if input wrongly
     while (true) {
-        cout << "\n\t6. Max number of students: ";
+        cout << "\t6. Max number of students: ";
         cin >> placeHolder;
         _course.max = stoi(placeHolder);
         if (_course.max <= 0) {
@@ -1085,12 +1088,12 @@ void updateCourseInfo(course &_course) {
         }
         break;
     }
-    cout << "\n\t7.1 Day: ";
+    cout << "\t7.1 Day: ";
     cin >> _course.day;
     for (int i = 0; i < _course.day.length(); i++) {
         _course.day[i] = toupper(_course.day[i]);
     }
-    cout << "\n\t7.2 Session: ";
+    cout << "\t7.2 Session: ";
     cin >> _course.session;
     //display the new course information
     cout << "Successfully updated course info" << endl;
@@ -1103,6 +1106,19 @@ void updateCourseInfo(course &_course) {
     cout << "\n\t6. Max number of students: " << _course.max;
     cout << "\n\t7. Schedule: " << _course.session << " - " << _course.day << endl;
     system("pause");
+    studentNode *currStudentNode = _course.enrolled;
+    while (currStudentNode) {
+        classNode *currClassNode = findClassName(_schoolYear._class, currStudentNode->data.className);
+        studentNode *target = findStudent(currClassNode->data._student, currStudentNode->data.id);
+        scoreboardNode *currScoreboardNode = findCourseScoreboard(target->data._course, prevID);
+        currScoreboardNode->data.courseID = _course.id;
+        currScoreboardNode->data.courseName = _course.name;
+        currClassNode = nullptr;
+        target = nullptr;
+        currScoreboardNode = nullptr;
+        currStudentNode = currStudentNode->next;
+    }
+    currStudentNode = nullptr;
 }
 
 void updateStudentResult(const schoolYear &_schoolYear, const string &ID, student &source) {
@@ -2848,7 +2864,7 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
     }
     switch (choice3) {
         case 1:
-            updateCourseInfo(currCourseNode->data);
+            updateCourseInfo(_schoolYear, currCourseNode->data);
             break;
         case 2:
             addStudentToCourseManually(_schoolYear, currCourseNode->data);
