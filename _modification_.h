@@ -2,13 +2,9 @@
 #include "_validate_.h"
 
 //miscellaneous/support function prototypes
-void getContentOfFile(const string &path, stringNode *&head);
-void displayListContent(stringNode *head);
-void displayListContentWithIndex(stringNode *head);
 void displayStudentList(studentNode *head);
 void addStudentByFile(studentNode *&head, const string &className);
 void addStudentIndividually(student &s);
-void saveStudentInfo(string path, const student &source);
 void addStringNode(stringNode *&head, const string &data);
 void addStudentNode(studentNode *&head, const student &source);
 void addStaffNode(staffNode *&head, const staffInfo &curStaff);
@@ -30,7 +26,6 @@ scoreboardNode* findCourseScoreboard(scoreboardNode *head, const string &ID);
 schoolYearNode* findSchoolYear(schoolYearNode *head, const string &_schoolYear);
 void deleteStringNode(stringNode *&head, const string &target);
 void deleteCourseNode(courseNode *&head, const string &ID);
-void deleteClassNode(classNode *&head, const string &className);
 void deleteStudentNode(studentNode *&head, const string &studentID);
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID);
 void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear);

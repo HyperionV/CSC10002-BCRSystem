@@ -187,12 +187,10 @@ void changePassStudent(string* password, student A) {
 
 void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode, credential &accountSystem)
 {
-    string yr = id.substr(0,2);
-    yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
     schoolYear thisYr;
     if (getSchoolYear(id, schoolYrHead, thisYr))
     {
-        classNode* tmp =thisYr._class;
+        classNode* tmp = thisYr._class;
         studentNode* tmpStu;
         while (tmp || !stuNode)
         {
