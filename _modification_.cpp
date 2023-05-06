@@ -1769,21 +1769,20 @@ void autoSaveCredential(stringNode *accountList) {
 
 bool changeAccountPassword(stringNode* accountList, string userID) {
     string newPassword, oldPassword;
-    cout << "Input new password : ";
-    cin >> newPassword;
-    cout << "Input old password : ";
+    cout << "Input old password: ";
     cin >> oldPassword;
-
+    cout << "Input new password: ";
+    cin >> newPassword;
     string curAccount = userID + ":" + oldPassword;
-    stringNode* acc= accountList;
+    stringNode* acc = accountList;
     while(acc) {
         if(curAccount == acc->data) {
-            string temp= userID + ":" + newPassword;
-            acc->data= temp;
+            string temp = userID + ":" + newPassword;
+            acc->data = temp;
             autoSaveCredential(accountList);
             return true;
         }
-        acc= acc->next;
+        acc = acc->next;
     }
     return false;
 }
@@ -1853,19 +1852,19 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         system("cls");
         cout << "\n---------Main menu - staff---------" << endl;
         cout << "\t1. View profile" << endl;
-        cout << "\t2. View current school year information" << endl;
-        cout << "\t3. Update current school year information" << endl;
-        cout << "\t4. Load another school year" << endl;
-        cout << "\t5. View scoreboard" << endl;
-        cout << "\t6. Update scoreboard" << endl;
-        cout << "\t7. Log out" << endl;
-        cout << "\t8. Save and close program" << endl;
-        cout << "\t9. Add new staff " << endl;
+        cout << "\t2. Add new staff " << endl;
+        cout << "\t3. View current school year information" << endl;
+        cout << "\t4. Update current school year information" << endl;
+        cout << "\t5. Load another school year" << endl;
+        cout << "\t6. View scoreboard" << endl;
+        cout << "\t7. Update scoreboard" << endl;
+        cout << "\t8. Log out" << endl;
+        cout << "\t9. Save and close program" << endl;
         cout << "Your choice: ";
         int choice;
         while (true) {
             choice = getChoiceInt();
-            if (choice > 9 || choice < 1) {
+            if (choice > 10 || choice < 1) {
                 cout << "Invalid option" << endl;
                 continue;
             }
@@ -1873,50 +1872,50 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         }
         if (choice == 1) {
             staffInfo curStaff = getStaff(staffList, userID);
-            cout << "Full name : " << curStaff.fullName << endl;
-            cout << "Email : " << curStaff.mail << endl;
-            cout << "Enter 1 to change password : "; 
-            int curChoice= 0;
+            cout << "Full name: " << curStaff.fullName << endl;
+            cout << "Email: " << curStaff.mail << endl;
+            cout << "Input \"1\" to change password: "; 
+            int curChoice = 0;
             cin >> curChoice;
             if(curChoice == 1) {
                 string curStaffID= curStaff.mail.substr(0, curStaff.mail.find_first_of("@"));
                 if(changeAccountPassword(accountList, curStaffID)) {
-                    cout << "Password changed successfully !" << endl;
+                    cout << "Password changed successfully!" << endl;
                     system("pause");
                 }
                 else {
-                    cout << "Incorrect password !" << endl;
+                    cout << "Incorrect password!" << endl;
                     system("pause");
                 }
             } 
         }
-        else if (choice == 2) {
+        else if (choice == 3) {
             viewCurrentYearInfo(_schoolYear);
         }
-        else if (choice == 3) {
+        else if (choice == 4) {
             updateCurrentYearInfo(_schoolYear);
         }
-        else if (choice == 4) {
+        else if (choice == 5) {
             _schoolYear = programStart(head);
         }
-        else if (choice == 5) {
+        else if (choice == 6) {
             viewScoreBoardUI(_schoolYear);
         }
-        else if (choice == 6) {
+        else if (choice == 7) {
             updateScoreboardUI(_schoolYear);
         }
-        else if (choice == 7) {
+        else if (choice == 8) {
             writeDataFolder("Data", head);
             deleteSchoolYearList(head);
             return 1;
         }
-        else if (choice == 8) {
+        else if (choice == 9) {
             cout << "Database reloaded!\nClosing program..." << endl;
             writeDataFolder("Data", head);
             deleteSchoolYearList(head);
             return 0;
         }
-        else if(choice == 9) {
+        else if(choice == 2) {
             createNewStaff(staffList, accountList);
         }
         else {
@@ -1934,8 +1933,8 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     getline(cin, staffName);
     while(!standardizeName(staffName)) {
         system("cls");
-        cout << "Name must not consist of special characters !" << endl;
-        cout << "Input staff's fullname";
+        cout << "Name must not consist of special characters!" << endl;
+        cout << "Input staff's fullname: ";
         getline(cin, staffName);
     }
     newStaff.fullName= staffName;
@@ -1945,7 +1944,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     addStringNode(accountList, curAcc);
     autoSaveCredential(accountList);
     saveStaffInfo(staffList);
-    cout << "Create new staff successfully ! Default password is : 123456789" << endl;
+    cout << "Create new staff successfully! Default password is: 123456789" << endl;
     system("pause");
     return;
 }
@@ -3111,9 +3110,9 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         }
         string ID, PW;
         cout << "------------LOGIN------------" << endl;
-        cout << "User ID : "; 
+        cout << "User ID: "; 
         cin >> ID;
-        cout << "Password : ";
+        cout << "Password: ";
         cin >> PW;
 
         if(PW.find_last_of(':') != string::npos) {
