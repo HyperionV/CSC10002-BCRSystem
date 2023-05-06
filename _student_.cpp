@@ -29,7 +29,7 @@ student getStudentData(string id, string schoolYr, studentNode* head) {
 	return stu->data;
 }
 
-void viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
+bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
@@ -42,10 +42,15 @@ void viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
-	menuStudent(A, _yr, accountSystem);
+	if(menuStudent(A, _yr, accountSystem)) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
 }
 
-void menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
+bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
 	string newPass;
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
@@ -71,17 +76,17 @@ void menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 		case 3:
 			cout << "Please input your new password (No spacing): ";
 			cin >> newPass;
-			changeAccountPassword(accountSystem, A.id, newPass);
+			changeAccountPassword(accountSystem, A.id);
 			break;
 		case 0:
-			//menu_version1(); Accessing login menu
-			return;
+			return 1;
 		default:
 			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
 			break;
 		}
 	
 	viewProfile(A, _yr, accountSystem);
+	return 0;
 }
 
 void viewScoreboard(student A) {
@@ -185,8 +190,9 @@ void changePassStudent(string* password, student A) {
 	return;
 }
 
-void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode, credential &accountSystem)
+bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)
 {
+	studentNode *stuNode= nullptr;
     schoolYear thisYr;
     if (getSchoolYear(id, schoolYrHead, thisYr))
     {
@@ -213,11 +219,13 @@ void StudentMain(schoolYearNode* schoolYrHead, string id, studentNode* stuNode, 
         }
         if (stuNode){
             student A = getStudentData(id, thisYr._schoolYear, stuNode);
-			viewProfile(A, thisYr, accountSystem);
+			if(viewProfile(A, thisYr, accountSystem)) {
+				return 1;
+			}
 		}
     }
     else {
         cout << "Unable to locate school year\n";
-        return;
+        return 1;
     }
 }

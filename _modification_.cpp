@@ -1704,13 +1704,6 @@ string createEmail(const string &fullName) {
     return email;
 }
 
-bool createStaffAccount(staffInfo &newStaff) {
-    cout << "----------------Create new staff account--------------------" << endl;
-    cout << "Input staff's full name : "; 
-    getline(cin, newStaff.name);
-    newStaff.mail = createEmail(newStaff.name);
-    return true;
-}
 
 schoolYearNode* loadDataFolder(const string &path) {
     schoolYearNode* schoolYearList= nullptr;
@@ -1754,7 +1747,7 @@ void loadStaffInfo(staffNode *& staffList) {
     string temp;
     while(in_file.good()) {
         staffInfo tempStaff;
-        getline(in_file, tempStaff.name, ',');
+        getline(in_file, tempStaff.fullName, ',');
         getline(in_file, tempStaff.mail);
         addStaffNode(staffList, tempStaff);
     }
@@ -1764,28 +1757,47 @@ void loadStaffInfo(staffNode *& staffList) {
 void autoSaveCredential(stringNode *accountList) {
     string path = "credential.txt";
 
-    ofstream out_file(path, ios::out);
+    ofstream out_file(path);
     while(accountList) {
         out_file << accountList->data << endl;
+
         accountList = accountList->next;
     }
-
+    out_file.close();
     return;
 }
 
-bool changeAccountPassword(stringNode* accountList, string newPassword, string userAccount) {
-    while(accountList) {
-        if(userAccount == accountList->data) {
-            string temp(accountList->data);
-            temp= temp.substr(0, temp.find_last_of(':') + 1);
-            temp+=newPassword;
-            accountList->data= temp;
+bool changeAccountPassword(stringNode* accountList, string userID) {
+    string newPassword, oldPassword;
+    cout << "Input new password : ";
+    cin >> newPassword;
+    cout << "Input old password : ";
+    cin >> oldPassword;
+
+    string curAccount = userID + ":" + oldPassword;
+    stringNode* acc= accountList;
+    while(acc) {
+        if(curAccount == acc->data) {
+            string temp= userID + ":" + newPassword;
+            acc->data= temp;
             autoSaveCredential(accountList);
             return true;
         }
-        accountList= accountList->next;
+        acc= acc->next;
     }
     return false;
+}
+
+staffInfo getStaff(staffNode* head, string userID) {
+    userID = userID + "@staff.hcmus.edu.vn";
+    staffInfo tempStaff;
+    while(head) {
+        if(head->staff.mail == userID) {
+            return head->staff;
+        }
+        head= head->next;
+    }
+    return tempStaff;
 }
 
 //Work flow
@@ -1834,8 +1846,9 @@ schoolYear programStart(schoolYearNode *&head) {
     return currSchoolYearNode->data;
 }
 
-void mainMenuStaff(schoolYearNode *&head) {
+bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList) {
     schoolYear _schoolYear = programStart(head);
+
     while (true) {
         system("cls");
         cout << "\n---------Main menu - staff---------" << endl;
@@ -1847,19 +1860,35 @@ void mainMenuStaff(schoolYearNode *&head) {
         cout << "\t6. Update scoreboard" << endl;
         cout << "\t7. Log out" << endl;
         cout << "\t8. Save and close program" << endl;
+        cout << "\t9. Add new staff " << endl;
         cout << "Your choice: ";
         int choice;
         while (true) {
             choice = getChoiceInt();
-            if (choice > 8 || choice < 1) {
+            if (choice > 9 || choice < 1) {
                 cout << "Invalid option" << endl;
                 continue;
             }
             break;
         }
         if (choice == 1) {
-            // void viewProfileStaff(staffInfo curStaff)
-            cout << "In development lol" << endl;
+            staffInfo curStaff = getStaff(staffList, userID);
+            cout << "Full name : " << curStaff.fullName << endl;
+            cout << "Email : " << curStaff.mail << endl;
+            cout << "Enter 1 to change password : "; 
+            int curChoice= 0;
+            cin >> curChoice;
+            if(curChoice == 1) {
+                string curStaffID= curStaff.mail.substr(0, curStaff.mail.find_first_of("@"));
+                if(changeAccountPassword(accountList, curStaffID)) {
+                    cout << "Password changed successfully !" << endl;
+                    system("pause");
+                }
+                else {
+                    cout << "Incorrect password !" << endl;
+                    system("pause");
+                }
+            } 
         }
         else if (choice == 2) {
             viewCurrentYearInfo(_schoolYear);
@@ -1877,18 +1906,48 @@ void mainMenuStaff(schoolYearNode *&head) {
             updateScoreboardUI(_schoolYear);
         }
         else if (choice == 7) {
-            cout << "In development lol" << endl;
+            writeDataFolder("Data", head);
+            deleteSchoolYearList(head);
+            return 1;
         }
         else if (choice == 8) {
             cout << "Database reloaded!\nClosing program..." << endl;
             writeDataFolder("Data", head);
-            return;
+            deleteSchoolYearList(head);
+            return 0;
+        }
+        else if(choice == 9) {
+            createNewStaff(staffList, accountList);
         }
         else {
             cout << "Not a valid option!\n" << endl;
             system("pause");
         }
     }
+}
+
+void createNewStaff(staffNode* staffList, stringNode* accountList) {
+    staffInfo newStaff;
+    string curAcc;
+    string staffName;
+    cout << "Input staff's fullname : ";
+    getline(cin, staffName);
+    while(!standardizeName(staffName)) {
+        system("cls");
+        cout << "Name must not consist of special characters !" << endl;
+        cout << "Input staff's fullname";
+        getline(cin, staffName);
+    }
+    newStaff.fullName= staffName;
+    newStaff.mail= createEmail(staffName);
+    curAcc= newStaff.mail.substr(0, newStaff.mail.find_first_of("@")) + ":" + "123456789";
+    addStaffNode(staffList, newStaff);
+    addStringNode(accountList, curAcc);
+    autoSaveCredential(accountList);
+    saveStaffInfo(staffList);
+    cout << "Create new staff successfully ! Default password is : 123456789" << endl;
+    system("pause");
+    return;
 }
 
 void updateScoreboardUI(schoolYear &_schoolYear) {
@@ -2165,7 +2224,7 @@ void viewProfileStudent(student curStudent) {
 void viewProfileStaff(staffInfo curStaff) {
     // system("cls");
     cout << "------------------PROFILE--------------" << endl;
-    cout << "Full name : " << curStaff.name << endl;
+    cout << "Full name : " << curStaff.fullName << endl;
     cout << "Email : " << curStaff.mail << endl;
     system("pause");
 }
@@ -3043,7 +3102,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
     }
 }
 
-bool login(stringNode *accountList, bool &isStaff) {
+bool login(stringNode *accountList, bool &isStaff, string &userID) {
     int loginAttempt= 0;
     while(loginAttempt < 5) {
         system("cls");
@@ -3066,6 +3125,7 @@ bool login(stringNode *accountList, bool &isStaff) {
         while(temp) {
             if(temp->data == userAccount) {
                 cout << "Login successfully - welcome back ! " << endl;
+                userID= ID;
                 if(!isdigit(userAccount[0]))
                     isStaff = 1;
                 return true;
@@ -3076,4 +3136,17 @@ bool login(stringNode *accountList, bool &isStaff) {
     }
     cout << "Too many login, please try again in a minute ! " << endl;
     return false;
+}
+
+void saveStaffInfo(staffNode* head) {
+    ofstream out_file("staff.txt");
+    while(head) {
+        out_file << head->staff.fullName << "," << head->staff.mail ;
+        if(head->next) {
+            out_file << endl;
+        }
+        head= head->next;
+    }
+    out_file.close();
+    return;
 }
