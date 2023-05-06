@@ -707,14 +707,15 @@ void addStudentToClass(schoolYear &_schoolYear) {
         cout << "\nSuccessfully added student to class\n" << endl;
         system("pause");
     }
+    //Change the mechanism into adding node instead of removing node from the original list
     else if (choice2 == 2) {
         studentNode *_student = nullptr;
-        addStudentByFile(_student, c.name);
-        studentNode *currStudentNode = _student;
+        studentNode *currStudentNode = nullptr;
+        addStudentByFile(currStudentNode, c.name);
         while (currStudentNode) {
             // cout << "Student not null" << endl;
-            if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
-                deleteStudentNode(currStudentNode, currStudentNode->data.id);
+            if (!checkStudentExistence(_schoolYear, currStudentNode->data)) {
+                addStudentNode(_student, currStudentNode->data);
             }
             currStudentNode = currStudentNode->next;
         }
@@ -1542,7 +1543,7 @@ void delete_directory(const string& path)
     }
     else
     {
-        cerr << "Error: Failed to open directory " << path << endl;
+        // cerr << "Error: Failed to open directory " << path << endl;
     }
     return;
 }
@@ -1628,7 +1629,6 @@ void writeCourse(courseNode* courseList , const string &path) {
         out_file.open(full_path + "/info.txt");
         out_file << courseList->data.id << "," << courseList->data.name << "," << courseList->data.className << "," << courseList->data.teacher << "," << courseList->data.credit << "," << courseList->data.max << "," << courseList->data.day << "," << courseList->data.session;
         out_file.close();
-        
         courseList= courseList->next;
     }
 
@@ -1640,7 +1640,6 @@ void writeClass(classNode* classList ,const string &path) {
         string full_path = path + "/" + classList->data.name;
         mkdir((full_path).c_str());
         writeStudentInClass(classList->data._student, full_path);
-
         classList = classList->next;
     }
 
@@ -1760,7 +1759,6 @@ void autoSaveCredential(stringNode *accountList) {
     ofstream out_file(path);
     while(accountList) {
         out_file << accountList->data << endl;
-
         accountList = accountList->next;
     }
     out_file.close();
@@ -1929,7 +1927,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     staffInfo newStaff;
     string curAcc;
     string staffName;
-    cout << "Input staff's fullname : ";
+    cout << "Input staff's fullname: ";
     getline(cin, staffName);
     while(!standardizeName(staffName)) {
         system("cls");
