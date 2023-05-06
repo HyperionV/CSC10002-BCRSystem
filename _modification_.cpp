@@ -1700,13 +1700,6 @@ string createEmail(const string &fullName) {
     return email;
 }
 
-bool createStaffAccount(staffInfo &newStaff) {
-    cout << "----------------Create new staff account--------------------" << endl;
-    cout << "Input staff's full name : "; 
-    getline(cin, newStaff.fullName);
-    newStaff.mail = createEmail(newStaff.fullName);
-    return true;
-}
 
 schoolYearNode* loadDataFolder(const string &path) {
     schoolYearNode* schoolYearList= nullptr;
@@ -1947,6 +1940,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     addStaffNode(staffList, newStaff);
     addStringNode(accountList, curAcc);
     autoSaveCredential(accountList);
+    saveStaffInfo(staffList);
     cout << "Create new staff successfully ! Default password is : 123456789" << endl;
     system("pause");
     return;
@@ -3138,4 +3132,17 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
     }
     cout << "Too many login, please try again in a minute ! " << endl;
     return false;
+}
+
+void saveStaffInfo(staffNode* head) {
+    ofstream out_file("staff.txt");
+    while(head) {
+        out_file << head->staff.fullName << "," << head->staff.mail ;
+        if(head->next) {
+            out_file << endl;
+        }
+        head= head->next;
+    }
+    out_file.close();
+    return;
 }

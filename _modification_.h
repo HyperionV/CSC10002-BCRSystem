@@ -119,3 +119,4 @@ void updateScoreboardUI(schoolYear &_schoolYear);
 bool login(stringNode *accountList, bool &isStaff, string& userID);
 staffInfo getStaff(staffNode* head, string userID);
 void createNewStaff(staffNode* staffList, stringNode* accountList);
+void saveStaffInfo(staffNode* head);
