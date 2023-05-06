@@ -18,18 +18,18 @@ bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr){
 	return false;
 }
 
-student getStudentData(const string &id, const string &schoolYr, studentNode* head) {
+bool getStudentData(string id, string schoolYr, studentNode* head, student& result) {
 	studentNode* stu = findStudent(head, id);
 	if (!stu)
 	{
 		cout << "Couldn't find student with that ID. Please retype your id and try again.\n";
-		cin >> id;
-		getStudentData(id, schoolYr, head);
+		return false;
 	}
-	return stu->data;
+	result = stu->data;
+	return true;
 }
 
-bool viewProfile(const student &A, const schoolYear &_yr, stringNode *&accountSystem) {
+bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
@@ -43,10 +43,10 @@ bool viewProfile(const student &A, const schoolYear &_yr, stringNode *&accountSy
 	cout << "Class: " << A.className << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
 	if(menuStudent(A, _yr, accountSystem)) {
-		return 1;
+		return true;
 	}
 	else {
-		return 0;
+		return false;
 	}
 }
 
@@ -82,12 +82,12 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 		default:
 			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
 			break;
-	}
-	viewProfile(A, _yr, accountSystem);
-	return 0;
+		}
+
+		return 0;
 }
 
-void viewScoreboard(const student &A) {
+void viewScoreboard(student A) {
 	scoreboardNode* viewScore = A._course;	
 	if (!viewScore){
 		cout << "The staff haven't updated the scoreboard yet\n";
@@ -103,7 +103,7 @@ void viewScoreboard(const student &A) {
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
-void viewCourse(const student &A, schoolYear &_yr) {
+void viewCourse(student A, schoolYear _yr) {
 	semester* tmp = _yr._semester;
 	bool printAll = false;
 	for (int count = 0; count < 3; count++){
@@ -190,7 +190,7 @@ void changePassStudent(string* password, student A) {
 
 bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)
 {
-	studentNode *stuNode= nullptr;
+	studentNode *stuNode = nullptr;
     schoolYear thisYr;
     if (getSchoolYear(id, schoolYrHead, thisYr))
     {
@@ -216,9 +216,15 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
             tmp = tmp->next;
         }
         if (stuNode){
-            student A = getStudentData(id, thisYr._schoolYear, stuNode);
-			if(viewProfile(A, thisYr, accountSystem)) {
-				return 1;
+			student A;
+			if (!getStudentData(id, thisYr._schoolYear, stuNode, A))
+			{
+				return 0;
+			}
+			
+			while (viewProfile(A, thisYr, accountSystem))
+			{
+				cout << endl;
 			}
 		}
     }
