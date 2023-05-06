@@ -113,12 +113,6 @@ void displayStudentList(studentNode *head) {
     curr = nullptr;
 }
 
-void saveStudentInfo(string path, const student &source) {
-    ofstream studentInfo {path};
-    studentInfo << source.index << "," << source.id << "," << source.firstName << "," << source.lastName << "," << source.gender << "," << source.dob << "," << source.socialid << endl;
-    studentInfo.close();
-}
-
 void addStudentByFile(studentNode *&head, const string &className) {
     cout << "\n--------Add students by file--------\n" << endl;
     cout << "Enter file path: ";
@@ -2486,7 +2480,7 @@ void viewStudentInfo(const schoolYear &_schoolYear) {
                     viewStudentResult(target->data);
                 target = nullptr;
                 currClassNode = nullptr;
-                // system("pause");
+                system("pause");
                 found = true;
                 break;
             }
