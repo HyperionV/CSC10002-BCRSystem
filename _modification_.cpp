@@ -614,6 +614,7 @@ void createClass(schoolYear &SC) {
         }
         if (!(type == "CLC" || type == "APCS" || type == "VP")) {
             cout << "Unknown type! Please try again!" << endl;
+            system("pause");
             return;
         }
         string className = yearNum+type;
@@ -625,6 +626,7 @@ void createClass(schoolYear &SC) {
         cin >> r2;
         if (r2 < r1) {
             cout << "Invalid range! Please try again!" << endl;
+            system("pause");
             return;
         }
         for (int i = r1; i <= r2; i++) {
@@ -708,11 +710,13 @@ void addStudentToClass(schoolYear &_schoolYear) {
     else if (choice2 == 2) {
         studentNode *_student = nullptr;
         addStudentByFile(_student, c.name);
-        while (_student) {
-            if (checkStudentExistence(_schoolYear, _student->data) || _student->data.id.substr(0,2) != c.name.substr(0,2)) {
-                deleteStudentNode(_student, _student->data.id);
+        studentNode *currStudentNode = _student;
+        while (currStudentNode) {
+            // cout << "Student not null" << endl;
+            if (checkStudentExistence(_schoolYear, currStudentNode->data)) {
+                deleteStudentNode(currStudentNode, currStudentNode->data.id);
             }
-            _student = _student->next;
+            currStudentNode = currStudentNode->next;
         }
         if (_student == nullptr) {
             cout << "\nErrors occured while adding student using file\n" << endl;
@@ -2458,7 +2462,7 @@ void viewStudentInfo(const schoolYear &_schoolYear) {
                     viewStudentResult(target->data);
                 target = nullptr;
                 currClassNode = nullptr;
-                // system("pause");
+                system("pause");
                 found = true;
                 break;
             }
@@ -2467,7 +2471,7 @@ void viewStudentInfo(const schoolYear &_schoolYear) {
         if (!found) {
             cout << "There is no student associated with the provided student ID! Please try again" << endl;
             currClassNode = nullptr;
-            // system("pause");
+            system("pause");
             system("cls");
             continue;
         }
