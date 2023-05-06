@@ -1,14 +1,14 @@
 #ifndef __STUDENT_H_
 #define __STUDENT_H_
 #include "_struct_.h"
-#include "_modification_.h"
+#include "_modification_.cpp"
 
 bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr);
 student getStudentData(string id, string schoolYr, studentNode* head);
-void menuStudent(student &A, const schoolYear &_yr, credential &accountSystem);
+bool menuStudent(student &A, const schoolYear &_yr, stringNode &accountSystem);
 void viewScoreboard(student A);
 void viewCourse(student A, schoolYear _yr);
-void viewProfile(student A, schoolYear _yr, credential &accountSystem);
+bool viewProfile(student A, schoolYear _yr, credential &accountSystem);
 void changePassStudent(string* password, student A);
-void StudentMain(schoolYearNode* schoolYr, string id, studentNode* stuNode, credential &accountSystem);
+bool StudentMain(schoolYearNode* schoolYr, string id, stringNode *accountSystem);
 #endif
