@@ -29,7 +29,7 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 	return true;
 }
 
-bool viewProfile(const student &A, const schoolYear &_yr, stringNode *&accountSystem) {
+bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
@@ -87,7 +87,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 		return 0;
 }
 
-void viewScoreboard(const student &A) {
+void viewScoreboard(student A) {
 	scoreboardNode* viewScore = A._course;	
 	if (!viewScore){
 		cout << "The staff haven't updated the scoreboard yet\n";
@@ -103,7 +103,7 @@ void viewScoreboard(const student &A) {
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
-void viewCourse(const student &A, schoolYear &_yr) {
+void viewCourse(student A, schoolYear _yr) {
 	semester* tmp = _yr._semester;
 	bool printAll = false;
 	for (int count = 0; count < 3; count++){
