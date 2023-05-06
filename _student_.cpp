@@ -84,9 +84,8 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
 			break;
 		}
-	
-	viewProfile(A, _yr, accountSystem);
-	return 0;
+
+		return 0;
 }
 
 void viewScoreboard(student A) {
@@ -192,7 +191,7 @@ void changePassStudent(string* password, student A) {
 
 bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)
 {
-	studentNode *stuNode= nullptr;
+	studentNode *stuNode = nullptr;
     schoolYear thisYr;
     if (getSchoolYear(id, schoolYrHead, thisYr))
     {
@@ -224,8 +223,9 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				return 0;
 			}
 			
-			if(viewProfile(A, thisYr, accountSystem)) {
-				return 1;
+			while (viewProfile(A, thisYr, accountSystem))
+			{
+				cout << endl;
 			}
 		}
     }
