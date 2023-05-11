@@ -1086,7 +1086,7 @@ void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
     system("pause");
     studentNode *currStudentNode = _course.enrolled;
     int counter = 1;
-    studentNode *toBeDeleted;
+    studentNode *toBeDeleted= nullptr;
     while (currStudentNode) {
         classNode *currClassNode = findClassName(_schoolYear._class, currStudentNode->data.className);
         studentNode *target = findStudent(currClassNode->data._student, currStudentNode->data.id);
