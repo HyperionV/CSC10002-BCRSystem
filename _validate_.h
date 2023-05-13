@@ -1,3 +1,4 @@
+#pragma once
 #include "_library_.h"
 
 int getChoiceInt();

@@ -471,7 +471,7 @@ int getNumberOfStudents(studentNode *_student) {
 
 //main features functions
 
-bool createSchoolYear(schoolYearNode *&head, schoolYear &year) {
+bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList) {
     // cout << "\n---------Create new school year----------" << endl;
     string SC;
     cout << "Enter school year: ";
@@ -553,7 +553,7 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year) {
         cout << "Your choice: ";
         choice  = getChoiceInt();
         if (choice == 1) {
-            addStudentToClass(year);
+            addStudentToClass(year, accountList);
         }
         else if (choice == 2) {
             break;
@@ -648,7 +648,7 @@ void createClass(schoolYear &SC) {
     }
 }
 
-void addStudentToClass(schoolYear &_schoolYear) {
+void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList) {
     classNode *curr = _schoolYear._class;
     cout << "Choose a class: " << endl;
     int idx = 1;
@@ -705,6 +705,8 @@ void addStudentToClass(schoolYear &_schoolYear) {
         addStudentNode(c._student, temp);
         curr->data = c;
         cout << "\nSuccessfully added student to class\n" << endl;
+        addStringNode(accountList, temp.id+":"+defaultPassword);
+        autoSaveCredential(accountList);
         system("pause");
     }
     //Change the mechanism into adding node instead of removing node from the original list
@@ -716,9 +718,11 @@ void addStudentToClass(schoolYear &_schoolYear) {
             // cout << "Student not null" << endl;
             if (!checkStudentExistence(_schoolYear, currStudentNode->data)) {
                 addStudentNode(_student, currStudentNode->data);
+                addStringNode(accountList, currStudentNode->data.id+":"+defaultPassword);
             }
             currStudentNode = currStudentNode->next;
         }
+        autoSaveCredential(accountList);
         if (_student == nullptr) {
             cout << "\nErrors occured while adding student using file\n" << endl;
             system("pause");
@@ -1541,10 +1545,6 @@ void delete_directory(const string& path)
         }
         closedir(directory);
     }
-    else
-    {
-        // cerr << "Error: Failed to open directory " << path << endl;
-    }
     return;
 }
 
@@ -1682,7 +1682,6 @@ void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
 
 void autoSaveSchoolyear(schoolYear curSchoolyear) {
     string full_path = "Data/" + curSchoolyear._schoolYear;
-    cout << full_path << endl;
     delete_directory(full_path);
     rmdir(full_path.c_str());
     writeSchoolyear("Data", curSchoolyear);
@@ -1735,7 +1734,6 @@ void loadUserAccount (stringNode* &head) {
     while(getline(in_file, temp)) {
         addStringNode(head, temp);
     }
-
     in_file.close();
     return;
 }
@@ -1798,13 +1796,15 @@ staffInfo getStaff(staffNode* head, string userID) {
 }
 
 //Work flow
-schoolYear programStart(schoolYearNode *&head) {
+schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
     if (head == nullptr) {
+        system("pause");
+        system("cls");
         cout << "\nDatabase is empty! Please create a new school year to continue!\n" << endl;
         system("pause");
         system("cls");
         head = new schoolYearNode;
-        if (!createSchoolYear(head, head->data)) head = nullptr;
+        if (!createSchoolYear(head, head->data, accountList)) head = nullptr;
     }
     system("cls");
     schoolYearNode *currSchoolYearNode = head;
@@ -1826,10 +1826,10 @@ schoolYear programStart(schoolYearNode *&head) {
     }
     if (choice == 1) {
         schoolYear newSY;
-        if (!createSchoolYear(head, newSY)) {
+        if (!createSchoolYear(head, newSY, accountList)) {
             cout << "Failed to created school year! Please try again\n" << endl;
             system("pause");
-            return programStart(head);
+            return programStart(head, accountList);
         }
         addSchoolYearNode(head, newSY);
         return newSY;
@@ -1844,10 +1844,11 @@ schoolYear programStart(schoolYearNode *&head) {
 }
 
 bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList) {
-    schoolYear _schoolYear = programStart(head);
+    schoolYear _schoolYear = programStart(head, accountList);
 
     while (true) {
         system("cls");
+        autoSaveSchoolyear(_schoolYear);
         cout << "\n---------Main menu - staff---------" << endl;
         cout << "\t1. View profile" << endl;
         cout << "\t2. Add new staff " << endl;
@@ -1872,7 +1873,7 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             staffInfo curStaff = getStaff(staffList, userID);
             cout << "Full name: " << curStaff.fullName << endl;
             cout << "Email: " << curStaff.mail << endl;
-            cout << "Input \"1\" to change password: "; 
+            cout << "Input \"1\" to change password or \"Exit\": "; 
             int curChoice = 0;
             cin >> curChoice;
             if(curChoice == 1) {
@@ -1894,7 +1895,7 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             updateCurrentYearInfo(_schoolYear);
         }
         else if (choice == 5) {
-            _schoolYear = programStart(head);
+            _schoolYear = programStart(head, accountList);
         }
         else if (choice == 6) {
             viewScoreBoardUI(_schoolYear);

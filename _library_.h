@@ -13,4 +13,9 @@
 
 using namespace std;
 
+#include "_struct_.h"
+#include "_modification_.h"
+#include "_student_.h"
+#include "_validate_.h"
+
 const string defaultPassword = "123456";

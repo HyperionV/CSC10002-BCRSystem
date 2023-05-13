@@ -4,7 +4,6 @@
 bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr){
 	string yr = id.substr(0,2);
     yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
-    schoolYear thisYr;
     bool check = false;
     while (schoolYrHead)
     {
@@ -150,44 +149,6 @@ void viewCourse(student A, schoolYear _yr) {
 	}
 }
 
-void changePassStudent(string* password, student A) {
-	system("CLS");
-	cout << endl << "Input previous password (default is 123456): ";
-	string temp;
-	cin.ignore();
-	cin >> temp;
-	if (temp == *password)
-	{
-		string newPass;
-		do {
-			cout << "Password cannot contain spaces!\n";
-			cout << "Input new password: ";
-			cin >> temp;
-			cout << "Confirm your new password: ";
-			cin >> newPass;
-			if (newPass != temp) cout << "Password confirmation incorrect, please retype a new password\n";
-		} while (temp != newPass);
-		*password = newPass;
-	}
-	else {
-		cout << "Wrong password. Would you like to continue changing password?\n";
-		cout << "1. Yes\t\t2. Cancel\n";
-		int choice;
-		do {
-			cin >> choice;
-			if (choice < 1 || choice > 2) cout << "Invalid option, please input again\n";
-		} while (choice < 1 || choice > 2);
-		switch (choice) {
-		case 1:
-			// changePassStudent(&A.password, A);
-			break;
-		case 2:
-			return;
-		}
-	}
-	return;
-}
-
 bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)
 {
 	studentNode *stuNode = nullptr;
@@ -227,6 +188,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				cout << endl;
 			}
 		}
+		return 0;
     }
     else {
         cout << "Unable to locate school year\n";
