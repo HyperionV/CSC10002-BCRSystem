@@ -332,7 +332,6 @@ schoolYearNode* findSchoolYear(schoolYearNode *head, const string &_schoolYear) 
 
 void deleteStringNode(stringNode *&head, const string &target) {
     stringNode *newhead = nullptr;
-    stringNode *delHead = head;
     while (head) {
         if (head->data == target) {
             stringNode *curr = head;
@@ -343,16 +342,15 @@ void deleteStringNode(stringNode *&head, const string &target) {
         addStringNode(newhead, head->data);
         head = head->next;
     }
+    deleteStringList(head);
     head = newhead;
-    deleteStringList(delHead);
     newhead = nullptr;
 }
 
 void deleteCourseNode(courseNode *&head, const string &ID) {
     courseNode* newhead = nullptr;
-    courseNode* delHead = head;
     while (head) {
-        if (head->data.name != ID) {
+        if (head->data.id != ID) {
             addCourseNode(newhead, head->data);
         }
         else {
@@ -360,14 +358,13 @@ void deleteCourseNode(courseNode *&head, const string &ID) {
         }
         head = head->next;
     }
+    deleteCourseList(head);
     head = newhead;
-    deleteCourseList(delHead);
     newhead = nullptr;
 }
 
 void deleteStudentNode(studentNode *&head, const string &studentID) {
     studentNode *newhead = nullptr;
-    studentNode *delHead = head;
     while (head) {
         if (head->data.id != studentID) {
             addStudentNode(newhead, head->data);
@@ -377,28 +374,26 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
         }
         head = head->next;
     }
+    deleteStudentList(head);
     head = newhead;
-    deleteStudentList(delHead);
     newhead = nullptr;
 }
 
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
     scoreboardNode *newhead = nullptr;
-    scoreboardNode *delHead = head;
     while (head) {
         if (head->data.courseID != ID) {
             addScoreboardNode(newhead, head->data);
         }
         head = head->next;
     }
+    deleteScoreboardList(head);
     head = newhead;
-    deleteScoreboardList(delHead);
     newhead = nullptr;
 }
 
 void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear) {
     schoolYearNode *newhead = nullptr;
-    schoolYearNode *delHead = head;
     while (head) {
         if (head->data._schoolYear == _schoolYear) {
             schoolYearNode *curr = head;
@@ -410,8 +405,8 @@ void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear) {
         addSchoolYearNode(newhead, head->data);
         head = head->next;
     }
+    deleteSchoolYearList(head);
     head = newhead;
-    deleteSchoolYearList(delHead);
     newhead= nullptr;
 }
 
@@ -1011,7 +1006,7 @@ void deleteCourse(schoolYear &_schoolYear, course &_course) {
     deleteStudentList(_course.enrolled);
     for (int i = 0; i < 3; i++) {
         courseNode* target = findCourse(_schoolYear._semester[i]._course, _course.id);
-        if (target != nullptr) {
+        if (target) {
             deleteCourseNode(_schoolYear._semester[i]._course, _course.id);
             return;
         }
@@ -1663,7 +1658,6 @@ void writeSchoolyear(string path, schoolYear sY)
 
     mkdir((path + "/Classes").c_str());
     writeClass(sY._class, path + "/Classes");
-
 }
 
 void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
