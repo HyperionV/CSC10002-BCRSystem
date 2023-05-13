@@ -28,15 +28,16 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 	return true;
 }
 
-bool viewProfile(student A) {
+void viewProfile(student A) {
 	system("CLS");
 	cout << "---------Student profile---------\n";
 	cout << "\tStudent ID: " << A.id << endl;
 	cout << "\tFull name: " << A.firstName << " " << A.lastName << "\t" << "Gender: ";
 	cout << ((A.gender == "M") ? "Male\n":"Female\n");
-	cout << "Date of Birth: " << A.dob << endl;
-	cout << "Social ID: " << A.socialid << endl;
-	cout << "Class: " << A.className << endl;
+	cout << "\tDate of Birth: " << A.dob << endl;
+	cout << "\tSocial ID: " << A.socialid << endl;
+	cout << "\tClass: " << A.className << endl;
+
 }
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
@@ -68,11 +69,12 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 			changeAccountPassword(accountSystem, A.id);
 			break;
 		case 4:
-			return 1;
+			return 0;
 		case 5: 
 			autoSaveCredential(accountSystem);
+			return 0;
 	}
-	return 0;
+	return 1;
 }
 
 void viewScoreboard(student A) {
@@ -89,6 +91,7 @@ void viewScoreboard(student A) {
 		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
 		no++;
 	}
+	system("pause");
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
