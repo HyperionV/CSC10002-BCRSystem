@@ -28,7 +28,7 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 	return true;
 }
 
-void viewProfile(student A) {
+bool viewProfile(student A) {
 	system("CLS");
 	cout << "---------Student profile---------\n";
 	cout << "\tStudent ID: " << A.id << endl;
@@ -37,30 +37,26 @@ void viewProfile(student A) {
 	cout << "Date of Birth: " << A.dob << endl;
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
-	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
-	if(menuStudent(A, _yr, accountSystem)) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
-bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
-	string newPass;
-	cout << "Please type in the number according to the menu listed below\n";
-	cout << "This menu is for students only\n";
-	cout << "-------------------------------------------------------------------\n";
-	cout << endl << endl;
-	cout << "1. View your scores throughout the year\n";
-	cout << "2. View your courses\n";
-	cout << "3. Change your password\n";
-	cout << "0. Exit to login screen\n";
-	cout << "-------------------------------------------------------------------\n";
-	cout << endl << endl;
-	cout << "Input: ";
-	int choice; cin >> choice;
-	system("CLS");
+bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
+	viewProfile(A);
+	cout << "\n---------Main menu - Student---------" << endl;
+	cout << "\t1. View your scores throughout the year\n";
+	cout << "\t2. View your courses\n";
+	cout << "\t3. Change your password\n";
+	cout << "\t4. Logout\n";
+	cout << "\t5. Close program\n";
+	cout << "Your choice: ";
+	int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 5 || choice < 1) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
 	switch (choice) {
 		case 1:
 			viewScoreboard(A);
@@ -69,8 +65,6 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			cout << "Please input your new password (No spacing): ";
-			cin >> newPass;
 			changeAccountPassword(accountSystem, A.id);
 			break;
 		case 4:
@@ -91,8 +85,8 @@ void viewScoreboard(student A) {
 	int no = 1;
 	cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
 	while (!viewScore){
-		cout<<no<<" \t" << viewScore->data.courseID<<"\t"<<viewScore->data.courseName<<"\t";
-		cout<<viewScore->data.total<<"\t"<<viewScore->data.final<<"\t"<<viewScore->data.midterm<<"\t"<<viewScore->data.other<<endl;
+		cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
 		no++;
 	}
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
@@ -104,11 +98,17 @@ void viewCourse(student A, schoolYear _yr) {
 	for (int count = 0; count < 3; count++){
 		cout << count + 1 << ". " << tmp->name << endl;
 	}
-	cout<<"4. View all courses throughout the year\n"; 
-	cout<<"Choose which semester to view\n";
-	do{
-		cin >> choice;
-	}  while (choice < 0 && choice > 4);
+	cout << "4. View all courses throughout the year\n"; 
+	cout << "Your choice: ";
+	int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 10 || choice < 1) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
 	if (choice == 4) {
 		printAll = true;
 	}
@@ -180,7 +180,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				return 0;
 			}
 			
-			while (menuStudent(A, thisYr, accountSystem))
+			while (menuStudent(A, thisYr, accountSystem)) //function will return false if user wants to log out
 			{
 				cout << endl;
 			}
