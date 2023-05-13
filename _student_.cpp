@@ -4,7 +4,6 @@
 bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr){
 	string yr = id.substr(0,2);
     yr = to_string(stoi(yr) + 2000) + "-" + to_string(stoi(yr) + 2001);
-    schoolYear thisYr;
     bool check = false;
     while (schoolYrHead)
     {
@@ -31,21 +30,24 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 
 void viewProfile(student A) {
 	system("CLS");
-	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
-	cout << "PROFILE\n";
-	cout << A.id << endl;
-	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
-	cout << "Full name: " << A.firstName << A.lastName << "\t" << "Gender: ";
-	if (A.gender == "M") cout << "male\n";
-	else cout << "female\n";
+	cout << "---------Student profile---------\n";
+	cout << "\tStudent ID: " << A.id << endl;
+	cout << "\tFull name: " << A.firstName << " " << A.lastName << "\t" << "Gender: ";
+	cout << ((A.gender == "M") ? "Male\n":"Female\n");
 	cout << "Date of Birth: " << A.dob << endl;
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
+	if(menuStudent(A, _yr, accountSystem)) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
-	viewProfile(A);
+	string newPass;
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
 	cout << "-------------------------------------------------------------------\n";
@@ -68,22 +70,22 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 			break;
 		case 3:
 			cout << "Please input your new password (No spacing): ";
+			cin >> newPass;
 			changeAccountPassword(accountSystem, A.id);
 			break;
-		case 0:
+		case 4:
 			return 1;
-		default:
-			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
-			break;
-		}
-
-		return 0;
+		case 5: 
+			autoSaveCredential(accountSystem);
+	}
+	return 0;
 }
 
 void viewScoreboard(student A) {
 	scoreboardNode* viewScore = A._course;	
 	if (!viewScore){
-		cout << "The staff haven't updated the scoreboard yet\n";
+		cout << "\nThe staff haven't updated the scoreboard yet\n";
+		system("pause");
 		return;
 	}
 	int no = 1;
@@ -102,13 +104,11 @@ void viewCourse(student A, schoolYear _yr) {
 	for (int count = 0; count < 3; count++){
 		cout << count + 1 << ". " << tmp->name << endl;
 	}
-	int choice;
 	cout<<"4. View all courses throughout the year\n"; 
 	cout<<"Choose which semester to view\n";
 	do{
 		cin >> choice;
 	}  while (choice < 0 && choice > 4);
-
 	if (choice == 4) {
 		printAll = true;
 	}
@@ -120,6 +120,7 @@ void viewCourse(student A, schoolYear _yr) {
 
 	if (!viewC){
 		cout << "Unable to find any courses\n";
+		system("pause");
 		return;
 	}
 
@@ -142,44 +143,6 @@ void viewCourse(student A, schoolYear _yr) {
 		_yr._semester++;
 		viewC = _yr._semester->_course;
 	}
-}
-
-void changePassStudent(string* password, student A) {
-	system("CLS");
-	cout << endl << "Input previous password (default is 123456): ";
-	string temp;
-	cin.ignore();
-	cin >> temp;
-	if (temp == *password)
-	{
-		string newPass;
-		do {
-			cout << "Password cannot contain spaces!\n";
-			cout << "Input new password: ";
-			cin >> temp;
-			cout << "Confirm your new password: ";
-			cin >> newPass;
-			if (newPass != temp) cout << "Password confirmation incorrect, please retype a new password\n";
-		} while (temp != newPass);
-		*password = newPass;
-	}
-	else {
-		cout << "Wrong password. Would you like to continue changing password?\n";
-		cout << "1. Yes\t\t2. Cancel\n";
-		int choice;
-		do {
-			cin >> choice;
-			if (choice < 1 || choice > 2) cout << "Invalid option, please input again\n";
-		} while (choice < 1 || choice > 2);
-		switch (choice) {
-		case 1:
-			// changePassStudent(&A.password, A);
-			break;
-		case 2:
-			return;
-		}
-	}
-	return;
 }
 
 bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)
@@ -205,6 +168,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
             if (!tmp && !stuNode) 
             {
                 cout << "No student exists with such student id\n";
+				system("pause");
                 break;
             } 
             tmp = tmp->next;
@@ -221,9 +185,11 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				cout << endl;
 			}
 		}
+		return 0;
     }
     else {
         cout << "Unable to locate school year\n";
+		system("pause");
         return 1;
     }
 }
