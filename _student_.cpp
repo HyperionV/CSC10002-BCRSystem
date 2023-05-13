@@ -84,8 +84,11 @@ void viewScoreboard(const student &A) {
 	scoreboardNode* viewScore = A._course;
 	bool isUploaded = false;
 	while (viewScore){
-		if (viewScore->data.isUploaded)
+		if (viewScore->data.total != 0)
+		{
 				isUploaded = true;
+				break;
+		}
 		viewScore = viewScore->next;
 	}
 	if (!isUploaded)
