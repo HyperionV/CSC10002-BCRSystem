@@ -41,40 +41,43 @@ void viewProfile(student A) {
 }
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
-	viewProfile(A);
-	cout << "\n---------Main menu - Student---------" << endl;
-	cout << "\t1. View your scores throughout the year\n";
-	cout << "\t2. View your courses\n";
-	cout << "\t3. Change your password\n";
-	cout << "\t4. Logout\n";
-	cout << "\t5. Close program\n";
-	cout << "Your choice: ";
 	int choice;
+	while (true) {
+		viewProfile(A);
+		cout << "\n---------Main menu - Student---------" << endl;
+		cout << "\t1. View your scores throughout the year\n";
+		cout << "\t2. View your courses\n";
+		cout << "\t3. Change your password\n";
+		cout << "\t4. Logout\n";
+		cout << "\t5. Close program\n";
+		cout << "Your choice: ";
+
     while (true) {
-        choice = getChoiceInt();
-        if (choice > 6 || choice < 1) {
-            cout << "Invalid option" << endl;
-            continue;
-        }
-        break;
-    }
+			choice = getChoiceInt();
+			if (choice > 6 || choice < 1) {
+				cout << "Invalid option" << endl;
+				continue;
+			}
+			break;
+		}
+
 	switch (choice) {
-		case 1:
-			viewScoreboard(A);
-			break;
-		case 2:
-			viewCourse(A, _yr);
-			break;
-		case 3:
-			changeAccountPassword(accountSystem, A.id);
-			break;
-		case 4:
-			return 0;
-		case 5: 
-			autoSaveCredential(accountSystem);
-			return 0;
+			case 1:
+				viewScoreboard(A);
+				break;
+			case 2:
+				viewCourse(A, _yr);
+				break;
+			case 3:
+				changeAccountPassword(accountSystem, A.id);
+				break;
+			case 4:
+				return 0;
+			case 5: 
+				autoSaveCredential(accountSystem);
+				return 0;
+		}
 	}
-	return 1;
 }
 
 void viewScoreboard(student A) {
@@ -86,7 +89,7 @@ void viewScoreboard(student A) {
 	}
 	int no = 1;
 	cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
-	while (!viewScore){
+	while (viewScore){
 		cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
 		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
 		no++;
@@ -183,10 +186,8 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				return 0;
 			}
 			
-			while (menuStudent(A, thisYr, accountSystem)) //function will return false if user wants to log out
-			{
-				cout << endl;
-			}
+			if (menuStudent(A, thisYr, accountSystem))
+				return 1;
 		}
 		return 0;
     }
