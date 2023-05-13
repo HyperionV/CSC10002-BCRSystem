@@ -1190,7 +1190,8 @@ void exportStudentInfoList(const string &_schoolYear, const course &_course) {
     studentNode *curr = _course.enrolled;
     int index= 1;
     while (curr) {
-        exportFile << index++ <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName<<",0,0,0,0";
+        exportFile << index++ <<","<<curr->data.id<<","<<curr->data.firstName<<" "<<curr->data.lastName << ",";
+        exportFile << curr->data._course->data.other << "," << curr->data._course->data.midterm << "," <<curr->data._course->data.final << "," << curr->data._course->data.total;
         if(curr->next) {
             exportFile << endl;
         }
@@ -1233,6 +1234,8 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             getline(in_file, placeholder);
             temp->data._course->data.total = stod(placeholder);
             placeholder.clear();
+            temp->data._course->data.courseID = _course.id;
+            temp->data._course->data.courseName = _course.name;
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             findCourseScoreboard(targetStudent->data._course, _course.id)->data = temp->data._course->data;
@@ -2035,6 +2038,7 @@ void viewScoreBoardUI(schoolYear &_schoolYear) {
         cout << "Your choice: ";
         int choice;
         while (true) {
+            cout << "Your choice: ";
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
                 cout << "Invalid option" << endl;
@@ -2132,6 +2136,9 @@ void viewCourseScoreBoardUI(schoolYear &_schoolYear) {
     }
     idx = 1;
     currCourseNode = _schoolYear._semester[choice]._course;
+    if(!currCourseNode) {
+        return;
+    }
     while (idx != choice2) {
         currCourseNode = currCourseNode->next;
         idx++;
@@ -2408,9 +2415,9 @@ void viewClassesInfo(const schoolYear &_schoolYear) {
             break;
         }
         if (choice == 1) {
-            cout << "Please choose a class to view: ";
             int choosen;
             while (true) {
+                cout << "Please choose a class to view: ";
                 choosen = getChoiceInt();
                 if (choosen > idx || choosen < 1) {
                     cout << "Invalid option" << endl;
@@ -3040,7 +3047,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             int choice3;
             while (true) {
                 choice3 = getChoiceInt();
-                if (choice > idx || choice < 1) {
+                if (choice3 > idx || choice3 < 1) {
                     cout << "Invalid option" << endl;
                     continue;
                 }

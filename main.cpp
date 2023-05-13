@@ -17,6 +17,9 @@ int main() {
             main();
         }
     }
+    else {
+        deleteSchoolYearList(_schoolYear);
+    }
     // else if(isLogin && !isStaff) {
     //     if(StudentMain(_schoolYear, userID, accountList)) { // chinh~ lai header file moi chay dc
     //         main();
