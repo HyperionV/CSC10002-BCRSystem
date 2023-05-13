@@ -82,7 +82,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 
 void viewScoreboard(student A) {
 	scoreboardNode* viewScore = A._course;	
-	if (!viewScore){
+	if (!viewScore->data.isUploaded){
 		cout << "\nThe staff haven't updated the scoreboard yet\n";
 		system("pause");
 		return;
@@ -108,18 +108,19 @@ void viewCourse(student A, schoolYear _yr) {
 	int choice;
     while (true) {
         choice = getChoiceInt();
-        if (choice > 10 || choice < 1) {
+        if (choice > 4 || choice < 1) {
             cout << "Invalid option" << endl;
             continue;
         }
         break;
     }
+	int sem = 0;
 	if (choice == 4) {
 		printAll = true;
+		sem = 1;
 	}
-	else for (int i = 0; i < choice - 1; i++){
-		_yr._semester++;
-	}
+	else
+		sem = choice;
 
 	courseNode* viewC = _yr._semester->_course;
 
@@ -128,25 +129,26 @@ void viewCourse(student A, schoolYear _yr) {
 		system("pause");
 		return;
 	}
-
-	int trash = 0;
-
-	if (printAll) trash = 3;
-	else trash = 1;
-
-	cout << "No \tCourse ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
-	int no = 1;
-	for (int k = 0; k < trash; k++)
+	int dummy;
+	if (printAll)
 	{
-		while(!viewC)
+		dummy = 4;
+	}
+		else
+		dummy = 1;
+
+	cout << "Course ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
+	while (dummy > 0)
+	{
+		dummy--;
+		viewC = _yr._semester[sem - 1]._course;
+		while (viewC)
 		{
-			cout << no << " \t"<< viewC->data.id << " \t" << viewC->data.name << viewC->data.className;
-			cout << " \t" << viewC->data.day << " \t" << viewC->data.session << " \t" << viewC->data.teacher << endl;
-			no++;
+			if (findStudent(viewC->data.enrolled, A.id))
+			cout << viewC->data.id << "\t" << viewC->data.name << "\t" << viewC->data.day << viewC->data.session << "\t" << viewC->data.teacher << endl;
 			viewC = viewC->next;
 		}
-		_yr._semester++;
-		viewC = _yr._semester->_course;
+		sem++;
 	}
 	system("pause");
 }
