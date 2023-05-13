@@ -28,7 +28,7 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 	return true;
 }
 
-bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
+bool viewProfile(student A) {
 	system("CLS");
 	cout << "---------Student profile---------\n";
 	cout << "\tStudent ID: " << A.id << endl;
@@ -37,17 +37,10 @@ bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	cout << "Date of Birth: " << A.dob << endl;
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
-	if(menuStudent(A, _yr, accountSystem)) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
-	string newPass;
-	// system("cls");
+	viewProfile(A);
 	cout << "\n---------Main menu - Student---------" << endl;
 	cout << "\t1. View your scores throughout the year\n";
 	cout << "\t2. View your courses\n";
@@ -92,8 +85,8 @@ void viewScoreboard(student A) {
 	int no = 1;
 	cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
 	while (!viewScore){
-		cout<<no<<" \t" << viewScore->data.courseID<<"\t"<<viewScore->data.courseName<<"\t";
-		cout<<viewScore->data.total<<"\t"<<viewScore->data.final<<"\t"<<viewScore->data.midterm<<"\t"<<viewScore->data.other<<endl;
+		cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
 		no++;
 	}
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
@@ -104,7 +97,7 @@ void viewCourse(student A, schoolYear _yr) {
 	for (int count = 0; count < 3; count++){
 		cout << count + 1 << ". " << _yr._semester[count].name << endl;
 	}
-	cout<<"4. View all courses throughout the year\n"; 
+	cout << "4. View all courses throughout the year\n"; 
 	cout << "Your choice: ";
 	int choice;
     while (true) {
@@ -187,7 +180,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				return 0;
 			}
 			
-			while (viewProfile(A, thisYr, accountSystem))
+			while (menuStudent(A, thisYr, accountSystem)) //function will return false if user wants to log out
 			{
 				cout << endl;
 			}
