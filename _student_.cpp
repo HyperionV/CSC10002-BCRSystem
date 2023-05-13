@@ -58,7 +58,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 	int choice;
     while (true) {
         choice = getChoiceInt();
-        if (choice > 5 || choice < 1) {
+        if (choice > 6 || choice < 1) {
             cout << "Invalid option" << endl;
             continue;
         }
@@ -100,10 +100,9 @@ void viewScoreboard(student A) {
 }
 
 void viewCourse(student A, schoolYear _yr) {
-	semester* tmp = _yr._semester;
 	bool printAll = false;
 	for (int count = 0; count < 3; count++){
-		cout << count + 1 << ". " << tmp->name << endl;
+		cout << count + 1 << ". " << _yr._semester[count].name << endl;
 	}
 	cout<<"4. View all courses throughout the year\n"; 
 	cout << "Your choice: ";
@@ -150,6 +149,7 @@ void viewCourse(student A, schoolYear _yr) {
 		_yr._semester++;
 		viewC = _yr._semester->_course;
 	}
+	system("pause");
 }
 
 bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)

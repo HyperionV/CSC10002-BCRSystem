@@ -1551,9 +1551,7 @@ void delete_directory(const string& path)
     return;
 }
 
-
 /////////////////////////////// SAVE DATA //////////////////////////////////////////////
-
 
 void writeStudentInClass(studentNode *studentList, const string &path) {
     while(studentList) {
@@ -1566,15 +1564,12 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
         out_file << studentList->data.gender << ",";
         out_file << studentList->data.dob << ',';
         out_file << studentList->data.socialid ;
-
         out_file.close();
 
         if(!studentList->data._course) {
             studentList = studentList->next;
             continue;
         }
-
-
         ofstream out_file1 {full_path + "/Scoreboard.txt"};
         scoreboardNode* tempCourseList = studentList->data._course;
         while(tempCourseList) {
@@ -1586,11 +1581,9 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
             out_file1 << tempCourseList->data.total;
             if(tempCourseList->next)
                 out_file1 << endl;
-
             tempCourseList= tempCourseList->next;
         }
         out_file1.close();
-
         studentList = studentList->next;
     }
     return;
@@ -1602,7 +1595,6 @@ void writeCourseEnrolls(courseNode* courseList, const string &path) {
         return;
     }
     ofstream out_file {path};
-
     studentNode* tempEnrolledList = courseList->data.enrolled;
     while(tempEnrolledList) {
         out_file << tempEnrolledList->data.id << "," << tempEnrolledList->data.firstName << "," << tempEnrolledList->data.lastName << "," << tempEnrolledList->data.className << ",";
@@ -1614,7 +1606,6 @@ void writeCourseEnrolls(courseNode* courseList, const string &path) {
             out_file << endl;
 
         tempEnrolledList= tempEnrolledList->next;
-
     }
     out_file.close();
     return;
@@ -1730,7 +1721,7 @@ void loadUserAccount (stringNode* &head) {
     ifstream in_file("credential.txt");
 
     if(!in_file) {
-        cout << "Could not open the file ! " << endl;
+        cout << "Could not open the file!" << endl;
         return;
     }
     string temp;
@@ -2009,7 +2000,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
     int choice3;
     while (true) {
         choice3 = getChoiceInt();
-        if (choice3 > 3 || choice3 < 0) {
+        if (choice3 > 3 || choice3 < 1) {
             cout << "Invalid option" << endl;
             continue;
         }
@@ -2039,7 +2030,6 @@ void viewScoreBoardUI(schoolYear &_schoolYear) {
         cout << "Your choice: ";
         int choice;
         while (true) {
-            cout << "Your choice: ";
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
                 cout << "Invalid option" << endl;
@@ -2604,7 +2594,7 @@ bool updateStudentResultUI(schoolYear &_schoolYear) {
     int choice;
     while (true) {
         choice = getChoiceInt();
-        if (choice > 6 || choice < 1) {
+        if (choice > 5 || choice < 1) {
             cout << "Invalid choice!" << endl;
             continue;
         }
@@ -2625,7 +2615,6 @@ bool updateStudentResultUI(schoolYear &_schoolYear) {
         case 5:
             return true;
     }
-    cout << "Out" << endl;
     autoSaveSchoolyear(_schoolYear);
     return false;
 }
