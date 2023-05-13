@@ -1241,6 +1241,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             placeholder.clear();
             temp->data._course->data.courseID = _course.id;
             temp->data._course->data.courseName = _course.name;
+            temp->data._course->data.isUploaded = true;
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             findCourseScoreboard(targetStudent->data._course, _course.id)->data = temp->data._course->data;
