@@ -1849,7 +1849,7 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
     while (true) {
         system("cls");
         autoSaveSchoolyear(_schoolYear);
-        cout << "\n---------Main menu - staff---------" << endl;
+        cout << "\n---------Main menu - Staff---------" << endl;
         cout << "\t1. View profile" << endl;
         cout << "\t2. Add new staff " << endl;
         cout << "\t3. View current school year information" << endl;

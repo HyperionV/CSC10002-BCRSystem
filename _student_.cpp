@@ -49,21 +49,25 @@ bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	}
 }
 
-bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
+bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 	string newPass;
-	cout << "Please type in the number according to the menu listed below\n";
-	cout << "This menu is for students only\n";
-	cout << "-------------------------------------------------------------------\n";
-	cout << endl << endl;
-	cout << "1. View your scores throughout the year\n";
-	cout << "2. View your courses\n";
-	cout << "3. Change your password\n";
-	cout << "0. Exit to login screen\n";
-	cout << "-------------------------------------------------------------------\n";
-	cout << endl << endl;
-	cout << "Input: ";
-	int choice; cin >> choice;
-	system("CLS");
+	system("cls");
+	cout << "\n---------Main menu - Student---------" << endl;
+	cout << "\t1. View your scores throughout the year\n";
+	cout << "\t2. View your courses\n";
+	cout << "\t3. Change your password\n";
+	cout << "\t4. Logout\n";
+	cout << "\t5. Close program\n";
+	cout << "Your choice: ";
+	int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 5 || choice < 1) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
 	switch (choice) {
 		case 1:
 			viewScoreboard(A);
@@ -72,18 +76,14 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 			viewCourse(A, _yr);
 			break;
 		case 3:
-			cout << "Please input your new password (No spacing): ";
-			cin >> newPass;
 			changeAccountPassword(accountSystem, A.id);
 			break;
-		case 0:
+		case 4:
 			return 1;
-		default:
-			cout << "Inappropriate decision. Please input again according to the menu listed above. For more information please contact customer support.\n";
-			break;
-		}
-
-		return 0;
+		case 5: 
+			autoSaveCredential(accountSystem);
+	}
+	return 0;
 }
 
 void viewScoreboard(student A) {

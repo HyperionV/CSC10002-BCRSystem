@@ -21,6 +21,10 @@ int main() {
         if(StudentMain(_schoolYear, userID, accountList)) { // chinh~ lai header file moi chay dc
             main();
         }
+        else {
+            deleteSchoolYearList(_schoolYear);
+            cout << "Closing program..." << endl;
+        }
     }
     return 0;
 }
