@@ -29,7 +29,7 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 	return true;
 }
 
-bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
+void viewProfile(student A) {
 	system("CLS");
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
 	cout << "PROFILE\n";
@@ -42,16 +42,10 @@ bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
 	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
-	if(menuStudent(A, _yr, accountSystem)) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) {
-	string newPass;
+	viewProfile(A);
 	cout << "Please type in the number according to the menu listed below\n";
 	cout << "This menu is for students only\n";
 	cout << "-------------------------------------------------------------------\n";
@@ -74,7 +68,6 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *&accountSystem) 
 			break;
 		case 3:
 			cout << "Please input your new password (No spacing): ";
-			cin >> newPass;
 			changeAccountPassword(accountSystem, A.id);
 			break;
 		case 0:
@@ -115,6 +108,7 @@ void viewCourse(student A, schoolYear _yr) {
 	do{
 		cin >> choice;
 	}  while (choice < 0 && choice > 4);
+
 	if (choice == 4) {
 		printAll = true;
 	}
@@ -222,7 +216,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
 				return 0;
 			}
 			
-			while (viewProfile(A, thisYr, accountSystem))
+			while (menuStudent(A, thisYr, accountSystem))
 			{
 				cout << endl;
 			}
