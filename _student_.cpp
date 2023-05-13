@@ -81,8 +81,15 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 }
 
 void viewScoreboard(const student &A) {
-	scoreboardNode* viewScore = A._course;	
-	if (!viewScore->data.isUploaded){
+	scoreboardNode* viewScore = A._course;
+	bool isUploaded = false;
+	while (viewScore){
+		if (viewScore->data.isUploaded)
+				isUploaded = true;
+		viewScore = viewScore->next;
+	}
+	if (!isUploaded)
+	{
 		cout << "\nThe staff haven't updated the scoreboard yet\n";
 		system("pause");
 		return;
