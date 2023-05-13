@@ -17,7 +17,7 @@ bool getSchoolYear(string id, schoolYearNode* schoolYrHead, schoolYear& thisYr){
 	return false;
 }
 
-bool getStudentData(string id, string schoolYr, studentNode* head, student& result) {
+bool getStudentData(const string &id, string schoolYr, studentNode* head, student& result) {
 	studentNode* stu = findStudent(head, id);
 	if (!stu)
 	{
@@ -28,11 +28,11 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 	return true;
 }
 
-void viewProfile(student A) {
+void viewProfile(const student &A) {
 	system("CLS");
 	cout << "---------Student profile---------\n";
 	cout << "\tStudent ID: " << A.id << endl;
-	cout << "\tFull name: " << A.firstName << " " << A.lastName << "\t" << "Gender: ";
+	cout << "\tFull name: " << A.firstName << " " << A.lastName << "\n\t" << "Gender: ";
 	cout << ((A.gender == "M") ? "Male\n":"Female\n");
 	cout << "\tDate of Birth: " << A.dob << endl;
 	cout << "\tSocial ID: " << A.socialid << endl;
@@ -72,7 +72,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 				changeAccountPassword(accountSystem, A.id);
 				break;
 			case 4:
-				return 0;
+				return 1;
 			case 5: 
 				autoSaveCredential(accountSystem);
 				return 0;
@@ -80,7 +80,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 	}
 }
 
-void viewScoreboard(student A) {
+void viewScoreboard(const student &A) {
 	scoreboardNode* viewScore = A._course;	
 	if (!viewScore->data.isUploaded){
 		cout << "\nThe staff haven't updated the scoreboard yet\n";
@@ -98,7 +98,7 @@ void viewScoreboard(student A) {
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
-void viewCourse(student A, schoolYear _yr) {
+void viewCourse(const student &A, const schoolYear &_yr) {
 	bool printAll = false;
 	for (int count = 0; count < 3; count++){
 		cout << count + 1 << ". " << _yr._semester[count].name << endl;
@@ -132,7 +132,7 @@ void viewCourse(student A, schoolYear _yr) {
 	int dummy;
 	if (printAll)
 	{
-		dummy = 4;
+		dummy = 3;
 	}
 		else
 		dummy = 1;
@@ -153,7 +153,7 @@ void viewCourse(student A, schoolYear _yr) {
 	system("pause");
 }
 
-bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSystem)
+bool StudentMain(schoolYearNode* schoolYrHead, const string &id, stringNode* accountSystem)
 {
 	studentNode *stuNode = nullptr;
     schoolYear thisYr;

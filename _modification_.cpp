@@ -1216,7 +1216,6 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     }
     else {
         classNode *currClassList = _schoolYear._class;
-        // studentNode* temp = _course.enrolled;
         string placeholder;
         getline(in_file, placeholder);
         while(in_file.good()) {
