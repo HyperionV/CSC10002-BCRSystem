@@ -59,7 +59,6 @@ studentNode* loadStudentsFromClass(const string &path ,const string& className);
 schoolYear loadSchoolyear(const string &path, const string &sY);
 classNode* loadClass(const string &path);
 
-
 //staff
 bool createStaffAccount(staffInfo &newStaff);
 string createEmail(const string &fullName);

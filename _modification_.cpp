@@ -1078,6 +1078,7 @@ void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
     cout << "\t7.2 Session: ";
     cin >> _course.session;
     //display the new course information
+    system("cls");
     cout << "Successfully updated course info" << endl;
     cout << "Current course info:";
     cout << "\n\t1. ID: " << _course.id;
@@ -1119,8 +1120,8 @@ void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
 
 void updateStudentResult(const schoolYear &_schoolYear, const string &ID, student &source) {
     cout << "\n----------Update student result----------" << endl;
-    cout << "Student : " << source.firstName << " " << source.lastName ;
-    cout << "\nID : " << source.id << endl;
+    cout << "Student: " << source.firstName << " " << source.lastName ;
+    cout << "\nID: " << source.id << endl;
     cout << "\nCurrent result: ";
     cout << "\n\tOther: " << source._course->data.other;
     cout << "\n\tMidterm: " << source._course->data.midterm;
@@ -3098,10 +3099,10 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
 
 bool login(stringNode *accountList, bool &isStaff, string &userID) {
     int loginAttempt= 0;
-    while(loginAttempt < 5) {
+    while (loginAttempt < 5) {
         system("cls");
         if(loginAttempt > 0) {
-            cout << "Invalid user ID or password ! Please try again !" << endl;
+            cout << "Invalid user ID or password! Please try again!" << endl;
         }
         string ID, PW;
         cout << "------------LOGIN------------" << endl;
@@ -3118,7 +3119,7 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         stringNode *temp= accountList;
         while(temp) {
             if(temp->data == userAccount) {
-                cout << "Login successfully - welcome back ! " << endl;
+                cout << "Login successfully - welcome back! " << endl;
                 userID= ID;
                 if(!isdigit(userAccount[0]))
                     isStaff = 1;
@@ -3128,7 +3129,7 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         }
         loginAttempt++;
     }
-    cout << "Too many login, please try again in a minute ! " << endl;
+    cout << "Too many login, please try again in a minute! " << endl;
     return false;
 }
 

@@ -26,5 +26,8 @@ int main() {
             cout << "Closing program..." << endl;
         }
     }
+    else {
+        deleteSchoolYearList(_schoolYear);
+    }
     return 0;
 }
