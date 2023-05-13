@@ -30,17 +30,13 @@ bool getStudentData(string id, string schoolYr, studentNode* head, student& resu
 
 bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 	system("CLS");
-	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
-	cout << "PROFILE\n";
-	cout << A.id << endl;
-	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n";
-	cout << "Full name: " << A.firstName << A.lastName << "\t" << "Gender: ";
-	if (A.gender == "M") cout << "male\n";
-	else cout << "female\n";
+	cout << "---------Student profile---------\n";
+	cout << "\tStudent ID: " << A.id << endl;
+	cout << "\tFull name: " << A.firstName << " " << A.lastName << "\t" << "Gender: ";
+	cout << ((A.gender == "M") ? "Male\n":"Female\n");
 	cout << "Date of Birth: " << A.dob << endl;
 	cout << "Social ID: " << A.socialid << endl;
 	cout << "Class: " << A.className << endl;
-	cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n\n";
 	if(menuStudent(A, _yr, accountSystem)) {
 		return true;
 	}
@@ -51,7 +47,7 @@ bool viewProfile(student A, schoolYear _yr, stringNode *&accountSystem) {
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 	string newPass;
-	system("cls");
+	// system("cls");
 	cout << "\n---------Main menu - Student---------" << endl;
 	cout << "\t1. View your scores throughout the year\n";
 	cout << "\t2. View your courses\n";
@@ -109,7 +105,6 @@ void viewCourse(student A, schoolYear _yr) {
 	for (int count = 0; count < 3; count++){
 		cout << count + 1 << ". " << tmp->name << endl;
 	}
-	int choice;
 	cout<<"4. View all courses throughout the year\n"; 
 	cout << "Your choice: ";
 	int choice;
