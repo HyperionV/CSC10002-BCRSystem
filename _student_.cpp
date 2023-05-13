@@ -89,7 +89,8 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 void viewScoreboard(student A) {
 	scoreboardNode* viewScore = A._course;	
 	if (!viewScore){
-		cout << "The staff haven't updated the scoreboard yet\n";
+		cout << "\nThe staff haven't updated the scoreboard yet\n";
+		system("pause");
 		return;
 	}
 	int no = 1;
@@ -110,10 +111,16 @@ void viewCourse(student A, schoolYear _yr) {
 	}
 	int choice;
 	cout<<"4. View all courses throughout the year\n"; 
-	cout<<"Choose which semester to view\n";
-	do{
-		cin >> choice;
-	}  while (choice < 0 && choice > 4);
+	cout << "Your choice: ";
+	int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 10 || choice < 1) {
+            cout << "Invalid option" << endl;
+            continue;
+        }
+        break;
+    }
 	if (choice == 4) {
 		printAll = true;
 	}
@@ -125,6 +132,7 @@ void viewCourse(student A, schoolYear _yr) {
 
 	if (!viewC){
 		cout << "Unable to find any courses\n";
+		system("pause");
 		return;
 	}
 
@@ -172,6 +180,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
             if (!tmp && !stuNode) 
             {
                 cout << "No student exists with such student id\n";
+				system("pause");
                 break;
             } 
             tmp = tmp->next;
@@ -192,6 +201,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, string id, stringNode* accountSys
     }
     else {
         cout << "Unable to locate school year\n";
+		system("pause");
         return 1;
     }
 }
