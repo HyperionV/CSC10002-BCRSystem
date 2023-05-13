@@ -109,11 +109,11 @@ void viewCourse(student A, schoolYear _yr) {
 		cout << count + 1 << ". " << tmp->name << endl;
 	}
 	int choice;
-	do {
-		cout<<"4. View all courses throughout the year\n"; 
-		cout<<"Choose which semester to view\n";
-		cin>>choice;
-	}  while (choice > 0 && choice < 5);
+	cout<<"4. View all courses throughout the year\n"; 
+	cout<<"Choose which semester to view\n";
+	do{
+		cin >> choice;
+	}  while (choice < 0 && choice > 4);
 	if (choice == 4) {
 		printAll = true;
 	}
