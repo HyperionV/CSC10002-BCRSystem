@@ -102,7 +102,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 
 	cout << "Choose a semester to view scoreboard:\n";
 	for (int i = 0; i < 3;i++)
-		cout << "\t" << i + 1 << _yr._semester[i].name << endl;
+		cout << "\t" << i + 1 << ". " << _yr._semester[i].name << endl;
 
 	cout << "\t4. View full scoreboard\n";
 	cout << "\t5. Return to menu\n";
@@ -171,7 +171,7 @@ void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
 		while (viewC)
 		{
 			if (findStudent(viewC->data.enrolled, A.id))
-			cout << setw(15) << left << viewC->data.id << setw(30) << viewC->data.name << setw(15) << viewC->data.className << setw(13) << viewC->data.day << setw(13) << viewC->data.session << "\t" << viewC->data.teacher << endl;
+			cout << setw(15) << left << viewC->data.id << setw(30) << viewC->data.name << setw(15) << viewC->data.className << setw(13) << viewC->data.day << setw(13) << viewC->data.session << setw(13) << viewC->data.teacher << endl;
 			viewC = viewC->next;
 		}
 	system("pause");

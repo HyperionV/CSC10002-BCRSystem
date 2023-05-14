@@ -18,7 +18,7 @@ int main() {
         }
     }
     else if(isLogin && !isStaff) {
-        if(StudentMain(_schoolYear, userID, accountList, currentSemesterCount)) { // chinh~ lai header file moi chay dc
+        if(StudentMain(_schoolYear, userID, accountList, currentSemesterCount)) {
             main();
         }
         else {

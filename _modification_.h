@@ -23,7 +23,6 @@ void importStudentScore(const schoolYear &_schooolYear, const course &_course);
 schoolYear programStart(schoolYearNode *&head, stringNode *accountList);
 void viewProfileStudent(student curStudent);
 bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
-bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList, int &currentSemesterCount);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
 void viewCourseScoreboard(studentNode *_student, const string &ID);
 bool viewSemestersInfo(const schoolYear &_schoolYear);
