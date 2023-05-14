@@ -81,7 +81,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, c
 	}
 }
 
-void viewScoreboard(const student &A, const schoolYear &_yr, const int &sem) {
+void viewScoreboard(const student &A, const schoolYear &_yr) {
 	scoreboardNode* viewScore = A._course;
 	bool isUploaded = false;
 	while (viewScore){
