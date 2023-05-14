@@ -86,6 +86,7 @@ void viewScoreboard(const student &A) {
 	while (viewScore){
 		if (viewScore->data.isUploaded)
 				isUploaded = true;
+		cout << boolalpha << viewScore->data.isUploaded << endl;
 		viewScore = viewScore->next;
 	}
 	if (!isUploaded)

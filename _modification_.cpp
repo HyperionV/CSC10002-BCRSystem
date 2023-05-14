@@ -1787,7 +1787,6 @@ staffInfo getStaff(staffNode* head, string userID) {
 //Work flow
 schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
     if (head == nullptr) {
-        system("pause");
         system("cls");
         cout << "\nDatabase is empty! Please create a new school year to continue!\n" << endl;
         system("pause");
@@ -2158,16 +2157,45 @@ void viewClassScoreboardUI(const schoolYear &_schoolYear) {
         currClassNode = currClassNode->next;
         idx++;
     }
-    viewWholeClassScoreboard(currClassNode->data);
+    viewWholeClassScoreboard(_schoolYear, currClassNode->data);
 }
 
-void viewWholeClassScoreboard(const _class &source) {
+void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &source) {
+    cout << "Choose a semester: " << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << "\t" << i+1 << ". " << _schoolYear._semester[i].name << endl;
+    }    
+    cout << "\t4. Cancel" << endl;
+    cout << "Your choice: ";
+    int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 4 || choice < 1) {
+            cout << "Invalid option" << endl;
+           continue;
+        }
+        break;
+    }
+    if (choice == 4) return;
+    choice--;
+    if (_schoolYear._semester[choice].start == "NULL" || _schoolYear._semester[choice].end == "NULL") {
+        cout << "This semester has not been created yet!" << endl;
+        system("pause");
+        return;
+    }
+    //the currSemesterCourses courseNode is used to conviniently access the courseNode of the current semester
+    //the courseName scoreboardNode is used to store the courses that will be displayed in the report
+    //the currStudent studentNode is used to quickly access the studentNode of the source class
+    courseNode* currSemesterCourses = _schoolYear._semester[choice]._course;
     scoreboardNode *courseName = nullptr;
     studentNode *currStudent = source._student;
+    //go through every students in this class to gather every courses enrolled by students in this class that were created in this semester
     while (currStudent) {
         scoreboardNode* currScoreboard = currStudent->data._course;
         while (currScoreboard) {
-            if (findCourseScoreboard(courseName, currScoreboard->data.courseID) == nullptr) {
+            //if the course we are looking at is not in the current semester, skip it 
+            //if the course has not been added to the temp scoreboard node, add it
+            if (findCourse(currSemesterCourses, currScoreboard->data.courseID) != nullptr && findCourseScoreboard(courseName, currScoreboard->data.courseID) == nullptr) {
                 scoreboard tmp = currScoreboard->data;
                 addScoreboardNode(courseName, tmp);
             }
@@ -2175,45 +2203,58 @@ void viewWholeClassScoreboard(const _class &source) {
         }
         currStudent = currStudent->next;
     }
+    //the basic layout of the report
     cout << setw(5) << left << "No. " << setw(20) << "Student ID" << setw(30) << "Full name";
     scoreboardNode *curr = courseName;
+    //write the name of courses appeared in the list
     while (curr) {
-        cout << setw(30) << left << curr->data.courseName;
+        int length = curr->data.courseName.length();
+        cout << setw(length+5) << left << curr->data.courseName;
         curr = curr->next;
     } 
-    cout << endl;
+    cout << setw(17) << left << "Current GPA" << setw(17) << left << "Overall GPA" << endl;
     curr = courseName;
     currStudent = source._student;
+    //go through the student list one more time to display the report for every student
     while (currStudent) {
         string fullName = currStudent->data.firstName + " " + currStudent->data.lastName;
         cout << setw(5) << left << currStudent->data.index << setw(20) << currStudent->data.id << setw(30) << fullName;
+        int totalScoreSemester = 0;
+        int semesterCoursesCount = 0;
+        int totalScoreYear = 0;
+        int yearCoursesCount = 0;
+        scoreboardNode* currStudentScoreboard = currStudent->data._course;
+        //get the overall GPA of the student 
+        while (currStudentScoreboard) {
+            totalScoreYear += currStudentScoreboard->data.total;
+            yearCoursesCount++;
+            currStudentScoreboard = currStudentScoreboard->next;
+        }
+        //get the GPA of the current semester and display the report for this semester
         while (curr) {
+            int length2 = curr->data.courseName.length();
             scoreboardNode *tmp = findCourseScoreboard(currStudent->data._course, curr->data.courseID);
-            cout << setw(30) << left << ((tmp) ? to_string(tmp->data.total).substr(0,3):"X") ;
+            cout << setw(length2+5) << left << ((tmp) ? to_string(tmp->data.total).substr(0,3):"X") ;
+            if (tmp) {
+                totalScoreSemester += tmp->data.total;
+                semesterCoursesCount++;
+            }
             curr = curr->next;
-        } 
+        }
+        semesterCoursesCount = (semesterCoursesCount > 0) ? semesterCoursesCount:1;
+        yearCoursesCount = (yearCoursesCount > 0) ? yearCoursesCount:1;
+        cout << setw(17) << left << to_string(totalScoreSemester*1.0/(semesterCoursesCount*1.0)).substr(0,3) << setw(17) << left << to_string(totalScoreYear*1.0/(yearCoursesCount*1.0)).substr(0,3) << endl;
         currStudent = currStudent->next;
         curr = courseName;
-        cout << endl;
     }
     system("pause");
-}
-
-///View class scoreboard
-
-void viewProfileStudent(student curStudent) {
-    // system("cls");
-    cout << "--------------PROFILE-------------" << endl;
-    cout << "Full name : " << curStudent.firstName << curStudent.lastName << endl;
-    cout << "Student's ID : " << curStudent.id << endl;
-    cout << "Student's gender : " << curStudent.gender << setw(10)<< left << "Student's date of birth : " << curStudent.dob << endl;
-    cout << "Student's social ID : " << curStudent.socialid << endl;
-    system("pause");
+    curr = nullptr;
+    deleteScoreboardList(courseName);
 }
 
 void viewProfileStaff(staffInfo curStaff) {
     // system("cls");
-    cout << "------------------PROFILE--------------" << endl;
+    cout << "--------------PROFILE--------------" << endl;
     cout << "Full name : " << curStaff.fullName << endl;
     cout << "Email : " << curStaff.mail << endl;
     system("pause");
@@ -3114,6 +3155,7 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         while(temp) {
             if(temp->data == userAccount) {
                 cout << "Login successfully - welcome back! " << endl;
+                system("pause");
                 userID= ID;
                 if(!isdigit(userAccount[0]))
                     isStaff = 1;

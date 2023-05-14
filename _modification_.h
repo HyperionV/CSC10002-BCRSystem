@@ -111,7 +111,7 @@ void viewScoreBoardUI(schoolYear &_schoolYear);
 void viewStudentResultUI(schoolYear &_schoolYear);
 void viewCourseScoreBoardUI(schoolYear &_schoolYear);
 void viewClassScoreboardUI(const schoolYear &_schoolYear);
-void viewWholeClassScoreboard(const _class &source);
+void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &source);
 void updateScoreboardUI(schoolYear &_schoolYear);
 
 bool login(stringNode *accountList, bool &isStaff, string& userID);
