@@ -64,7 +64,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, c
 		switch (choice)
 		{
 		case 1:
-			viewScoreboard(A);
+			viewScoreboard(A, _yr, sem);
 			break;
 		case 2:
 			viewCourse(A, _yr, sem);
@@ -81,7 +81,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, c
 	}
 }
 
-void viewScoreboard(const student &A) {
+void viewScoreboard(const student &A, const schoolYear &_yr, const int &sem) {
 	scoreboardNode* viewScore = A._course;
 	bool isUploaded = false;
 	while (viewScore){
@@ -92,20 +92,71 @@ void viewScoreboard(const student &A) {
 		}
 		viewScore = viewScore->next;
 	}
+
 	if (!isUploaded)
 	{
-		cout << "\nThe staff haven't updated the scoreboard yet\n";
+		cout << "The staff haven't published the scoreboard yet!\n";
 		system("pause");
 		return;
 	}
+
+	cout << "Choose a semester to view scoreboard:\n";
+	for (int i = 0; i < 3;i++)
+		cout << i + 1 << "\t" << _yr._semester[i].name << endl;
+
+	cout << "4.\tView this year's entire scoreboard\n";
+	cout << "5.\tReturn to menu\n";
+	cout << "Your choice: ";
+    int choice;
+    while (true) {
+        choice = getChoiceInt();
+        if (choice > 5 || choice < 1) {
+            cout << "Invalid option" << endl;
+           continue;
+        }
+        break;
+    }
+
+	if (choice == 5)
+		return;
+
+
+
 	int no = 1;
-	cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
-	while (viewScore){
-		cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
-		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
-		no++;
+	if (choice != 4){
+		cout << _yr._semester[choice - 1].name << " Scoreboard:" << endl;
+		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+		while (viewScore){
+			if (_yr._semester[choice - 1]._course->data.id == viewScore->data.courseID)
+			{
+				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
+				no++;
+			}
+			viewScore = viewScore->next;
+		}
+				system("pause");
+		return;
 	}
-	system("pause");
+
+	for (int j = 0; j < 3;j++)
+	{
+		cout << _yr._semester[j].name << " Scoreboard:\n";
+		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+		viewScore = A._course;
+		while (viewScore){
+			if (_yr._semester[choice - 1]._course->data.id == viewScore->data.courseID)
+			{
+				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
+				no++;
+			}
+			viewScore = viewScore->next;
+		}
+				system("pause");
+	}
+
+
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
