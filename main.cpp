@@ -1,4 +1,4 @@
-#include "_modification_.h"
+#include "_library_.h"
 
 int main() {
     bool isStaff = 0;
@@ -17,13 +17,17 @@ int main() {
             main();
         }
     }
+    else if(isLogin && !isStaff) {
+        if(StudentMain(_schoolYear, userID, accountList)) { // chinh~ lai header file moi chay dc
+            main();
+        }
+        else {
+            deleteSchoolYearList(_schoolYear);
+            cout << "Closing program..." << endl;
+        }
+    }
     else {
         deleteSchoolYearList(_schoolYear);
     }
-    // else if(isLogin && !isStaff) {
-    //     if(StudentMain(_schoolYear, userID, accountList)) { // chinh~ lai header file moi chay dc
-    //         main();
-    //     }
-    // }
     return 0;
 }

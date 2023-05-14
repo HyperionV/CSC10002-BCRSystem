@@ -332,7 +332,6 @@ schoolYearNode* findSchoolYear(schoolYearNode *head, const string &_schoolYear) 
 
 void deleteStringNode(stringNode *&head, const string &target) {
     stringNode *newhead = nullptr;
-    stringNode *delHead = head;
     while (head) {
         if (head->data == target) {
             stringNode *curr = head;
@@ -343,16 +342,15 @@ void deleteStringNode(stringNode *&head, const string &target) {
         addStringNode(newhead, head->data);
         head = head->next;
     }
+    deleteStringList(head);
     head = newhead;
-    deleteStringList(delHead);
     newhead = nullptr;
 }
 
 void deleteCourseNode(courseNode *&head, const string &ID) {
     courseNode* newhead = nullptr;
-    courseNode* delHead = head;
     while (head) {
-        if (head->data.name != ID) {
+        if (head->data.id != ID) {
             addCourseNode(newhead, head->data);
         }
         else {
@@ -360,14 +358,13 @@ void deleteCourseNode(courseNode *&head, const string &ID) {
         }
         head = head->next;
     }
+    deleteCourseList(head);
     head = newhead;
-    deleteCourseList(delHead);
     newhead = nullptr;
 }
 
 void deleteStudentNode(studentNode *&head, const string &studentID) {
     studentNode *newhead = nullptr;
-    studentNode *delHead = head;
     while (head) {
         if (head->data.id != studentID) {
             addStudentNode(newhead, head->data);
@@ -377,28 +374,26 @@ void deleteStudentNode(studentNode *&head, const string &studentID) {
         }
         head = head->next;
     }
+    deleteStudentList(head);
     head = newhead;
-    deleteStudentList(delHead);
     newhead = nullptr;
 }
 
 void deleteScoreboardNode(scoreboardNode *&head, const string &ID) {
     scoreboardNode *newhead = nullptr;
-    scoreboardNode *delHead = head;
     while (head) {
         if (head->data.courseID != ID) {
             addScoreboardNode(newhead, head->data);
         }
         head = head->next;
     }
+    deleteScoreboardList(head);
     head = newhead;
-    deleteScoreboardList(delHead);
     newhead = nullptr;
 }
 
 void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear) {
     schoolYearNode *newhead = nullptr;
-    schoolYearNode *delHead = head;
     while (head) {
         if (head->data._schoolYear == _schoolYear) {
             schoolYearNode *curr = head;
@@ -410,8 +405,8 @@ void deleteSchoolYearNode(schoolYearNode *&head, const string &_schoolYear) {
         addSchoolYearNode(newhead, head->data);
         head = head->next;
     }
+    deleteSchoolYearList(head);
     head = newhead;
-    deleteSchoolYearList(delHead);
     newhead= nullptr;
 }
 
@@ -471,7 +466,7 @@ int getNumberOfStudents(studentNode *_student) {
 
 //main features functions
 
-bool createSchoolYear(schoolYearNode *&head, schoolYear &year) {
+bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList) {
     // cout << "\n---------Create new school year----------" << endl;
     string SC;
     cout << "Enter school year: ";
@@ -553,7 +548,7 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year) {
         cout << "Your choice: ";
         choice  = getChoiceInt();
         if (choice == 1) {
-            addStudentToClass(year);
+            addStudentToClass(year, accountList);
         }
         else if (choice == 2) {
             break;
@@ -648,7 +643,7 @@ void createClass(schoolYear &SC) {
     }
 }
 
-void addStudentToClass(schoolYear &_schoolYear) {
+void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList) {
     classNode *curr = _schoolYear._class;
     cout << "Choose a class: " << endl;
     int idx = 1;
@@ -705,6 +700,8 @@ void addStudentToClass(schoolYear &_schoolYear) {
         addStudentNode(c._student, temp);
         curr->data = c;
         cout << "\nSuccessfully added student to class\n" << endl;
+        addStringNode(accountList, temp.id+":"+defaultPassword);
+        autoSaveCredential(accountList);
         system("pause");
     }
     //Change the mechanism into adding node instead of removing node from the original list
@@ -716,9 +713,11 @@ void addStudentToClass(schoolYear &_schoolYear) {
             // cout << "Student not null" << endl;
             if (!checkStudentExistence(_schoolYear, currStudentNode->data)) {
                 addStudentNode(_student, currStudentNode->data);
+                addStringNode(accountList, currStudentNode->data.id+":"+defaultPassword);
             }
             currStudentNode = currStudentNode->next;
         }
+        autoSaveCredential(accountList);
         if (_student == nullptr) {
             cout << "\nErrors occured while adding student using file\n" << endl;
             system("pause");
@@ -1007,7 +1006,7 @@ void deleteCourse(schoolYear &_schoolYear, course &_course) {
     deleteStudentList(_course.enrolled);
     for (int i = 0; i < 3; i++) {
         courseNode* target = findCourse(_schoolYear._semester[i]._course, _course.id);
-        if (target != nullptr) {
+        if (target) {
             deleteCourseNode(_schoolYear._semester[i]._course, _course.id);
             return;
         }
@@ -1074,6 +1073,7 @@ void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
     cout << "\t7.2 Session: ";
     cin >> _course.session;
     //display the new course information
+    system("cls");
     cout << "Successfully updated course info" << endl;
     cout << "Current course info:";
     cout << "\n\t1. ID: " << _course.id;
@@ -1115,8 +1115,8 @@ void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
 
 void updateStudentResult(const schoolYear &_schoolYear, const string &ID, student &source) {
     cout << "\n----------Update student result----------" << endl;
-    cout << "Student : " << source.firstName << " " << source.lastName ;
-    cout << "\nID : " << source.id << endl;
+    cout << "Student: " << source.firstName << " " << source.lastName ;
+    cout << "\nID: " << source.id << endl;
     cout << "\nCurrent result: ";
     cout << "\n\tOther: " << source._course->data.other;
     cout << "\n\tMidterm: " << source._course->data.midterm;
@@ -1216,7 +1216,6 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     }
     else {
         classNode *currClassList = _schoolYear._class;
-        // studentNode* temp = _course.enrolled;
         string placeholder;
         getline(in_file, placeholder);
         while(in_file.good()) {
@@ -1236,6 +1235,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             placeholder.clear();
             temp->data._course->data.courseID = _course.id;
             temp->data._course->data.courseName = _course.name;
+            temp->data._course->data.isUploaded = true;
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             findCourseScoreboard(targetStudent->data._course, _course.id)->data = temp->data._course->data;
@@ -1544,16 +1544,10 @@ void delete_directory(const string& path)
         }
         closedir(directory);
     }
-    else
-    {
-        // cerr << "Error: Failed to open directory " << path << endl;
-    }
     return;
 }
 
-
 /////////////////////////////// SAVE DATA //////////////////////////////////////////////
-
 
 void writeStudentInClass(studentNode *studentList, const string &path) {
     while(studentList) {
@@ -1566,15 +1560,12 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
         out_file << studentList->data.gender << ",";
         out_file << studentList->data.dob << ',';
         out_file << studentList->data.socialid ;
-
         out_file.close();
 
         if(!studentList->data._course) {
             studentList = studentList->next;
             continue;
         }
-
-
         ofstream out_file1 {full_path + "/Scoreboard.txt"};
         scoreboardNode* tempCourseList = studentList->data._course;
         while(tempCourseList) {
@@ -1586,11 +1577,9 @@ void writeStudentInClass(studentNode *studentList, const string &path) {
             out_file1 << tempCourseList->data.total;
             if(tempCourseList->next)
                 out_file1 << endl;
-
             tempCourseList= tempCourseList->next;
         }
         out_file1.close();
-
         studentList = studentList->next;
     }
     return;
@@ -1602,7 +1591,6 @@ void writeCourseEnrolls(courseNode* courseList, const string &path) {
         return;
     }
     ofstream out_file {path};
-
     studentNode* tempEnrolledList = courseList->data.enrolled;
     while(tempEnrolledList) {
         out_file << tempEnrolledList->data.id << "," << tempEnrolledList->data.firstName << "," << tempEnrolledList->data.lastName << "," << tempEnrolledList->data.className << ",";
@@ -1614,7 +1602,6 @@ void writeCourseEnrolls(courseNode* courseList, const string &path) {
             out_file << endl;
 
         tempEnrolledList= tempEnrolledList->next;
-
     }
     out_file.close();
     return;
@@ -1670,7 +1657,6 @@ void writeSchoolyear(string path, schoolYear sY)
 
     mkdir((path + "/Classes").c_str());
     writeClass(sY._class, path + "/Classes");
-
 }
 
 void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
@@ -1685,7 +1671,6 @@ void writeDataFolder(const string &path, schoolYearNode* &SYlist) {
 
 void autoSaveSchoolyear(schoolYear curSchoolyear) {
     string full_path = "Data/" + curSchoolyear._schoolYear;
-    cout << full_path << endl;
     delete_directory(full_path);
     rmdir(full_path.c_str());
     writeSchoolyear("Data", curSchoolyear);
@@ -1731,14 +1716,13 @@ void loadUserAccount (stringNode* &head) {
     ifstream in_file("credential.txt");
 
     if(!in_file) {
-        cout << "Could not open the file ! " << endl;
+        cout << "Could not open the file!" << endl;
         return;
     }
     string temp;
     while(getline(in_file, temp)) {
         addStringNode(head, temp);
     }
-
     in_file.close();
     return;
 }
@@ -1801,13 +1785,15 @@ staffInfo getStaff(staffNode* head, string userID) {
 }
 
 //Work flow
-schoolYear programStart(schoolYearNode *&head) {
+schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
     if (head == nullptr) {
+        system("pause");
+        system("cls");
         cout << "\nDatabase is empty! Please create a new school year to continue!\n" << endl;
         system("pause");
         system("cls");
         head = new schoolYearNode;
-        if (!createSchoolYear(head, head->data)) head = nullptr;
+        if (!createSchoolYear(head, head->data, accountList)) head = nullptr;
     }
     system("cls");
     schoolYearNode *currSchoolYearNode = head;
@@ -1829,10 +1815,10 @@ schoolYear programStart(schoolYearNode *&head) {
     }
     if (choice == 1) {
         schoolYear newSY;
-        if (!createSchoolYear(head, newSY)) {
+        if (!createSchoolYear(head, newSY, accountList)) {
             cout << "Failed to created school year! Please try again\n" << endl;
             system("pause");
-            return programStart(head);
+            return programStart(head, accountList);
         }
         addSchoolYearNode(head, newSY);
         return newSY;
@@ -1847,11 +1833,12 @@ schoolYear programStart(schoolYearNode *&head) {
 }
 
 bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList) {
-    schoolYear _schoolYear = programStart(head);
+    schoolYear _schoolYear = programStart(head, accountList);
 
     while (true) {
         system("cls");
-        cout << "\n---------Main menu - staff---------" << endl;
+        autoSaveSchoolyear(_schoolYear);
+        cout << "\n---------Main menu - Staff---------" << endl;
         cout << "\t1. View profile" << endl;
         cout << "\t2. Add new staff " << endl;
         cout << "\t3. View current school year information" << endl;
@@ -1875,7 +1862,7 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             staffInfo curStaff = getStaff(staffList, userID);
             cout << "Full name: " << curStaff.fullName << endl;
             cout << "Email: " << curStaff.mail << endl;
-            cout << "Input \"1\" to change password: "; 
+            cout << "Input \"1\" to change password or \"Exit\": "; 
             int curChoice = 0;
             cin >> curChoice;
             if(curChoice == 1) {
@@ -1897,7 +1884,7 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             updateCurrentYearInfo(_schoolYear);
         }
         else if (choice == 5) {
-            _schoolYear = programStart(head);
+            _schoolYear = programStart(head, accountList);
         }
         else if (choice == 6) {
             viewScoreBoardUI(_schoolYear);
@@ -2008,7 +1995,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
     int choice3;
     while (true) {
         choice3 = getChoiceInt();
-        if (choice3 > 3 || choice3 < 0) {
+        if (choice3 > 3 || choice3 < 1) {
             cout << "Invalid option" << endl;
             continue;
         }
@@ -2038,7 +2025,6 @@ void viewScoreBoardUI(schoolYear &_schoolYear) {
         cout << "Your choice: ";
         int choice;
         while (true) {
-            cout << "Your choice: ";
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
                 cout << "Invalid option" << endl;
@@ -2603,7 +2589,7 @@ bool updateStudentResultUI(schoolYear &_schoolYear) {
     int choice;
     while (true) {
         choice = getChoiceInt();
-        if (choice > 6 || choice < 1) {
+        if (choice > 5 || choice < 1) {
             cout << "Invalid choice!" << endl;
             continue;
         }
@@ -2624,7 +2610,6 @@ bool updateStudentResultUI(schoolYear &_schoolYear) {
         case 5:
             return true;
     }
-    cout << "Out" << endl;
     autoSaveSchoolyear(_schoolYear);
     return false;
 }
@@ -3108,10 +3093,10 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
 
 bool login(stringNode *accountList, bool &isStaff, string &userID) {
     int loginAttempt= 0;
-    while(loginAttempt < 5) {
+    while (loginAttempt < 5) {
         system("cls");
         if(loginAttempt > 0) {
-            cout << "Invalid user ID or password ! Please try again !" << endl;
+            cout << "Invalid user ID or password! Please try again!" << endl;
         }
         string ID, PW;
         cout << "------------LOGIN------------" << endl;
@@ -3128,7 +3113,7 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         stringNode *temp= accountList;
         while(temp) {
             if(temp->data == userAccount) {
-                cout << "Login successfully - welcome back ! " << endl;
+                cout << "Login successfully - welcome back! " << endl;
                 userID= ID;
                 if(!isdigit(userAccount[0]))
                     isStaff = 1;
@@ -3138,7 +3123,7 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         }
         loginAttempt++;
     }
-    cout << "Too many login, please try again in a minute ! " << endl;
+    cout << "Too many login, please try again in a minute! " << endl;
     return false;
 }
 

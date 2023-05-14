@@ -1,3 +1,4 @@
+#pragma once
 #include "_library_.h"
 
 struct schoolYear;
@@ -30,6 +31,7 @@ struct scoreboard {
     double final = 0.0;
     double midterm = 0.0;
     double other = 0.0;
+    bool isUploaded = false;
 };
 
 struct scoreboardNode {

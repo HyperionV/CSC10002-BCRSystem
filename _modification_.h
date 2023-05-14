@@ -1,6 +1,5 @@
-#include "_struct_.h"
+#pragma once
 #include "_validate_.h"
-// #include "_student_.h"
 
 //miscellaneous/support function prototypes
 void displayStudentList(studentNode *head);
@@ -36,9 +35,9 @@ courseNode* findCourseInDatabase(schoolYearNode *_schoolYearNode, const string &
 int getNumberOfStudents(studentNode *_student);
 
 //main features functions prototypes
-bool createSchoolYear(schoolYearNode *&head, schoolYear &year);
+bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList);
 void createClass(schoolYear &SC);
-void addStudentToClass(schoolYear &_schoolYear);
+void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList);
 void createSemester(schoolYear &SY);
 void createCourse(schoolYear &_schoolYear, semester &_semester);
 bool addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course);
@@ -60,9 +59,7 @@ studentNode* loadStudentsFromClass(const string &path ,const string& className);
 schoolYear loadSchoolyear(const string &path, const string &sY);
 classNode* loadClass(const string &path);
 
-
 //staff
-bool standardizeName(string &name);
 bool createStaffAccount(staffInfo &newStaff);
 string createEmail(const string &fullName);
 
@@ -83,9 +80,10 @@ void writeCourse(courseNode* courseList , const string &path);
 void writeClass(classNode* classList ,const string &path);
 void writeDataFolder(const string &path, schoolYearNode*& SYlist);
 void autoSaveSchoolyear(schoolYear curSchoolyear);
+void autoSaveCredential(stringNode* accountList);
 
 //Menu/support functions
-schoolYear programStart(schoolYearNode *&head);
+schoolYear programStart(schoolYearNode *&head, stringNode *accountList);
 void viewProfileStudent(student curStudent);
 bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
 bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList);
