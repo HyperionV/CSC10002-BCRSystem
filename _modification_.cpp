@@ -1830,7 +1830,7 @@ schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
     return currSchoolYearNode->data;
 }
 
-bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList) {
+bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList, int &currentSemesterCount) {
     schoolYear _schoolYear = programStart(head, accountList);
 
     while (true) {
@@ -1841,11 +1841,12 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         cout << "\t2. Add new staff " << endl;
         cout << "\t3. View current school year information" << endl;
         cout << "\t4. Update current school year information" << endl;
-        cout << "\t5. Load another school year" << endl;
-        cout << "\t6. View scoreboard" << endl;
-        cout << "\t7. Update scoreboard" << endl;
-        cout << "\t8. Log out" << endl;
-        cout << "\t9. Save and close program" << endl;
+        cout << "\t5. Change working semester" << endl;
+        cout << "\t6. Load another school year" << endl;
+        cout << "\t7. View scoreboard" << endl;
+        cout << "\t8. Update scoreboard" << endl;
+        cout << "\t9. Log out" << endl;
+        cout << "\t10. Save and close program" << endl;
         cout << "Your choice: ";
         int choice;
         while (true) {
@@ -1881,21 +1882,21 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         else if (choice == 4) {
             updateCurrentYearInfo(_schoolYear);
         }
-        else if (choice == 5) {
+        else if (choice == 6) {
             _schoolYear = programStart(head, accountList);
         }
-        else if (choice == 6) {
+        else if (choice == 7) {
             viewScoreBoardUI(_schoolYear);
         }
-        else if (choice == 7) {
+        else if (choice == 8) {
             updateScoreboardUI(_schoolYear);
         }
-        else if (choice == 8) {
+        else if (choice == 9) {
             writeDataFolder("Data", head);
             deleteSchoolYearList(head);
             return 1;
         }
-        else if (choice == 9) {
+        else if (choice == 10) {
             cout << "Database reloaded!\nClosing program..." << endl;
             writeDataFolder("Data", head);
             deleteSchoolYearList(head);
@@ -1903,6 +1904,12 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         }
         else if(choice == 2) {
             createNewStaff(staffList, accountList);
+        }
+        else if (choice == 5) {
+            cout << "\nEnter working semester: ";
+            cin >> currentSemesterCount;
+            cout << "\nChanged working semester to: " << currentSemesterCount << endl;
+            system("pause");
         }
         else {
             cout << "Not a valid option!\n" << endl;
@@ -2218,10 +2225,10 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
     while (currStudent) {
         string fullName = currStudent->data.firstName + " " + currStudent->data.lastName;
         cout << setw(5) << left << currStudent->data.index << setw(20) << currStudent->data.id << setw(30) << fullName;
-        int totalScoreSemester = 0;
-        int semesterCoursesCount = 0;
-        int totalScoreYear = 0;
-        int yearCoursesCount = 0;
+        double totalScoreSemester = 0;
+        double semesterCoursesCount = 0;
+        double totalScoreYear = 0;
+        double yearCoursesCount = 0;
         scoreboardNode* currStudentScoreboard = currStudent->data._course;
         //get the overall GPA of the student 
         while (currStudentScoreboard) {
@@ -2242,7 +2249,7 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
         }
         semesterCoursesCount = (semesterCoursesCount > 0) ? semesterCoursesCount:1;
         yearCoursesCount = (yearCoursesCount > 0) ? yearCoursesCount:1;
-        cout << setw(17) << left << to_string(totalScoreSemester*1.0/(semesterCoursesCount*1.0)).substr(0,3) << setw(17) << left << to_string(totalScoreYear*1.0/(yearCoursesCount*1.0)).substr(0,3) << endl;
+        cout << setw(17) << left << to_string(totalScoreSemester/semesterCoursesCount).substr(0,3) << setw(17) << left << to_string(totalScoreYear/yearCoursesCount).substr(0,3) << endl;
         currStudent = currStudent->next;
         curr = courseName;
     }
