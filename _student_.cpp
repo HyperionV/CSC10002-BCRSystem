@@ -169,7 +169,7 @@ void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
 		return;
 	}
 
-	cout << "Showing courses of " << _yr._semester[sem].name << endl;
+	cout << "Showing courses of " << _yr._semester[sem-1].name << endl;
 	cout << "Course ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
 		viewC = _yr._semester[sem - 1]._course;
 		while (viewC)
