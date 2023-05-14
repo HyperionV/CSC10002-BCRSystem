@@ -69,7 +69,14 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 				viewCourse(A, _yr);
 				break;
 			case 3:
-				changeAccountPassword(accountSystem, A.id);
+				if(changeAccountPassword(accountSystem, A.id)) {
+					cout << "Changed password successfully!";
+					system("pause");
+				}
+				else {
+					cout << "Changed password failed !";
+					system("pause");
+				}
 				break;
 			case 4:
 				return 1;
@@ -103,6 +110,7 @@ void viewScoreboard(const student &A) {
 		cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
 		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
 		no++;
+		viewScore= viewScore->next;
 	}
 	system("pause");
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
