@@ -123,39 +123,38 @@ void viewScoreboard(const student &A, const schoolYear &_yr, const int &sem) {
 
 
 	int no = 1;
+	courseNode *tmp = _yr._semester[choice - 1]._course;
 	if (choice != 4){
 		cout << _yr._semester[choice - 1].name << " Scoreboard:" << endl;
 		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
-		while (viewScore){
-			if (_yr._semester[choice - 1]._course->data.id == viewScore->data.courseID)
+		while (tmp && viewScore){
+			if (tmp->data.id == viewScore->data.courseID)
 			{
 				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
 				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
 				no++;
+				viewScore = viewScore->next;
 			}
-			viewScore = viewScore->next;
+			else {
+				tmp = tmp->next;
+			}
+			
 		}
 				system("pause");
 		return;
 	}
 
-	for (int j = 0; j < 3;j++)
-	{
-		cout << _yr._semester[j].name << " Scoreboard:\n";
+
+		cout << "Scoreboard:\n";
 		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
 		viewScore = A._course;
 		while (viewScore){
-			if (_yr._semester[choice - 1]._course->data.id == viewScore->data.courseID)
-			{
-				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
-				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
-				no++;
-			}
+			cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+			cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
+			no++;
 			viewScore = viewScore->next;
 		}
-				system("pause");
-	}
-
+		system("pause");
 
 	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
@@ -170,7 +169,7 @@ void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
 		return;
 	}
 
-	cout << "Showing courses of " << _yr._semester->name << endl;
+	cout << "Showing courses of " << _yr._semester[sem].name << endl;
 	cout << "Course ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
 		viewC = _yr._semester[sem - 1]._course;
 		while (viewC)
