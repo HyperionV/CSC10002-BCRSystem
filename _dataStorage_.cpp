@@ -1,4 +1,5 @@
 #include "_library_.h"
+/////////////////////////////// LOAD DATA //////////////////////////////////////////////
 
 semester loadSemester(const string &path, string semesterName) {
     semester curr;
@@ -66,6 +67,33 @@ course loadCourse(const string &path) {
     return curr;
 }
 
+schoolYear loadSchoolyear(const string &path, const string &sY) 
+{
+    int index= 0;
+    schoolYear curr;
+    curr._schoolYear = sY;
+    DIR* directory = opendir(path.c_str());
+    if(directory != NULL) 
+    {   
+        struct dirent *dir_entry;
+        while (dir_entry = readdir(directory)) {
+            string entry_name = dir_entry->d_name;
+            if(entry_name != "." && entry_name != ".." ) {
+                if(entry_name == "Classes") {
+                    string cur_path =  path + '/' + entry_name;
+                    curr._class= loadClass(cur_path);
+                }
+                else {
+                    string cur_path = path + "/" + entry_name;
+                    curr._semester[index++] = loadSemester(cur_path, entry_name);
+                }
+            }
+        }   
+    }
+    closedir(directory);
+    return curr;
+}
+
 studentNode* loadStudentsFromClass(const string &path ,const string& className) {
     studentNode* curr = nullptr;
     DIR* directory = opendir(path.c_str());
@@ -105,31 +133,23 @@ classNode* loadClass(const string &path) {
     return list;
 }
 
-schoolYear loadSchoolyear(const string &path, const string &sY) 
-{
-    int index= 0;
-    schoolYear curr;
-    curr._schoolYear = sY;
+schoolYearNode* loadDataFolder(const string &path) {
+    schoolYearNode* schoolYearList= nullptr;
     DIR* directory = opendir(path.c_str());
     if(directory != NULL) 
     {   
         struct dirent *dir_entry;
         while (dir_entry = readdir(directory)) {
             string entry_name = dir_entry->d_name;
-            if(entry_name != "." && entry_name != ".." ) {
-                if(entry_name == "Classes") {
-                    string cur_path =  path + '/' + entry_name;
-                    curr._class= loadClass(cur_path);
-                }
-                else {
-                    string cur_path = path + "/" + entry_name;
-                    curr._semester[index++] = loadSemester(cur_path, entry_name);
-                }
+            if(entry_name != "." && entry_name != "..") {
+                string full_path = path + "/" + entry_name;
+                schoolYear curr= loadSchoolyear(full_path, entry_name);
+                addSchoolYearNode(schoolYearList, curr);
             }
-        }   
+        }
     }
     closedir(directory);
-    return curr;
+    return schoolYearList;
 }
 
 void loadStudentByFile(studentNode *&head, const string &path) {
@@ -260,6 +280,34 @@ void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path) 
         }
     }
     closedir(directory);
+    return;
+}
+
+void loadUserAccount (stringNode* &head) {
+    ifstream in_file("credential.txt");
+
+    if(!in_file) {
+        cout << "Could not open the file!" << endl;
+        return;
+    }
+    string temp;
+    while(getline(in_file, temp)) {
+        addStringNode(head, temp);
+    }
+    in_file.close();
+    return;
+}
+
+void loadStaffInfo(staffNode *& staffList) {
+    ifstream in_file("staff.txt");
+
+    string temp;
+    while(in_file.good()) {
+        staffInfo tempStaff;
+        getline(in_file, tempStaff.fullName, ',');
+        getline(in_file, tempStaff.mail);
+        addStaffNode(staffList, tempStaff);
+    }
     return;
 }
 
@@ -422,53 +470,6 @@ void autoSaveSchoolyear(schoolYear curSchoolyear) {
     delete_directory(full_path);
     rmdir(full_path.c_str());
     writeSchoolyear("Data", curSchoolyear);
-    return;
-}
-
-schoolYearNode* loadDataFolder(const string &path) {
-    schoolYearNode* schoolYearList= nullptr;
-    DIR* directory = opendir(path.c_str());
-    if(directory != NULL) 
-    {   
-        struct dirent *dir_entry;
-        while (dir_entry = readdir(directory)) {
-            string entry_name = dir_entry->d_name;
-            if(entry_name != "." && entry_name != "..") {
-                string full_path = path + "/" + entry_name;
-                schoolYear curr= loadSchoolyear(full_path, entry_name);
-                addSchoolYearNode(schoolYearList, curr);
-            }
-        }
-    }
-    closedir(directory);
-    return schoolYearList;
-}
-
-void loadUserAccount (stringNode* &head) {
-    ifstream in_file("credential.txt");
-
-    if(!in_file) {
-        cout << "Could not open the file!" << endl;
-        return;
-    }
-    string temp;
-    while(getline(in_file, temp)) {
-        addStringNode(head, temp);
-    }
-    in_file.close();
-    return;
-}
-
-void loadStaffInfo(staffNode *& staffList) {
-    ifstream in_file("staff.txt");
-
-    string temp;
-    while(in_file.good()) {
-        staffInfo tempStaff;
-        getline(in_file, tempStaff.fullName, ',');
-        getline(in_file, tempStaff.mail);
-        addStaffNode(staffList, tempStaff);
-    }
     return;
 }
 

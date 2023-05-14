@@ -4,7 +4,7 @@ int main() {
     bool isStaff = 0;
     schoolYearNode *_schoolYear = nullptr;
     _schoolYear = loadDataFolder("Data");
-
+    int currentSemesterCount = 2;
     stringNode* accountList= nullptr;
     loadUserAccount(accountList);
 
@@ -13,12 +13,12 @@ int main() {
     if(isLogin && isStaff) {
         staffNode* staffList= nullptr;
         loadStaffInfo(staffList);
-        if(mainMenuStaff(_schoolYear, userID, staffList, accountList)) {
+        if(mainMenuStaff(_schoolYear, userID, staffList, accountList, currentSemesterCount)) {
             main();
         }
     }
     else if(isLogin && !isStaff) {
-        if(StudentMain(_schoolYear, userID, accountList)) { // chinh~ lai header file moi chay dc
+        if(StudentMain(_schoolYear, userID, accountList, currentSemesterCount)) { // chinh~ lai header file moi chay dc
             main();
         }
         else {

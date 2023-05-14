@@ -1132,10 +1132,10 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
     while (currStudent) {
         string fullName = currStudent->data.firstName + " " + currStudent->data.lastName;
         cout << setw(5) << left << currStudent->data.index << setw(20) << currStudent->data.id << setw(30) << fullName;
-        int totalScoreSemester = 0;
-        int semesterCoursesCount = 0;
-        int totalScoreYear = 0;
-        int yearCoursesCount = 0;
+        double totalScoreSemester = 0;
+        double semesterCoursesCount = 0;
+        double totalScoreYear = 0;
+        double yearCoursesCount = 0;
         scoreboardNode* currStudentScoreboard = currStudent->data._course;
         //get the overall GPA of the student 
         while (currStudentScoreboard) {
@@ -1147,7 +1147,7 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
         while (curr) {
             int length2 = curr->data.courseName.length();
             scoreboardNode *tmp = findCourseScoreboard(currStudent->data._course, curr->data.courseID);
-            cout << setw(length2+5) << left << ((tmp) ? to_string(tmp->data.total).substr(0,3):"X") ;
+            cout << setw(length2+5) << left << ((tmp) ? to_string(tmp->data.final).substr(0,3):"X") ;
             if (tmp) {
                 totalScoreSemester += tmp->data.total;
                 semesterCoursesCount++;
@@ -1156,7 +1156,7 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
         }
         semesterCoursesCount = (semesterCoursesCount > 0) ? semesterCoursesCount:1;
         yearCoursesCount = (yearCoursesCount > 0) ? yearCoursesCount:1;
-        cout << setw(17) << left << to_string(totalScoreSemester*1.0/(semesterCoursesCount*1.0)).substr(0,3) << setw(17) << left << to_string(totalScoreYear*1.0/(yearCoursesCount*1.0)).substr(0,3) << endl;
+        cout << setw(17) << left << to_string(totalScoreSemester/semesterCoursesCount).substr(0,3) << setw(17) << left << to_string(totalScoreYear/yearCoursesCount).substr(0,3) << endl;
         currStudent = currStudent->next;
         curr = courseName;
     }

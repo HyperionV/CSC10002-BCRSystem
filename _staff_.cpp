@@ -12,7 +12,7 @@ staffInfo getStaff(staffNode* head, string userID) {
     return tempStaff;
 }
 
-bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList) {
+bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList, int &currentSemesterCount) {
     schoolYear _schoolYear = programStart(head, accountList);
 
     while (true) {
@@ -23,11 +23,12 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         cout << "\t2. Add new staff " << endl;
         cout << "\t3. View current school year information" << endl;
         cout << "\t4. Update current school year information" << endl;
-        cout << "\t5. Load another school year" << endl;
-        cout << "\t6. View scoreboard" << endl;
-        cout << "\t7. Update scoreboard" << endl;
-        cout << "\t8. Log out" << endl;
-        cout << "\t9. Save and close program" << endl;
+        cout << "\t5. Change working semester" << endl;
+        cout << "\t6. Load another school year" << endl;
+        cout << "\t7. View scoreboard" << endl;
+        cout << "\t8. Update scoreboard" << endl;
+        cout << "\t9. Log out" << endl;
+        cout << "\t10. Save and close program" << endl;
         cout << "Your choice: ";
         int choice;
         while (true) {
@@ -63,21 +64,21 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         else if (choice == 4) {
             updateCurrentYearInfo(_schoolYear);
         }
-        else if (choice == 5) {
+        else if (choice == 6) {
             _schoolYear = programStart(head, accountList);
         }
-        else if (choice == 6) {
+        else if (choice == 7) {
             viewScoreBoardUI(_schoolYear);
         }
-        else if (choice == 7) {
+        else if (choice == 8) {
             updateScoreboardUI(_schoolYear);
         }
-        else if (choice == 8) {
+        else if (choice == 9) {
             writeDataFolder("Data", head);
             deleteSchoolYearList(head);
             return 1;
         }
-        else if (choice == 9) {
+        else if (choice == 10) {
             cout << "Database reloaded!\nClosing program..." << endl;
             writeDataFolder("Data", head);
             deleteSchoolYearList(head);
@@ -85,6 +86,12 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         }
         else if(choice == 2) {
             createNewStaff(staffList, accountList);
+        }
+        else if (choice == 5) {
+            cout << "\nEnter working semester: ";
+            cin >> currentSemesterCount;
+            cout << "\nChanged working semester to: " << currentSemesterCount << endl;
+            system("pause");
         }
         else {
             cout << "Not a valid option!\n" << endl;
