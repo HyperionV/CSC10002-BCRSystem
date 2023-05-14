@@ -55,7 +55,7 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, c
     while (true) {
 			choice = getChoiceInt();
 			if (choice > 6 || choice < 1) {
-				cout << "Invalid option" << endl;
+				cout << "Invalid option! Please try again!" << endl;
 				continue;
 			}
 			break;
@@ -95,23 +95,23 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 
 	if (!isUploaded)
 	{
-		cout << "The staff haven't published the scoreboard yet!\n";
+		cout << "\nThe staff haven't published the scoreboard yet!\n";
 		system("pause");
 		return;
 	}
 
 	cout << "Choose a semester to view scoreboard:\n";
 	for (int i = 0; i < 3;i++)
-		cout << i + 1 << "\t" << _yr._semester[i].name << endl;
+		cout << "\t" << i + 1 << _yr._semester[i].name << endl;
 
-	cout << "4.\tView this year's entire scoreboard\n";
-	cout << "5.\tReturn to menu\n";
+	cout << "\t4. View full scoreboard\n";
+	cout << "\t5. Return to menu\n";
 	cout << "Your choice: ";
     int choice;
     while (true) {
         choice = getChoiceInt();
         if (choice > 5 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
            continue;
         }
         break;
@@ -125,14 +125,13 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	int no = 1;
 	courseNode *tmp = _yr._semester[choice - 1]._course;
 	if (choice != 4){
-		cout << _yr._semester[choice - 1].name << " Scoreboard:" << endl;
-		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+		cout << "Scoreboard of" << _yr._semester[choice - 1].name << ": " << endl;
+		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
 		while (tmp && viewScore){
 			if (tmp->data.id == viewScore->data.courseID)
 			{
-				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
-				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
-				no++;
+				cout << setw(7) << left << no++ << setw(15) << viewScore->data.courseID << setw(30) << viewScore->data.courseName;
+				cout << setw(15) << viewScore->data.other << setw(15) << viewScore->data.midterm << setw(15) << viewScore->data.final << viewScore->data.total << endl;
 				viewScore = viewScore->next;
 			}
 			else {
@@ -143,15 +142,12 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 				system("pause");
 		return;
 	}
-
-
-		cout << "Scoreboard:\n";
-		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+		cout << "Full scoreboard:\n";
+		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
 		viewScore = A._course;
 		while (viewScore){
-			cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
-			cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
-			no++;
+			cout << setw(7) << left << no++ << setw(15) << viewScore->data.courseID << setw(30) << viewScore->data.courseName;
+			cout << setw(15) << viewScore->data.other << setw(15) << viewScore->data.midterm << setw(15) << viewScore->data.final << viewScore->data.total << endl;
 			viewScore = viewScore->next;
 		}
 		system("pause");
@@ -170,12 +166,12 @@ void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
 	}
 
 	cout << "Showing courses of " << _yr._semester[sem-1].name << endl;
-	cout << "Course ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
+	cout << setw(15) << left << "Course ID" << setw(30) << "Course Name" << setw(15) <<  "Classroom" << setw(13) <<  "Day" << setw(13) << "Session" << "Teacher\n";
 		viewC = _yr._semester[sem - 1]._course;
 		while (viewC)
 		{
 			if (findStudent(viewC->data.enrolled, A.id))
-			cout << viewC->data.id << "\t" << viewC->data.name << "\t" << viewC->data.day << viewC->data.session << "\t" << viewC->data.teacher << endl;
+			cout << setw(15) << left << viewC->data.id << setw(30) << viewC->data.name << setw(15) << viewC->data.className << setw(13) << viewC->data.day << setw(13) << viewC->data.session << "\t" << viewC->data.teacher << endl;
 			viewC = viewC->next;
 		}
 	system("pause");

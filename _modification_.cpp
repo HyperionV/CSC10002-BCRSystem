@@ -106,7 +106,7 @@ void createClass(schoolYear &SC) {
     while (true) {
         choice = getChoiceInt();
         if (choice > 2 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -191,7 +191,7 @@ void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList) {
     while (true) {
         choice = getChoiceInt();
         if (choice > idx || choice < 1) {
-            cout << "Invalid option\n" << endl;
+            cout << "Invalid option! Please try again!\n" << endl;
             system("pause");
             continue;
         }
@@ -212,7 +212,7 @@ void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList) {
         if (choice2 <= 3 && choice2 >= 1) {
             break;
         }
-        cout << "Invalid option!" << endl;
+        cout << "Invalid option! Please try again!" << endl;
     }
     if (choice2 == 1) {
         student temp;
@@ -496,7 +496,7 @@ void removeStudentFromCourse(schoolYear &_schoolYear, course &_course) {
     while (true) {
         choice = getChoiceInt();
         if (choice > counter || choice < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -804,7 +804,7 @@ schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
         if (choice <= idx && choice >= 1) {
             break;
         }
-        cout << "Invalid option! Please try again" << endl;
+        cout << "Invalid option! Please try again!" << endl;
     }
     if (choice == 1) {
         schoolYear newSY;
@@ -860,7 +860,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > 4 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -885,7 +885,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
     while (true) {
         choice2 = getChoiceInt();
         if (choice2 > idx || choice2 < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -908,7 +908,7 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
     while (true) {
         choice3 = getChoiceInt();
         if (choice3 > 3 || choice3 < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -939,7 +939,7 @@ void viewScoreBoardUI(schoolYear &_schoolYear) {
         while (true) {
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -999,7 +999,7 @@ void viewCourseScoreBoardUI(schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > 4 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1024,7 +1024,7 @@ void viewCourseScoreBoardUI(schoolYear &_schoolYear) {
     while (true) {
         choice2 = getChoiceInt();
         if (choice2 > idx || choice2 < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1056,7 +1056,7 @@ void viewClassScoreboardUI(const schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > idx || choice < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1084,7 +1084,7 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
     while (true) {
         choice = getChoiceInt();
         if (choice > 4 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
            continue;
         }
         break;
@@ -1189,7 +1189,7 @@ void viewCurrentYearInfo(const schoolYear &_schoolYear) {
         while (true) {
             choice = getChoiceInt();
             if (choice > 3 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -1247,7 +1247,7 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
         while (true) {
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -1278,7 +1278,7 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
         while (true) {
             choice2 = getChoiceInt();
             if (choice2 > 3 || choice2 < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -1292,18 +1292,17 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
                 system("pause");
                 return false;
             }
-            int idx = 1;
+            int idx = 0;
             while (currCourseNode) {
-                cout << "\t" << idx << ". " << currCourseNode->data.id << " - " << currCourseNode->data.name << endl;
+                cout << "\t" << ++idx << ". " << currCourseNode->data.id << " - " << currCourseNode->data.name << endl;
                 currCourseNode = currCourseNode->next;
-                idx++;
             }
             int choice3;
             cout << "Your choice: ";
             while (true) {
                 choice3 = getChoiceInt();
-                if (choice3 > --idx || choice3 < 1) {
-                    cout << "Invalid option" << endl;
+                if (choice3 > idx || choice3 < 1) {
+                    cout << "Invalid option! Please try again!" << endl;
                     continue;
                 }
                 break;
@@ -1353,7 +1352,7 @@ void viewClassesInfo(const schoolYear &_schoolYear) {
         while (true) {
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -1364,7 +1363,7 @@ void viewClassesInfo(const schoolYear &_schoolYear) {
                 cout << "Please choose a class to view: ";
                 choosen = getChoiceInt();
                 if (choosen > idx || choosen < 1) {
-                    cout << "Invalid option" << endl;
+                    cout << "Invalid option! Please try again!" << endl;
                     system("pause");
                     continue;
                 }
@@ -1507,7 +1506,7 @@ void updateCurrentYearInfo(schoolYear &_schoolYear) {
         while (true) {
             choice = getChoiceInt();
             if (choice > 6 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -1615,7 +1614,7 @@ void updateStudentResultWithID(schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > idx || choice < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1644,7 +1643,7 @@ void updateStudentResultFromCourse(schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > 4 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1659,9 +1658,9 @@ void updateStudentResultFromCourse(schoolYear &_schoolYear) {
     }
     courseNode *currCourseNode = _schoolYear._semester[choice]._course;
     cout << "Courses created in this semester: " << endl;
-    int idx = 1;
+    int idx = 0;
     while (currCourseNode) {
-        cout << "\t" << idx++ << ". " << currCourseNode->data.id << "\t" << currCourseNode->data.name << endl;
+        cout << "\t" << ++idx << ". " << currCourseNode->data.id << "\t" << currCourseNode->data.name << endl;
         currCourseNode = currCourseNode->next;
     }
     int choice2;
@@ -1669,7 +1668,7 @@ void updateStudentResultFromCourse(schoolYear &_schoolYear) {
     while (true) {
         choice2 = getChoiceInt();
         if (choice2 > idx || choice2 < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1690,7 +1689,7 @@ void updateStudentResultFromCourse(schoolYear &_schoolYear) {
     while (true) {
         choice3 = getChoiceInt();
         if (choice3 > counter || choice3 < 0) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1739,7 +1738,7 @@ void updateStudentResultFromClass(schoolYear &_schoolYear) {
     while (true) {
         choice2 = getChoiceInt();
         if (choice2 < 1 || choice2 > counter) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1761,7 +1760,7 @@ void updateStudentResultFromClass(schoolYear &_schoolYear) {
     while (true) {
         choice3 = getChoiceInt();
         if (choice3 < 1 || choice3 > idx) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1797,7 +1796,7 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > 4 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1820,17 +1819,17 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
     }
     cout << "Current semester's courses: " << endl;
     courseNode *currCourseNode = _schoolYear._semester[choice]._course;
-    int idx = 1;
+    int idx = 0;
     while (currCourseNode) {
-        cout << "\t" << idx++ << ". " << currCourseNode->data.id << " - " << currCourseNode->data.name << endl;
+        cout << "\t" << ++idx << ". " << currCourseNode->data.id << " - " << currCourseNode->data.name << endl;
         currCourseNode = currCourseNode->next;
     }
     cout << "Choose a course to update information: ";
     int choice2;
     while (true) {
         choice2 = getChoiceInt();
-        if (choice2 > --idx || choice2 < 1) {
-            cout << "Invalid option" << endl;
+        if (choice2 > idx || choice2 < 1) {
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1855,7 +1854,7 @@ bool updateCourseInfoUI(schoolYear &_schoolYear) {
     while (true) {
         choice3 = getChoiceInt();
         if (choice3 > 7 || choice3 < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1897,7 +1896,7 @@ void createNewCourseUI(schoolYear &_schoolYear) {
     while (true) {
         choice = getChoiceInt();
         if (choice > 4 || choice < 1) {
-            cout << "Invalid option" << endl;
+            cout << "Invalid option! Please try again!" << endl;
             continue;
         }
         break;
@@ -1938,7 +1937,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
         while (true) {
             choice = getChoiceInt();
             if (choice > 4 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -1972,26 +1971,25 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
         while (true) {
             choice2 = getChoiceInt();
             if (choice2 > 5 || choice2 < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
         }
         if (choice2 == 1) {
             cout << "----------View course detailed information----------" << endl;
-            int idx = 1;
+            int idx = 0;
             courseNode *currCourseNode = _schoolYear._semester[choice]._course;
             while (currCourseNode) {
-                cout << "\t" << idx << ". " << currCourseNode->data.id << " - " << currCourseNode->data.name << endl;
+                cout << "\t" << ++idx << ". " << currCourseNode->data.id << " - " << currCourseNode->data.name << endl;
                 currCourseNode = currCourseNode->next;
-                idx++;
             }
             cout << "Your choice: ";
             int choice3;
             while (true) {
                 choice3 = getChoiceInt();
                 if (choice3 > idx || choice3 < 1) {
-                    cout << "Invalid option" << endl;
+                    cout << "Invalid option! Please try again!" << endl;
                     continue;
                 }
                 break;
