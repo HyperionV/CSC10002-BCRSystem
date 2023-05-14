@@ -1742,7 +1742,6 @@ void loadStaffInfo(staffNode *& staffList) {
 
 void autoSaveCredential(stringNode *accountList) {
     string path = "credential.txt";
-
     ofstream out_file(path);
     while(accountList) {
         out_file << accountList->data << endl;
@@ -2234,7 +2233,7 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
         while (curr) {
             int length2 = curr->data.courseName.length();
             scoreboardNode *tmp = findCourseScoreboard(currStudent->data._course, curr->data.courseID);
-            cout << setw(length2+5) << left << ((tmp) ? to_string(tmp->data.total).substr(0,3):"X") ;
+            cout << setw(length2+5) << left << ((tmp) ? to_string(tmp->data.final).substr(0,3):"X") ;
             if (tmp) {
                 totalScoreSemester += tmp->data.total;
                 semesterCoursesCount++;
