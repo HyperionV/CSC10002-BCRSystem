@@ -40,7 +40,7 @@ void viewProfile(const student &A) {
 
 }
 
-bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
+bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, const int &sem) {
 	int choice;
 	while (true) {
 		viewProfile(A);
@@ -60,27 +60,28 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem) {
 			}
 			break;
 		}
-
-	switch (choice) {
-			case 1:
-				viewScoreboard(A);
-				break;
-			case 2:
-				viewCourse(A, _yr);
-				break;
-			case 3:
-				changeAccountPassword(accountSystem, A.id);
-				break;
-			case 4:
-				return 1;
-			case 5: 
-				autoSaveCredential(accountSystem);
-				return 0;
+		system("CLS");
+		switch (choice)
+		{
+		case 1:
+			viewScoreboard(A, _yr, sem);
+			break;
+		case 2:
+			viewCourse(A, _yr, sem);
+			break;
+		case 3:
+			changeAccountPassword(accountSystem, A.id);
+			break;
+		case 4:
+			return 1;
+		case 5:
+			autoSaveCredential(accountSystem);
+			return 0;
 		}
 	}
 }
 
-void viewScoreboard(const student &A) {
+void viewScoreboard(const student &A, const schoolYear &_yr, const int &sem) {
 	scoreboardNode* viewScore = A._course;
 	bool isUploaded = false;
 	while (viewScore){
@@ -91,66 +92,86 @@ void viewScoreboard(const student &A) {
 		}
 		viewScore = viewScore->next;
 	}
+
 	if (!isUploaded)
 	{
-		cout << "\nThe staff haven't updated the scoreboard yet\n";
+		cout << "The staff haven't published the scoreboard yet!\n";
 		system("pause");
 		return;
 	}
-	int no = 1;
-	cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
-	while (viewScore){
-		cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
-		cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
-		no++;
-	}
-	system("pause");
-	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
-}
 
-void viewCourse(const student &A, const schoolYear &_yr) {
-	bool printAll = false;
-	for (int count = 0; count < 3; count++){
-		cout << count + 1 << ". " << _yr._semester[count].name << endl;
-	}
-	cout << "4. View all courses throughout the year\n"; 
+	cout << "Choose a semester to view scoreboard:\n";
+	for (int i = 0; i < 3;i++)
+		cout << i + 1 << "\t" << _yr._semester[i].name << endl;
+
+	cout << "4.\tView this year's entire scoreboard\n";
+	cout << "5.\tReturn to menu\n";
 	cout << "Your choice: ";
-	int choice;
+    int choice;
     while (true) {
         choice = getChoiceInt();
-        if (choice > 4 || choice < 1) {
+        if (choice > 5 || choice < 1) {
             cout << "Invalid option" << endl;
-            continue;
+           continue;
         }
         break;
     }
-	int sem = 0;
-	if (choice == 4) {
-		printAll = true;
-		sem = 1;
-	}
-	else
-		sem = choice;
 
-	courseNode* viewC = _yr._semester->_course;
+	if (choice == 5)
+		return;
+
+
+
+	int no = 1;
+	if (choice != 4){
+		cout << _yr._semester[choice - 1].name << " Scoreboard:" << endl;
+		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+		while (viewScore){
+			if (_yr._semester[choice - 1]._course->data.id == viewScore->data.courseID)
+			{
+				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
+				no++;
+			}
+			viewScore = viewScore->next;
+		}
+				system("pause");
+		return;
+	}
+
+	for (int j = 0; j < 3;j++)
+	{
+		cout << _yr._semester[j].name << " Scoreboard:\n";
+		cout << "No\tCourse ID\tCourse Name\tTotal Mark\tFinal Mark\tMidterm Mark\tOther Mark\n";
+		viewScore = A._course;
+		while (viewScore){
+			if (_yr._semester[choice - 1]._course->data.id == viewScore->data.courseID)
+			{
+				cout << no << " \t" << viewScore->data.courseID << "\t" << viewScore->data.courseName << "\t";
+				cout << viewScore->data.total << "\t" << viewScore->data.final << "\t" << viewScore->data.midterm << "\t" << viewScore->data.other << endl;
+				no++;
+			}
+			viewScore = viewScore->next;
+		}
+				system("pause");
+	}
+
+
+	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
+}
+
+void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
+
+	courseNode* viewC = _yr._semester[sem - 1]._course;
 
 	if (!viewC){
 		cout << "Unable to find any courses\n";
 		system("pause");
 		return;
 	}
-	int dummy;
-	if (printAll)
-	{
-		dummy = 3;
-	}
-		else
-		dummy = 1;
 
+	cout << "Showing courses of " << _yr._semester->name << endl;
 	cout << "Course ID \tCourse Name \tClass Name \tSchedule \tSession \tTeacher\n";
-	while (dummy > 0)
-	{
-		dummy--;
 		viewC = _yr._semester[sem - 1]._course;
 		while (viewC)
 		{
@@ -158,12 +179,10 @@ void viewCourse(const student &A, const schoolYear &_yr) {
 			cout << viewC->data.id << "\t" << viewC->data.name << "\t" << viewC->data.day << viewC->data.session << "\t" << viewC->data.teacher << endl;
 			viewC = viewC->next;
 		}
-		sem++;
-	}
 	system("pause");
 }
 
-bool StudentMain(schoolYearNode* schoolYrHead, const string &id, stringNode* accountSystem)
+bool StudentMain(schoolYearNode* schoolYrHead, const string &id, stringNode* accountSystem, const int &sem)
 {
 	studentNode *stuNode = nullptr;
     schoolYear thisYr;
@@ -198,7 +217,7 @@ bool StudentMain(schoolYearNode* schoolYrHead, const string &id, stringNode* acc
 				return 0;
 			}
 			
-			if (menuStudent(A, thisYr, accountSystem))
+			if (menuStudent(A, thisYr, accountSystem, sem))
 				return 1;
 		}
 		return 0;
