@@ -87,7 +87,6 @@ void autoSaveSchoolyear(schoolYear curSchoolyear);
 //Menu/support functions
 schoolYear programStart(schoolYearNode *&head);
 void viewProfileStudent(student curStudent);
-void viewProfileStaff(staffInfo curStaff, credential accountSystem);
 bool chooseSemester(const schoolYear &_schoolYear, semester &_semester);
 bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList);
 void viewCurrentYearInfo(const schoolYear &_schoolYear);
