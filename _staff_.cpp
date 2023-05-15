@@ -34,7 +34,7 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
         while (true) {
             choice = getChoiceInt();
             if (choice > 10 || choice < 1) {
-                cout << "Invalid option" << endl;
+                cout << "Invalid option! Please try again!" << endl;
                 continue;
             }
             break;
@@ -43,9 +43,8 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             staffInfo curStaff = getStaff(staffList, userID);
             cout << "Full name: " << curStaff.fullName << endl;
             cout << "Email: " << curStaff.mail << endl;
-            cout << "Input \"1\" to change password or \"Exit\": "; 
-            int curChoice = 0;
-            cin >> curChoice;
+            cout << "Input \"1\" to change password or \"0\" to cancel: "; 
+            int curChoice = getChoiceInt();
             if(curChoice == 1) {
                 string curStaffID= curStaff.mail.substr(0, curStaff.mail.find_first_of("@"));
                 if(changeAccountPassword(accountList, curStaffID)) {
@@ -88,9 +87,23 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             createNewStaff(staffList, accountList);
         }
         else if (choice == 5) {
-            cout << "\nEnter working semester: ";
-            cin >> currentSemesterCount;
-            cout << "\nChanged working semester to: " << currentSemesterCount << endl;
+            cout << "\nCurrent working semester: " << _schoolYear._semester[currentSemesterCount-1].name << endl;
+            cout << "\nEnter working semester: " << endl;
+            cout << "\t1. Semester 1" << endl;
+            cout << "\t2. Semester 2" << endl;
+            cout << "\t3. Semester 3" << endl;
+            cout << "Your choice: ";
+            int choice2;
+            while (true) {
+                choice2 = getChoiceInt();
+                if (choice2 > 3 || choice2 < 1) {
+                    cout << "Invalid option! Please try again!" << endl;
+                    continue;
+                }
+                break;
+            }
+            currentSemesterCount = choice2;
+            cout << "\nChanged working semester to: " << _schoolYear._semester[currentSemesterCount-1].name << endl;
             system("pause");
         }
         else {

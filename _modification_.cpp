@@ -749,7 +749,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     ifstream in_file(path);
 
     if(!in_file) {
-        cout << "Could not open the file, please try again!" << endl;
+        cout << "Could not open file, please try again!" << endl;
         system("pause");
         return;
     }
@@ -774,7 +774,6 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             placeholder.clear();
             temp->data._course->data.courseID = _course.id;
             temp->data._course->data.courseName = _course.name;
-            temp->data._course->data.isUploaded = true;
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             findCourseScoreboard(targetStudent->data._course, _course.id)->data = temp->data._course->data;
@@ -782,7 +781,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
         }
         in_file.close();
     }
-    cout << "Scoreboard imported successfully!" << endl;
+    cout << "\nScoreboard imported successfully!\n" << endl;
     system("pause");
 }
 
@@ -794,15 +793,18 @@ schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
         system("pause");
         system("cls");
         head = new schoolYearNode;
-        if (!createSchoolYear(head, head->data, accountList)) head = nullptr;
+        if (!createSchoolYear(head, head->data, accountList)) {
+            delete head;
+            head = nullptr;
+        }
     }
     system("cls");
     schoolYearNode *currSchoolYearNode = head;
     cout << "Choose a schoolyear to work on: " << endl;
-    int idx = 2;
+    int idx = 1;
     cout << "\t1. Create new school year" << endl;
     while (currSchoolYearNode) {
-        cout << "\t" << idx++ << ". " << currSchoolYearNode->data._schoolYear << endl;
+        cout << "\t" << ++idx << ". " << currSchoolYearNode->data._schoolYear << endl;
         currSchoolYearNode = currSchoolYearNode->next;
     }
     cout << "Your choice: ";
@@ -837,7 +839,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     staffInfo newStaff;
     string curAcc;
     string staffName;
-    cout << "Input staff's fullname: ";
+    cout << "\nInput staff's fullname: ";
     getline(cin, staffName);
     while(!standardizeName(staffName)) {
         system("cls");
@@ -852,7 +854,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     addStringNode(accountList, curAcc);
     autoSaveCredential(accountList);
     saveStaffInfo(staffList);
-    cout << "Create new staff successfully! Default password is: 123456789" << endl;
+    cout << "\nCreate new staff successfully! Default password is: 123456789\n" << endl;
     system("pause");
     return;
 }
@@ -2014,9 +2016,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             return false;
         }
         else if (choice2 == 2) {
-            cout << "---Change semester start date---" << endl;
-            cout << "Current semester start date: " << _schoolYear._semester[choice].start << endl;
-           
+            cout << "\nCurrent semester start date: " << _schoolYear._semester[choice].start << endl;
             string newDate;
 //Added Date validation
             do {
@@ -2032,9 +2032,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             return false;
         }
         else if (choice2 == 3) {
-            cout << "---Change semester end date---" << endl;
-            cout << "Current semester end date: " << _schoolYear._semester[choice].start << endl;
-            
+            cout << "\nCurrent semester end date: " << _schoolYear._semester[choice].start << endl;
             string newDate;
             do {
                 cout << "Enter new end date for this semester: ";

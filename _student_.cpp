@@ -102,7 +102,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	isUploaded = false;
 	cout << "Choose a semester to view scoreboard:\n";
 	for (int i = 0; i < 3;i++)
-		cout << "\t" << i + 1 << _yr._semester[i].name << endl;
+		cout << "\t" << i + 1 << ". " << _yr._semester[i].name << endl;
 
 	cout << "\t4. View full scoreboard\n";
 	cout << "\t5. Return to menu\n";
@@ -126,8 +126,8 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	courseNode *tmp = _yr._semester[choice - 1]._course;
 	if (choice != 4){
 		// finding courses in a semester with the same id as the one inside student's scoreboard node's data's course's id; if matches, prints the result
-		cout << "Scoreboard of" << _yr._semester[choice - 1].name << ": " << endl;
-		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
+		cout << "Scoreboard of " << _yr._semester[choice - 1].name << ": " << endl;
+		cout << setw(7) << left << "No." << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
 		while (tmp){
 		   viewScore = A._course;
 		   while (viewScore)
@@ -151,7 +151,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 		return;
 	}
 		cout << "Full scoreboard:\n";
-		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
+		cout << setw(7) << left << "No." << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
 		viewScore = A._course;
 		while (viewScore){
 			cout << setw(7) << left << no++ << setw(15) << viewScore->data.courseID << setw(30) << viewScore->data.courseName;
@@ -179,7 +179,7 @@ void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
 		while (viewC)
 		{
 			if (findStudent(viewC->data.enrolled, A.id))
-			cout << setw(15) << left << viewC->data.id << setw(30) << viewC->data.name << setw(15) << viewC->data.className << setw(13) << viewC->data.day << setw(13) << viewC->data.session << "\t" << viewC->data.teacher << endl;
+			cout << setw(15) << left << viewC->data.id << setw(30) << viewC->data.name << setw(15) << viewC->data.className << setw(13) << viewC->data.day << setw(13) << viewC->data.session << setw(13) << viewC->data.teacher << endl;
 			viewC = viewC->next;
 		}
 	system("pause");
