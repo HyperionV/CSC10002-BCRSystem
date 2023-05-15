@@ -125,7 +125,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	int no = 1;
 	courseNode *tmp = _yr._semester[choice - 1]._course;
 	if (choice != 4){
-		cout << "Scoreboard of" << _yr._semester[choice - 1].name << ": " << endl;
+		cout << "Scoreboard of " << _yr._semester[choice - 1].name << ": " << endl;
 		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
 		while (tmp && viewScore){
 			if (tmp->data.id == viewScore->data.courseID)

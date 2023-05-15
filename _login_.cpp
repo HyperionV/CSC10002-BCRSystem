@@ -35,3 +35,41 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
     cout << "Too many login, please try again in a minute! " << endl;
     return false;
 }
+
+void initialize(schoolYearNode* _schoolYear, stringNode* accountList, int &currentSemesterCount) {
+    bool isStaff = 0;
+    _schoolYear = loadDataFolder("Data");
+    loadUserAccount(accountList);
+    string userID;
+    bool isLogin = login(accountList, isStaff, userID);
+    if(isLogin && isStaff) {
+        staffNode* staffList= nullptr;
+        loadStaffInfo(staffList);
+        if(mainMenuStaff(_schoolYear, userID, staffList, accountList, currentSemesterCount)) {
+            deleteStringList(accountList);
+            deleteSchoolYearList(_schoolYear);
+            accountList = nullptr;
+            _schoolYear = nullptr;
+            initialize(_schoolYear, accountList, currentSemesterCount);
+        }
+    }
+    else if(isLogin && !isStaff) {
+        if(StudentMain(_schoolYear, userID, accountList, currentSemesterCount)) {
+            deleteStringList(accountList);
+            deleteSchoolYearList(_schoolYear);
+            accountList = nullptr;
+            _schoolYear = nullptr;
+            initialize(_schoolYear, accountList, currentSemesterCount);
+        }
+        else {
+            deleteSchoolYearList(_schoolYear);
+            cout << "Closing program..." << endl;
+            return;
+        }
+    }
+    else {
+        deleteSchoolYearList(_schoolYear);
+        deleteStringList(accountList);
+    }
+    return;
+}

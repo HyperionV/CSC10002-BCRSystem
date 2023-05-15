@@ -766,7 +766,6 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             placeholder.clear();
             temp->data._course->data.courseID = _course.id;
             temp->data._course->data.courseName = _course.name;
-            temp->data._course->data.isUploaded = true;
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             findCourseScoreboard(targetStudent->data._course, _course.id)->data = temp->data._course->data;
@@ -786,15 +785,18 @@ schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
         system("pause");
         system("cls");
         head = new schoolYearNode;
-        if (!createSchoolYear(head, head->data, accountList)) head = nullptr;
+        if (!createSchoolYear(head, head->data, accountList)) {
+            delete head;
+            head = nullptr;
+        }
     }
     system("cls");
     schoolYearNode *currSchoolYearNode = head;
     cout << "Choose a schoolyear to work on: " << endl;
-    int idx = 2;
+    int idx = 1;
     cout << "\t1. Create new school year" << endl;
     while (currSchoolYearNode) {
-        cout << "\t" << idx++ << ". " << currSchoolYearNode->data._schoolYear << endl;
+        cout << "\t" << ++idx << ". " << currSchoolYearNode->data._schoolYear << endl;
         currSchoolYearNode = currSchoolYearNode->next;
     }
     cout << "Your choice: ";
