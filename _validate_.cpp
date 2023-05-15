@@ -46,8 +46,8 @@ bool standardizeName(string &name) {
 
 bool checkValidDate(string date)
 {
-    //Assuming date format is dd/mm/yyyy or d/m/yyyy or dd/m/yyyy or d/mm/yyyy => minLength == 8, maxLength == 10 
-    if (date.length() < 8 || date.length() > 10)
+    //Assuming date format is dd/mm or d/m or dd/m or d/mm => minLength == 3, maxLength == 5 
+    if (date.length() < 3 || date.length() > 5)
     {
         cout << "Invalid date, please type date as dd/mm/yyyy\n";
         return false;
@@ -69,8 +69,7 @@ bool checkValidDate(string date)
 
     //getting date 
     int d = stoi(date.substr(0, date.find(dummy)));
-    int m = stoi(date.substr(date.find(dummy) + 1, date.find_last_of(dummy) - 1));
-    int y = stoi(date.substr(date.find_last_of(dummy) + 1));
+    int m = stoi(date.substr(date.find(dummy) + 1));
 
     //checking 
     if (d > 31 || d < 1)
@@ -85,21 +84,10 @@ bool checkValidDate(string date)
         return false;
     }
 
-    if (m == 2)
+    if (m == 2 && d > 29)
     {
-        if (y % 4 != 0 || y % 100 == 0)
-        {
-            if (m > 28) 
-            {
-                cout << y << " is not a leap year, date cannot exceed 28\n";
-                return false;
-            }
-        }
-        else if (d > 29)
-        {
-            cout << "February is special, its date cannot exceed 29\n";
-            return false;
-        }
+        cout << "February only contains 29 days maximum\n";
+        return false;
     }
 
     switch (m)
