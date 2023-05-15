@@ -1,0 +1,22 @@
+Start of The Project
+
+-- Profile of Me --
+Họ và Tên: Vũ Lê Trọng Văn
+Mã số sinh viên: 20127095
+Lớp: 22CLC06
+Dự án đang tham gia: BCRSystem (Better/Best Course Registration System)
+
+-- Works in the Project --
+1. Vẽ giao diện cơ sở (wireframe) của Login/Register và giao diện của trang chính Student và Staff, cũng như các giao diện phụ.
+2. Làm giao diện của Login/Register của Student và Staff (thông qua từng tuần có thể sẽ có chỉnh sửa).
+3. Làm giao diện và các hoạt động ảnh hưởng tới giao diện của Student cũng như Staff (thông qua từng tuần có thể sẽ có chỉnh sửa).
+4. Làm báo cáo cho toàn thể đồ án/dự án (thông qua từng tuần có thể sẽ có chỉnh sửa).
+5. Quay video demo cho đồ án/dự án và update video lên youtube
+6. Làm ReadMe.md: diễn tả chi tiết dự án/đồ án đang làm gì, và cách thức sử dụng của chương trình nhóm đang làm, ....
+7. Làm trang miêu tả từng cá nhân trong đồ án (nếu có thời gian).
+8. Làm danh sách các mục của từng thành viên tham gia đồ án hoàn thành (có thể làm trong files excel, hoặc một công cụ nào đó phụ trợ cho công việc này).
+9. Làm test data để nhóm có thể thông quá thử (1000 ---> 2000 dòng gì đó hoặc hơn).
+
+---> Đối với mục 1 và mục 2: khi đang trong quá trình hoàn thiện code của Student và Staff sẽ có thể ảnh hưởng và chỉnh sửa để phù hợp với giao diện người dùng, chính xác hơn là sửa các code của mục view cũng như upadate và xóa trong Student và Staff.
+
+---> Youtube Chanel of Group BCRSystem: https://www.youtube.com/channel/UC_vMFU1bHtroD3qtdLOCxHg
