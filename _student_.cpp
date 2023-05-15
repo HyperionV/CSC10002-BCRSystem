@@ -127,17 +127,21 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	if (choice != 4){
 		cout << "Scoreboard of" << _yr._semester[choice - 1].name << ": " << endl;
 		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
-		while (tmp && viewScore){
-			if (tmp->data.id == viewScore->data.courseID)
-			{
-				cout << setw(7) << left << no++ << setw(15) << viewScore->data.courseID << setw(30) << viewScore->data.courseName;
-				cout << setw(15) << viewScore->data.other << setw(15) << viewScore->data.midterm << setw(15) << viewScore->data.final << viewScore->data.total << endl;
-				viewScore = viewScore->next;
+		while (tmp){
+		   viewScore = A._course;
+		   while (viewScore)
+		   {
+				if (tmp->data.id == viewScore->data.courseID)
+				{
+					cout << setw(7) << left << no++ << setw(15) << viewScore->data.courseID << setw(30) << viewScore->data.courseName;
+					cout << setw(15) << viewScore->data.other << setw(15) << viewScore->data.midterm << setw(15) << viewScore->data.final << viewScore->data.total << endl;
+					break;
+				}
+				else {
+					viewScore = viewScore->next;
+				}
 			}
-			else {
-				tmp = tmp->next;
-			}
-			
+			tmp = tmp->next;
 		}
 				system("pause");
 		return;
