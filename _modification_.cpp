@@ -20,7 +20,6 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accou
             return false;
         }
     }
-
     schoolYearNode *target = findSchoolYear(head, SC);
     if (target != nullptr) {
         cout << "This school year has been created before" << endl;

@@ -44,12 +44,12 @@ bool standardizeName(string &name) {
     return true;
 }
 
-bool checkValidDate(string date)
+bool checkValidDate(const string &date)
 {
     //Assuming date format is dd/mm or d/m or dd/m or d/mm => minLength == 3, maxLength == 5 
     if (date.length() < 3 || date.length() > 5)
     {
-        cout << "Invalid date, please type date as dd/mm/yyyy\n";
+        cout << "Invalid date, please type date as dd/mm\n";
         return false;
     }
 
