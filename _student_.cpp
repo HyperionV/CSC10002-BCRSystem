@@ -99,7 +99,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 		system("pause");
 		return;
 	}
-
+	isUploaded = false;
 	cout << "Choose a semester to view scoreboard:\n";
 	for (int i = 0; i < 3;i++)
 		cout << "\t" << i + 1 << _yr._semester[i].name << endl;
@@ -125,6 +125,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	int no = 1;
 	courseNode *tmp = _yr._semester[choice - 1]._course;
 	if (choice != 4){
+		// finding courses with the same id inside student's scoreboard node's data's course's id; if matches, prints the result
 		cout << "Scoreboard of" << _yr._semester[choice - 1].name << ": " << endl;
 		cout << setw(7) << left << "No" << setw(15) << "Course ID" << setw(30) << "Course Name" << setw(15) << "Other" << setw(15) << "Midterm" << setw(15) << "Final" << "Total\n";
 		while (tmp){
@@ -133,6 +134,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 		   {
 				if (tmp->data.id == viewScore->data.courseID)
 				{
+					isUploaded = true;
 					cout << setw(7) << left << no++ << setw(15) << viewScore->data.courseID << setw(30) << viewScore->data.courseName;
 					cout << setw(15) << viewScore->data.other << setw(15) << viewScore->data.midterm << setw(15) << viewScore->data.final << viewScore->data.total << endl;
 					break;
@@ -143,7 +145,9 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 			}
 			tmp = tmp->next;
 		}
-				system("pause");
+		if (!isUploaded)
+			cout << "Staff haven't published your scoreboard\n";
+		system("pause");
 		return;
 	}
 		cout << "Full scoreboard:\n";
