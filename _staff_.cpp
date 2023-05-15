@@ -43,9 +43,8 @@ bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, s
             staffInfo curStaff = getStaff(staffList, userID);
             cout << "Full name: " << curStaff.fullName << endl;
             cout << "Email: " << curStaff.mail << endl;
-            cout << "Input \"1\" to change password or \"Exit\": "; 
-            int curChoice = 0;
-            cin >> curChoice;
+            cout << "Input \"1\" to change password or \"0\" to cancel: "; 
+            int curChoice = getChoiceInt();
             if(curChoice == 1) {
                 string curStaffID= curStaff.mail.substr(0, curStaff.mail.find_first_of("@"));
                 if(changeAccountPassword(accountList, curStaffID)) {

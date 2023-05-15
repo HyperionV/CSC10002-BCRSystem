@@ -741,7 +741,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     ifstream in_file(path);
 
     if(!in_file) {
-        cout << "Could not open the file, please try again!" << endl;
+        cout << "Could not open file, please try again!" << endl;
         system("pause");
         return;
     }
@@ -773,7 +773,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
         }
         in_file.close();
     }
-    cout << "Scoreboard imported successfully!" << endl;
+    cout << "\nScoreboard imported successfully!\n" << endl;
     system("pause");
 }
 
@@ -831,7 +831,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     staffInfo newStaff;
     string curAcc;
     string staffName;
-    cout << "Input staff's fullname: ";
+    cout << "\nInput staff's fullname: ";
     getline(cin, staffName);
     while(!standardizeName(staffName)) {
         system("cls");
@@ -846,7 +846,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     addStringNode(accountList, curAcc);
     autoSaveCredential(accountList);
     saveStaffInfo(staffList);
-    cout << "Create new staff successfully! Default password is: 123456789" << endl;
+    cout << "\nCreate new staff successfully! Default password is: 123456789\n" << endl;
     system("pause");
     return;
 }

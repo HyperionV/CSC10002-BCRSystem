@@ -5,7 +5,9 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
     while (loginAttempt < 5) {
         system("cls");
         if(loginAttempt > 0) {
-            cout << "Invalid user ID or password! Please try again!" << endl;
+            cout << "\nInvalid user ID or password! Please try again!\n" << endl;
+            system("pause");
+            system("cls");
         }
         string ID, PW;
         cout << "------------LOGIN------------" << endl;
@@ -22,7 +24,7 @@ bool login(stringNode *accountList, bool &isStaff, string &userID) {
         stringNode *temp= accountList;
         while(temp) {
             if(temp->data == userAccount) {
-                cout << "Login successfully - welcome back! " << endl;
+
                 userID= ID;
                 if(!isdigit(userAccount[0]))
                     isStaff = 1;
@@ -43,8 +45,10 @@ void initialize(schoolYearNode* _schoolYear, stringNode* accountList, int &curre
     string userID;
     bool isLogin = login(accountList, isStaff, userID);
     if(isLogin && isStaff) {
-        staffNode* staffList= nullptr;
+        staffNode* staffList = nullptr;
         loadStaffInfo(staffList);
+        cout << "\nLogin as Staff successfully - Welcome back!\n" << endl;
+        system("pause");
         if(mainMenuStaff(_schoolYear, userID, staffList, accountList, currentSemesterCount)) {
             deleteStringList(accountList);
             deleteSchoolYearList(_schoolYear);
@@ -54,6 +58,8 @@ void initialize(schoolYearNode* _schoolYear, stringNode* accountList, int &curre
         }
     }
     else if(isLogin && !isStaff) {
+        cout << "\nLogin as Student successfully - Welcome back!\n" << endl;
+        system("pause");
         if(StudentMain(_schoolYear, userID, accountList, currentSemesterCount)) {
             deleteStringList(accountList);
             deleteSchoolYearList(_schoolYear);
@@ -63,7 +69,7 @@ void initialize(schoolYearNode* _schoolYear, stringNode* accountList, int &curre
         }
         else {
             deleteSchoolYearList(_schoolYear);
-            cout << "Closing program..." << endl;
+            cout << "\nClosing program...\n" << endl;
             return;
         }
     }
