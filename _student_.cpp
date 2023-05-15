@@ -146,7 +146,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 			tmp = tmp->next;
 		}
 		if (!isUploaded)
-			cout << "Staff haven't published your scoreboard\n";
+			cout << "Staff haven't published your scoreboard for this semester\n";
 		system("pause");
 		return;
 	}

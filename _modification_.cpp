@@ -299,11 +299,17 @@ void createSemester(schoolYear &SY) {
     string tempStart;
     string tempEnd;
     //added date validation
-    cout << "Enter start date: ";
-    do cin >> tempStart;
+    
+    do {
+        cout << "Enter start date: ";
+        cin >> tempStart;
+        }
     while (!checkValidDate(tempStart));
-    cout << "Enter end date: ";
-    do cin >>tempEnd;
+    
+    do {
+        cout << "Enter end date: ";
+        cin >>tempEnd;
+    }
     while (!checkValidDate(tempEnd));
     SY._semester[choice-1].start = tempStart;
     SY._semester[choice-1].end = tempEnd;
@@ -2010,11 +2016,14 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
         else if (choice2 == 2) {
             cout << "---Change semester start date---" << endl;
             cout << "Current semester start date: " << _schoolYear._semester[choice].start << endl;
-            cout << "Enter new start date for this semester: ";
+           
             string newDate;
 //Added Date validation
-            do cin >> newDate;
+            do {
+                cout << "Enter new start date for this semester: ";
+                cin >> newDate;
             //validate input
+            }
             while (!checkValidDate(newDate));
             _schoolYear._semester[choice].start = newDate;
             cout << "Start date changed successfully" << endl;
@@ -2025,9 +2034,12 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
         else if (choice2 == 3) {
             cout << "---Change semester end date---" << endl;
             cout << "Current semester end date: " << _schoolYear._semester[choice].start << endl;
-            cout << "Enter new end date for this semester: ";
+            
             string newDate;
-            do cin >> newDate;
+            do {
+                cout << "Enter new end date for this semester: ";
+                cin >> newDate;
+            }
             //added validate input
             while (!checkValidDate(newDate));
             _schoolYear._semester[choice].start = newDate;
