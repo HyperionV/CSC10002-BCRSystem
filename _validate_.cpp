@@ -59,7 +59,7 @@ bool checkValidDate(string date)
     {
         if (date.find("-") > date.length())
         {
-            cout << "No date seperation symbol is found or the symbol is incorrect ('/' and '-' )\n";
+            cout << "No date seperation symbol is found or the symbol is incorrect ('/' or '-' )\n";
             return false;
         }
         dummy += "-";

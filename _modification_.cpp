@@ -298,11 +298,13 @@ void createSemester(schoolYear &SY) {
     }
     string tempStart;
     string tempEnd;
-    //add date validation
+    //added date validation
     cout << "Enter start date: ";
-    cin >> tempStart;
+    do cin >> tempStart;
+    while (!checkValidDate(tempStart));
     cout << "Enter end date: ";
-    cin >>tempEnd;
+    do cin >>tempEnd;
+    while (!checkValidDate(tempEnd));
     SY._semester[choice-1].start = tempStart;
     SY._semester[choice-1].end = tempEnd;
     cout << "\nCreated " << SY._semester[choice-1].name << " for school year " << SY._schoolYear << ". The semester starts on " << SY._semester[choice-1].start << ", ends on " << SY._semester[choice-1].end << "\n" << endl; 
@@ -2010,9 +2012,10 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             cout << "Current semester start date: " << _schoolYear._semester[choice].start << endl;
             cout << "Enter new start date for this semester: ";
             string newDate;
-//Date validation
-            cin >> newDate;
+//Added Date validation
+            do cin >> newDate;
             //validate input
+            while (!checkValidDate(newDate));
             _schoolYear._semester[choice].start = newDate;
             cout << "Start date changed successfully" << endl;
             system("pause");
@@ -2024,8 +2027,9 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             cout << "Current semester end date: " << _schoolYear._semester[choice].start << endl;
             cout << "Enter new end date for this semester: ";
             string newDate;
-            cin >> newDate;
-            //validate input
+            do cin >> newDate;
+            //added validate input
+            while (!checkValidDate(newDate));
             _schoolYear._semester[choice].start = newDate;
             cout << "End date changed successfully" << endl;
             system("pause");
