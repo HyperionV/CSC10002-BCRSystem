@@ -168,12 +168,12 @@ void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
 	courseNode* viewC = _yr._semester[sem - 1]._course;
 
 	if (!viewC){
-		cout << "Unable to find any courses\n";
+		cout << "Unable to find any courses in " << _yr._semester[sem-1].name << endl;
 		system("pause");
 		return;
 	}
 
-	cout << "Showing courses of " << _yr._semester[sem-1].name << endl;
+	cout << "Showing courses of " << _yr._semester[sem-1].name << ":" << endl;
 	cout << setw(15) << left << "Course ID" << setw(30) << "Course Name" << setw(15) <<  "Classroom" << setw(13) <<  "Day" << setw(13) << "Session" << "Teacher\n";
 		viewC = _yr._semester[sem - 1]._course;
 		while (viewC)

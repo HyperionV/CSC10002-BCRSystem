@@ -3,16 +3,23 @@
 bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList) {
     string SC;
     cout << "Enter school year: ";
-    cin.clear();
-    cin.ignore();
+    fflush(stdin);
     getline(cin, SC);
     deleteSpacing(SC);
-    if (stoi(SC) < 2000) {
-        cout << "\nInvalid input! Please enter in YYYY format!\n" << endl;
-        system("pause");
-        return false;
+    for (auto t: SC) {
+        if (t == '-') continue;
+        if (t < '0' || t >  '9') {
+            cout << "Error! Please try again" << endl;
+            system("pause");
+            return false;
+        }
     }
     if (SC.length() < 5) {
+        if (stoi(SC) < 2000) {
+            cout << "\nInvalid input! Please enter in YYYY format and no white space!\n" << endl;
+            system("pause");
+            return false;
+        }   
         int temp = stoi(SC);
         temp++;
         SC += "-" + to_string(temp);
@@ -118,28 +125,44 @@ void createClass(schoolYear &SC) {
     if (choice == 1) {
         cout << "Enter class name: " << yearNum;
         string name;
-        cin.ignore(INT16_MAX, '\n');
-        cin.clear();
         cin >> name;
+        fflush(stdin);
         for (auto &t: name) {
             t = toupper(t);
         }
-
-        if (name.find_first_of("CLC") == string::npos && name.find_first_of("APCS") == string::npos && name.find_first_of("VP") == string::npos) {
+        string nameTemp = name;
+        name= "";
+        int i= 0;
+        for(; i< nameTemp.length(); i++) {
+            if(!isdigit(nameTemp[i])) {
+                name += nameTemp[i];
+            }
+            else {
+                break;
+            }
+        }
+        for(; i< nameTemp.length(); i++) {
+            if(!isdigit(nameTemp[i])) {
+                cout << "\nInvalid type!\n" << endl;
+                system("pause");
+                return;
+            }
+        }
+        if (name != "CLC" && name != "APCS" && name != "VP") {
             cout << "\nInvalid type!\n" << endl;
             system("pause");
             return;
         }
-        name = yearNum+=name;
-        if (findClassName(SC._class, name)) {
+        nameTemp = yearNum+=nameTemp;
+        if (findClassName(SC._class, nameTemp)) {
             cout << "\nThis class has already been added\n" << endl;
             system("pause");
             return;
         }
         _class temp;
-        temp.name = name;
+        temp.name = nameTemp;
         addClassNode(SC._class, temp);
-        cout << "Created new class " << name << endl;
+        cout << "Created new class " << nameTemp << endl;
     }
     else if (choice == 2) {
         string type;
