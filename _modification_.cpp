@@ -1,21 +1,27 @@
 #include "_modification_.h"
-//main features functions
 
 bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList) {
-    // cout << "\n---------Create new school year----------" << endl;
     string SC;
     cout << "Enter school year: ";
-    cin >> SC;
+    cin.clear();
+    cin.ignore();
+    getline(cin, SC);
+    deleteSpacing(SC);
+    if (stoi(SC) < 2000) {
+        cout << "\nInvalid input! Please enter in YYYY format!\n" << endl;
+        system("pause");
+        return false;
+    }
     if (SC.length() < 5) {
         int temp = stoi(SC);
         temp++;
         SC += "-" + to_string(temp);
     }
     if (SC.length() > 5) {
-        string temp1 = SC.substr(5);
-        string temp2 = SC.substr(0, 4);
-        if (abs(stoi(temp2) - stoi(temp1)) != 1 || SC[4] != '-') {
-            cout << "Invalid input" << endl;
+        string temp2 = SC.substr(5);
+        string temp1 = SC.substr(0, 4);
+        if (stoi(temp2) - stoi(temp1) != 1 || SC[4] != '-') {
+            cout << "\nInvalid input! The secondary year must be lower than the first year by 1\n" << endl;
             system("pause");
             return false;
         }
@@ -96,7 +102,6 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accou
 }
 
 void createClass(schoolYear &SC) {
-    // cout << "\n----------Create class----------" << endl;
     string tmpYearNum = SC._schoolYear.substr(0, 4);
     string yearNum = tmpYearNum.substr(2);
     cout << "Choose a way to create classes: \n\t1. Single Creation \n\t2. Mass Creation" << endl;
@@ -113,11 +118,14 @@ void createClass(schoolYear &SC) {
     if (choice == 1) {
         cout << "Enter class name: " << yearNum;
         string name;
+        cin.ignore(INT16_MAX, '\n');
+        cin.clear();
         cin >> name;
         for (auto &t: name) {
             t = toupper(t);
         }
-        if (name != "CLC" && name != "APCS" && name != "VP") {
+
+        if (name.find_first_of("CLC") == string::npos && name.find_first_of("APCS") == string::npos && name.find_first_of("VP") == string::npos) {
             cout << "\nInvalid type!\n" << endl;
             system("pause");
             return;
