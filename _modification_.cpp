@@ -115,6 +115,16 @@ void createClass(schoolYear &SC) {
         cout << "Enter class name: " << yearNum;
         string name;
         cin >> name;
+        string nameTemp = name;
+        name= "";
+        for(int i= 0; i< nameTemp.length(); i++) {
+            if(!isdigit(nameTemp[i])) {
+                name += nameTemp[i];
+            }
+            else {
+                break;
+            }
+        }
         for (auto &t: name) {
             t = toupper(t);
         }
@@ -123,16 +133,16 @@ void createClass(schoolYear &SC) {
             system("pause");
             return;
         }
-        name = yearNum+=name;
-        if (findClassName(SC._class, name)) {
+        nameTemp = yearNum+=nameTemp;
+        if (findClassName(SC._class, nameTemp)) {
             cout << "\nThis class has already been added\n" << endl;
             system("pause");
             return;
         }
         _class temp;
-        temp.name = name;
+        temp.name = nameTemp;
         addClassNode(SC._class, temp);
-        cout << "Created new class " << name << endl;
+        cout << "Created new class " << nameTemp << endl;
     }
     else if (choice == 2) {
         string type;
