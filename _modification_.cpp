@@ -3,8 +3,6 @@
 bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList) {
     string SC;
     cout << "Enter school year: ";
-    cin.clear();
-    cin.ignore();
     getline(cin, SC);
     deleteSpacing(SC);
     if (stoi(SC) < 2000) {
@@ -118,8 +116,6 @@ void createClass(schoolYear &SC) {
     if (choice == 1) {
         cout << "Enter class name: " << yearNum;
         string name;
-        cin.ignore(INT16_MAX, '\n');
-        cin.clear();
         cin >> name;
         string nameTemp = name;
         name= "";
@@ -143,7 +139,7 @@ void createClass(schoolYear &SC) {
             t = toupper(t);
         }
 
-        if (name.find_first_of("CLC") == string::npos && name.find_first_of("APCS") == string::npos && name.find_first_of("VP") == string::npos) {
+        if (name != "CLC" && name != "APCS" && name != "VP") {
             cout << "\nInvalid type!\n" << endl;
             system("pause");
             return;
