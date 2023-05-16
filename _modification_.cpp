@@ -1,26 +1,31 @@
 #include "_modification_.h"
-//main features functions
 
 bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accountList) {
-    // cout << "\n---------Create new school year----------" << endl;
     string SC;
     cout << "Enter school year: ";
-    cin >> SC;
+    cin.clear();
+    cin.ignore();
+    getline(cin, SC);
+    deleteSpacing(SC);
+    if (stoi(SC) < 2000) {
+        cout << "\nInvalid input! Please enter in YYYY format!\n" << endl;
+        system("pause");
+        return false;
+    }
     if (SC.length() < 5) {
         int temp = stoi(SC);
         temp++;
         SC += "-" + to_string(temp);
     }
     if (SC.length() > 5) {
-        string temp1 = SC.substr(5);
-        string temp2 = SC.substr(0, 4);
-        if (abs(stoi(temp2) - stoi(temp1)) != 1 || SC[4] != '-') {
-            cout << "Invalid input" << endl;
+        string temp2 = SC.substr(5);
+        string temp1 = SC.substr(0, 4);
+        if (stoi(temp2) - stoi(temp1) != 1 || SC[4] != '-') {
+            cout << "\nInvalid input! The secondary year must be lower than the first year by 1\n" << endl;
             system("pause");
             return false;
         }
     }
-
     schoolYearNode *target = findSchoolYear(head, SC);
     if (target != nullptr) {
         cout << "This school year has been created before" << endl;
@@ -97,7 +102,6 @@ bool createSchoolYear(schoolYearNode *&head, schoolYear &year, stringNode* accou
 }
 
 void createClass(schoolYear &SC) {
-    // cout << "\n----------Create class----------" << endl;
     string tmpYearNum = SC._schoolYear.substr(0, 4);
     string yearNum = tmpYearNum.substr(2);
     cout << "Choose a way to create classes: \n\t1. Single Creation \n\t2. Mass Creation" << endl;
@@ -114,6 +118,8 @@ void createClass(schoolYear &SC) {
     if (choice == 1) {
         cout << "Enter class name: " << yearNum;
         string name;
+        cin.ignore(INT16_MAX, '\n');
+        cin.clear();
         cin >> name;
         string nameTemp = name;
         name= "";
@@ -136,7 +142,8 @@ void createClass(schoolYear &SC) {
         for (auto &t: name) {
             t = toupper(t);
         }
-        if (name != "CLC" && name != "APCS" && name != "VP") {
+
+        if (name.find_first_of("CLC") == string::npos && name.find_first_of("APCS") == string::npos && name.find_first_of("VP") == string::npos) {
             cout << "\nInvalid type!\n" << endl;
             system("pause");
             return;
@@ -767,7 +774,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     ifstream in_file(path);
 
     if(!in_file) {
-        cout << "Could not open the file, please try again!" << endl;
+        cout << "Could not open file, please try again!" << endl;
         system("pause");
         return;
     }
@@ -792,7 +799,6 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
             placeholder.clear();
             temp->data._course->data.courseID = _course.id;
             temp->data._course->data.courseName = _course.name;
-            temp->data._course->data.isUploaded = true;
             classNode *targetClass = findClassName(currClassList, temp->data.className);
             studentNode *targetStudent = findStudent(targetClass->data._student, temp->data.id);
             findCourseScoreboard(targetStudent->data._course, _course.id)->data = temp->data._course->data;
@@ -800,7 +806,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
         }
         in_file.close();
     }
-    cout << "Scoreboard imported successfully!" << endl;
+    cout << "\nScoreboard imported successfully!\n" << endl;
     system("pause");
 }
 
@@ -812,15 +818,18 @@ schoolYear programStart(schoolYearNode *&head, stringNode* accountList) {
         system("pause");
         system("cls");
         head = new schoolYearNode;
-        if (!createSchoolYear(head, head->data, accountList)) head = nullptr;
+        if (!createSchoolYear(head, head->data, accountList)) {
+            delete head;
+            head = nullptr;
+        }
     }
     system("cls");
     schoolYearNode *currSchoolYearNode = head;
     cout << "Choose a schoolyear to work on: " << endl;
-    int idx = 2;
+    int idx = 1;
     cout << "\t1. Create new school year" << endl;
     while (currSchoolYearNode) {
-        cout << "\t" << idx++ << ". " << currSchoolYearNode->data._schoolYear << endl;
+        cout << "\t" << ++idx << ". " << currSchoolYearNode->data._schoolYear << endl;
         currSchoolYearNode = currSchoolYearNode->next;
     }
     cout << "Your choice: ";
@@ -855,7 +864,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     staffInfo newStaff;
     string curAcc;
     string staffName;
-    cout << "Input staff's fullname: ";
+    cout << "\nInput staff's fullname: ";
     getline(cin, staffName);
     while(!standardizeName(staffName)) {
         system("cls");
@@ -870,7 +879,7 @@ void createNewStaff(staffNode* staffList, stringNode* accountList) {
     addStringNode(accountList, curAcc);
     autoSaveCredential(accountList);
     saveStaffInfo(staffList);
-    cout << "Create new staff successfully! Default password is: 123456789" << endl;
+    cout << "\nCreate new staff successfully! Default password is: 123456789\n" << endl;
     system("pause");
     return;
 }
@@ -2032,9 +2041,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             return false;
         }
         else if (choice2 == 2) {
-            cout << "---Change semester start date---" << endl;
-            cout << "Current semester start date: " << _schoolYear._semester[choice].start << endl;
-           
+            cout << "\nCurrent semester start date: " << _schoolYear._semester[choice].start << endl;
             string newDate;
 //Added Date validation
             do {
@@ -2050,9 +2057,7 @@ bool updateSemesterInfo(schoolYear &_schoolYear) {
             return false;
         }
         else if (choice2 == 3) {
-            cout << "---Change semester end date---" << endl;
-            cout << "Current semester end date: " << _schoolYear._semester[choice].start << endl;
-            
+            cout << "\nCurrent semester end date: " << _schoolYear._semester[choice].start << endl;
             string newDate;
             do {
                 cout << "Enter new end date for this semester: ";

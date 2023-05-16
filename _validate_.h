@@ -4,5 +4,5 @@
 int getChoiceInt();
 char getChoiceChar();
 bool standardizeName(string &name);
-bool checkValidDate(string date);
+bool checkValidDate(const string &date);
 void deleteSpacing(string &str);
