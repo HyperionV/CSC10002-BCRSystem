@@ -74,7 +74,6 @@ void displayStudentList(studentNode *head) {
 }
 
 void addStudentByFile(studentNode *&head, const string &className) {
-    // cout << "\n--------Add students by file--------\n" << endl;
     cout << "Enter file path: ";
     string filePath;
     cin >> filePath;
@@ -86,7 +85,7 @@ void addStudentByFile(studentNode *&head, const string &className) {
         return;
     }
     string placeHolder;
-    getline(in_file, placeHolder); //get the content line of the CSV file
+    getline(in_file, placeHolder); 
     while (!in_file.eof()) {
         student temp;
         string placeHolder;
@@ -94,7 +93,6 @@ void addStudentByFile(studentNode *&head, const string &className) {
         if (placeHolder == "" || placeHolder == "\n") {
             break;
         }
-        // cout << placeHolder << endl;
         temp.index = stoi(placeHolder);
         getline(in_file, temp.id, ',');
         getline(in_file, temp.firstName, ',');
@@ -115,8 +113,6 @@ void addStudentByFile(studentNode *&head, const string &className) {
 }
 
 void addStudentIndividually(student &s) {
-    //validate input
-
     cout << "\n--------Add student individually--------" << endl;
     cout << "Enter ID of student: ";
     cin >> s.id;

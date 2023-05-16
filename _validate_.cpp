@@ -66,30 +66,23 @@ bool checkValidDate(const string &date)
     }
     else
         dummy += "/";
-
-    //getting date 
     int d = stoi(date.substr(0, date.find(dummy)));
     int m = stoi(date.substr(date.find(dummy) + 1));
-
-    //checking 
     if (d > 31 || d < 1)
     {
         cout << "Date is incorrect, value must be <= 31 or >= 1\n";
         return false;
     }
-
     if (m < 1 || m > 12)
     {
         cout << "Month is incorrect, value must be <= 12 or >= 1, you might have misplaced date and month's positions\nIn that case, the correct format is : DD/MM/YYYY\n";
         return false;
     }
-
     if (m == 2 && d > 29)
     {
         cout << "February only contains 29 days maximum\n";
         return false;
     }
-
     switch (m)
     {
         case 4:
@@ -102,7 +95,6 @@ bool checkValidDate(const string &date)
             return false;
             }
     }
-
     return true;
 }
 

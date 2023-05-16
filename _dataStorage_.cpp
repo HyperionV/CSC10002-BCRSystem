@@ -158,7 +158,6 @@ void loadStudentByFile(studentNode *&head, const string &path) {
         cout << "Error while opening file! Please check if the path was correct" << endl;
         return;
     }
-    //validate input
     while (!in_file.eof()) {
         student temp;
         temp._course = new scoreboardNode;
@@ -208,7 +207,6 @@ void loadStudentByFile(studentNode *&head, const string &classname, const string
                 temp.className = classname;
                 in_file.close();
                 ifstream in_file1 {full_path + "/Scoreboard.txt"};
-                // cout << "\n" << full_path + "/Scoreboard.txt" << endl;
                 if(in_file1) {
                     while(!in_file1.eof()) {
                         scoreboard curr;
@@ -285,7 +283,6 @@ void loadStudentScoreboard(scoreboardNode* &scoreboardList, const string &path) 
 
 void loadUserAccount (stringNode* &head) {
     ifstream in_file("credential.txt");
-
     if(!in_file) {
         cout << "Could not open the file!" << endl;
         return;
@@ -300,7 +297,6 @@ void loadUserAccount (stringNode* &head) {
 
 void loadStaffInfo(staffNode *& staffList) {
     ifstream in_file("staff.txt");
-
     string temp;
     while(in_file.good()) {
         staffInfo tempStaff;
@@ -418,7 +414,6 @@ void writeCourse(courseNode* courseList , const string &path) {
         out_file.close();
         courseList= courseList->next;
     }
-
     return;
 }
 
@@ -429,7 +424,6 @@ void writeClass(classNode* classList ,const string &path) {
         writeStudentInClass(classList->data._student, full_path);
         classList = classList->next;
     }
-
     return;
 }
 
@@ -451,7 +445,6 @@ void writeSchoolyear(string path, schoolYear sY)
         writeCourse(sY._semester[i]._course, full_path);
         out_file.close();
     }
-
     mkdir((path + "/Classes").c_str());
     writeClass(sY._class, path + "/Classes");
 }
@@ -475,7 +468,6 @@ void autoSaveSchoolyear(schoolYear curSchoolyear) {
 
 void autoSaveCredential(stringNode *accountList) {
     string path = "credential.txt";
-
     ofstream out_file(path);
     while(accountList) {
         out_file << accountList->data << endl;

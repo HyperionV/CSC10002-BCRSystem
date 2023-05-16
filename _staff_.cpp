@@ -14,7 +14,6 @@ staffInfo getStaff(staffNode* head, string userID) {
 
 bool mainMenuStaff(schoolYearNode *&head, string userID, staffNode* staffList, stringNode* accountList, int &currentSemesterCount) {
     schoolYear _schoolYear = programStart(head, accountList);
-
     while (true) {
         system("cls");
         autoSaveSchoolyear(_schoolYear);

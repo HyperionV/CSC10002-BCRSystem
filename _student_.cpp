@@ -37,7 +37,6 @@ void viewProfile(const student &A) {
 	cout << "\tDate of Birth: " << A.dob << endl;
 	cout << "\tSocial ID: " << A.socialid << endl;
 	cout << "\tClass: " << A.className << endl;
-
 }
 
 bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, const int &sem) {
@@ -51,7 +50,6 @@ bool menuStudent(student &A, const schoolYear &_yr, stringNode *accountSystem, c
 		cout << "\t4. Logout\n";
 		cout << "\t5. Close program\n";
 		cout << "Your choice: ";
-
     while (true) {
 			choice = getChoiceInt();
 			if (choice > 6 || choice < 1) {
@@ -92,7 +90,6 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 		}
 		viewScore = viewScore->next;
 	}
-
 	if (!isUploaded)
 	{
 		cout << "\nThe staff haven't published the scoreboard yet!\n";
@@ -101,9 +98,9 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 	}
 	isUploaded = false;
 	cout << "Choose a semester to view scoreboard:\n";
-	for (int i = 0; i < 3;i++)
+	for (int i = 0; i < 3;i++) {
 		cout << "\t" << i + 1 << ". " << _yr._semester[i].name << endl;
-
+	}
 	cout << "\t4. View full scoreboard\n";
 	cout << "\t5. Return to menu\n";
 	cout << "Your choice: ";
@@ -116,12 +113,7 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
         }
         break;
     }
-
-	if (choice == 5)
-		return;
-
-
-
+	if (choice == 5) return;
 	int no = 1;
 	courseNode *tmp = _yr._semester[choice - 1]._course;
 	if (choice != 4){
@@ -159,8 +151,6 @@ void viewScoreboard(const student &A, const schoolYear &_yr) {
 			viewScore = viewScore->next;
 		}
 		system("pause");
-
-	// No, Student ID, Student Full Name, Total Mark, Final Mark, Midterm Mark, and Other Mark
 }
 
 void viewCourse(const student &A, const schoolYear &_yr, const int &sem) {
@@ -219,7 +209,6 @@ bool StudentMain(schoolYearNode* schoolYrHead, const string &id, stringNode* acc
 			{
 				return 0;
 			}
-			
 			if (menuStudent(A, thisYr, accountSystem, currentSemesterCount))
 				return 1;
 		}

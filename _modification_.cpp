@@ -196,13 +196,11 @@ void createClass(schoolYear &SC) {
             }
             string tmpClassName = className + numName;
             if (findClassName(SC._class, tmpClassName)) {
-                //cout << "This class has already been added" << endl;
                 continue;
             }
             _class temp;
             temp.name = tmpClassName;
             addClassNode(SC._class, temp);
-            //cout << "Created new class " << tmpClassName << endl;
         }
         cout << "Created classes from range " << r1 << " to " << r2 << endl;
     }
@@ -275,7 +273,6 @@ void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList) {
         studentNode *currStudentNode = nullptr;
         addStudentByFile(currStudentNode, c.name);
         while (currStudentNode) {
-            // cout << "Student not null" << endl;
             if (!checkStudentExistence(_schoolYear, currStudentNode->data)) {
                 addStudentNode(_student, currStudentNode->data);
                 addStringNode(accountList, currStudentNode->data.id+":"+defaultPassword);
@@ -315,7 +312,6 @@ void addStudentToClass(schoolYear &_schoolYear, stringNode* accountList) {
 }
 
 void createSemester(schoolYear &SY) {
-    // cout << "\n----------Create semester----------" << endl;
     cout << "Choose a semester to create: \n\t1. Semester 1 \n\t2. Semester 2 \n\t3. Semester 3" << endl;
     int choice;
     cout << "Choose a semester to create: ";
@@ -327,9 +323,7 @@ void createSemester(schoolYear &SY) {
         return;
     }
     string tempStart;
-    string tempEnd;
-    //added date validation
-    
+    string tempEnd;    
     do {
         cout << "Enter start date: ";
         cin >> tempStart;
@@ -349,7 +343,6 @@ void createSemester(schoolYear &SY) {
 }
 
 void createCourse(schoolYear &_schoolYear, semester &_semester) {
-    // cout << "\n----------Create course----------" << endl;
     course temp;
     cout << "Enter course ID: ";
     cin >> temp.id;
@@ -421,7 +414,6 @@ bool addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course) {
         getline(inputFile, tempStudent.firstName, ',');
         getline(inputFile, tempStudent.lastName, ',');
         getline(inputFile, tempStudent.className);
-
         //check if the current student has been added to the enrolled list -> prevent duplication in input file
         studentNode* checkStudentDuplicate = findStudent(_course.enrolled, tempStudent.id);
         if (checkStudentDuplicate != nullptr) {
@@ -450,9 +442,6 @@ bool addStudentToCourseByFile(const schoolYear &_schoolYear, course &_course) {
         tempStudent= studentObject->data;
         tempStudent._course = new scoreboardNode;
         tempStudent._course->data = tempScoreboard;
-
-        // deleteScoreboardList(tempStudent._course);
-
         addScoreboardNode(tempStudent._course, tempScoreboard);
         addStudentNode(_course.enrolled, tempStudent);
         counter++;
@@ -483,7 +472,6 @@ void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course) 
     }
     cout << "Enter student's class: ";
     cin >> tempStudent.className;
-    //The criteria of a valid classname ???
     studentNode *checkStudentDuplicate = findStudent(_course.enrolled, tempStudent.id);
     if (checkStudentDuplicate != nullptr) {
         checkStudentDuplicate = nullptr;
@@ -514,18 +502,13 @@ void addStudentToCourseManually(const schoolYear &_schoolYear, course &_course) 
     tempStudent = checkStudent->data;
     tempStudent._course = new scoreboardNode;
     tempStudent._course->data= tempScoreboard;
-
-
     addStudentNode(_course.enrolled, tempStudent);
     cout << "\nSuccessfully enrolled this student to the course" << endl;
     system("pause");
     system("cls");
 }
-//bug: course not removed from student's scoreboard when delete course
-//bug: course not removed from student's scoreboard when modifying course info 
 
 void removeStudentFromCourse(schoolYear &_schoolYear, course &_course) {
-    // cout << "\n----------Remove student from course----------" << endl;
     cout << "Students enrolled in this course: " << endl;
     displayStudentList(_course.enrolled);
     cout << "Choose a student to remove: ";
@@ -551,7 +534,6 @@ void removeStudentFromCourse(schoolYear &_schoolYear, course &_course) {
     classNode *studentClass = findClassName(_schoolYear._class, className);
     studentNode *currStudent = findStudent(studentClass->data._student, curr->data.id);
     deleteScoreboardNode(currStudent->data._course, _course.id);
-
     //delete him/her from the course
     deleteScoreboardList(curr->data._course);
     cout << "\nRemoved student " << curr->data.id << " - " << curr->data.firstName << " " << curr->data.lastName << " from this course" << endl;
@@ -594,15 +576,12 @@ void viewCourseInfo(const course &_course) {
     cout << "\t7. Schedule: " << _course.session << " - " << _course.day << endl;
 }
 
-//bug: cannot delete course from student's scoreboard
-
 void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
     string prevID = _course.id;
     cout << "\n---------Update course info----------" << endl;
     string placeHolder;
     cout << "Current course info:" << endl;
     viewCourseInfo(_course);
-    //enter new course info
     cout << "\nEnter new information for this course: ";
     cout << "\n\t1. ID: ";
     cin >> _course.id;
@@ -643,7 +622,6 @@ void updateCourseInfo(schoolYear &_schoolYear, course &_course) {
     }
     cout << "\t7.2 Session: ";
     cin >> _course.session;
-    //display the new course information
     system("cls");
     cout << "Successfully updated course info" << endl;
     cout << "Current course info:";
@@ -705,7 +683,6 @@ void updateStudentResult(const schoolYear &_schoolYear, const string &ID, studen
     classNode *studentClass = findClassName(_schoolYear._class, source.className);
     studentNode *OG = findStudent(studentClass->data._student, source.id);
     scoreboardNode *studentScore = findCourseScoreboard(OG->data._course, ID);
-
     if (!studentScore) {
         cout << "Error while update student result" << endl;
         system("pause");
@@ -737,8 +714,6 @@ void updateStudentResult(const schoolYear &_schoolYear, scoreboardNode *curScore
     cin >> curScoreboard->data.final;
     cout << "\tTotal: "; 
     cin >> curScoreboard->data.total;
-    
-
     courseNode* currCourseNode = nullptr;
     for (int i = 0; i < 3; i++) {
         currCourseNode = findCourse(_schoolYear._semester[i]._course, curScoreboard->data.courseID);
@@ -775,9 +750,7 @@ void importStudentScore(const schoolYear& _schoolYear, const course & _course) {
     string path;
     cout << "Enter scoreboard path: " ;
     getline(cin, path);
-
     ifstream in_file(path);
-
     if(!in_file) {
         cout << "Could not open file, please try again!" << endl;
         system("pause");
@@ -958,7 +931,6 @@ void updateScoreboardUI(schoolYear &_schoolYear) {
             exportStudentInfoList(_schoolYear._schoolYear, currCourseNode->data);
             break;
         case 2:
-            //export
             importStudentScore(_schoolYear, currCourseNode->data);
             break;
         case 3:
@@ -1208,7 +1180,6 @@ void viewWholeClassScoreboard(const schoolYear &_schoolYear, const _class &sourc
 ///View class scoreboard
 
 void viewProfileStudent(student curStudent) {
-    // system("cls");
     cout << "--------------PROFILE-------------" << endl;
     cout << "Full name : " << curStudent.firstName << curStudent.lastName << endl;
     cout << "Student's ID : " << curStudent.id << endl;
@@ -1259,19 +1230,16 @@ void viewCurrentYearInfo(const schoolYear &_schoolYear) {
 //if return false -> return to previous menu only
 
 void viewCourseScoreboard(studentNode *_student, const string &ID) {
-    // cout << "---View scoreboard---" << endl;
     cout << endl;
     cout << setw(5) << left << "No. " << setw(30) << left << "Student ID" << setw(40) << left << "Full name" << setw(10) << left << "Class" << setw(10) << left << "Other" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10)<< "Total" << endl; 
     studentNode *curr = _student;
     int index = 1;
     while (curr) {
-        // scoreboardNode *tmp = findCourseScoreboard(curr->data._course, ID);
         string fullName = curr->data.firstName + " " + curr->data.lastName;
         cout << setw(5) << left << index++ << setw(30) << left << curr->data.id << setw(40) << left << fullName << setw(10) << left << curr->data.className << setw(10) << curr->data._course->data.other << setw(10) << curr->data._course->data.midterm << setw(10) << curr->data._course->data.final << setw(10) << curr->data._course->data.total << endl; 
         curr = curr->next;
     }
     system("pause");
-    // system("cls");
 }
 
 bool viewSemestersInfo(const schoolYear &_schoolYear) {
@@ -1324,7 +1292,6 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
             break;
         }
         if (choice2 == 1) {
-            //display courses for user to choose 
             cout << "Choose a course from the list below: " << endl;
             courseNode* currCourseNode = _schoolYear._semester[choice]._course;
             if (currCourseNode == nullptr) {
@@ -1366,7 +1333,6 @@ bool viewSemestersInfo(const schoolYear &_schoolYear) {
             cout << "Invalid choice! Please try again" << endl;
             continue;
         }
-        // system("pause");
     }
     return false;
 }
@@ -1435,7 +1401,6 @@ void viewClassesInfo(const schoolYear &_schoolYear) {
 }
 
 void viewDetailedClassInfo(const _class &source) {
-    //view scoreboard of the whole class and overall GPA
     cout << "\n----------View detailed class info----------" << endl;
     cout << "Class: " << source.name << endl;
     cout << "Students of this class: " << endl;
@@ -1464,8 +1429,6 @@ void viewSchoolYearAllStudent(const schoolYear &_schoolyear) {
 }
 
 void viewStudentResult(const student &source) {
-    // cout << "View student result" << endl;
-
     cout << setw(15) << left << "Course ID" << setw(30) << left << "Course name" << setw(10) << "Other" << setw(10) << "Midterm" << setw(10) << "Final" << setw(10) << "Total" << endl;
     scoreboardNode *curr = source._course;
     while (curr) {
@@ -1478,15 +1441,12 @@ void viewStudentResult(const student &source) {
 void viewStudentInfo(const schoolYear &_schoolYear) {
     while (true) {
         system("cls");
-        // cout << "---View Student Information---" << endl;
         cout << "Enter ID of the student you want to find or \"0\" to stop: ";
         string ID;
         cin >> ID;
-//Check studentID input
         if (ID == "0") {
             return;
         }
-        //check ID validity here
         classNode* currClassNode = _schoolYear._class;
         bool found = false;
         while (currClassNode && !found) {
@@ -1526,7 +1486,6 @@ void viewStudentInfo(const schoolYear &_schoolYear) {
 }
 
 void viewDetailedCourseInfo(const course &_course) {
-    // cout << "\n---View detailed course information---" << endl;
     viewCourseInfo(_course);
     viewCourseScoreboard(_course.enrolled, _course.id);
 }
@@ -1768,7 +1727,6 @@ void updateStudentResultFromClass(schoolYear &_schoolYear) {
         currClassNode = currClassNode->next;
         idx++;
     }
-    //system clear here
     studentNode* currStudentNode  = currClassNode->data._student;
     cout << "Students in this class: " << endl;
     displayStudentList(currStudentNode);
@@ -1811,9 +1769,7 @@ void updateStudentResultFromClass(schoolYear &_schoolYear) {
         currScoreboardNode = currScoreboardNode->next;
         idx++;
     }
-    //change the result for the student object in classes
     updateStudentResult(_schoolYear, currScoreboardNode->data.courseID, currStudentNode->data);
-    //update the result for the student object in course
     courseNode *currCourseNode = nullptr;
     for (int i = 0; i < 3; i++) {
         currCourseNode = findCourse(_schoolYear._semester[i]._course, currScoreboardNode->data.courseID);
