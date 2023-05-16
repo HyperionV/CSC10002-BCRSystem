@@ -117,12 +117,20 @@ void createClass(schoolYear &SC) {
         cin >> name;
         string nameTemp = name;
         name= "";
-        for(int i= 0; i< nameTemp.length(); i++) {
+        int i= 0;
+        for(; i< nameTemp.length(); i++) {
             if(!isdigit(nameTemp[i])) {
                 name += nameTemp[i];
             }
             else {
                 break;
+            }
+        }
+        for(; i< nameTemp.length(); i++) {
+            if(!isdigit(nameTemp[i])) {
+                cout << "\nInvalid type!\n" << endl;
+                system("pause");
+                return;
             }
         }
         for (auto &t: name) {
